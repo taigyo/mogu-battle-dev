@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>モグバト！通信テスト</title>
+<style>
+body{font-family:sans-serif;max-width:480px;margin:20px auto;padding:0 12px;background:#1b1b22;color:#eee}
+button,input{font-size:16px;padding:8px 12px;margin:4px 0;border-radius:6px;border:1px solid #666;background:#2b2b36;color:#eee}
+button{cursor:pointer}
+#code{font-size:28px;letter-spacing:4px;font-weight:bold;color:#7CFF7C}
+#log{background:#111;padding:8px;border-radius:6px;height:200px;overflow:auto;font-size:13px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<h2>モグバト！通信テスト</h2>
+<p>2人で開いて「つながるか」だけを確認するページです。</p>
+<div>
+  <button id="host">部屋を作る（ホスト）</button>
+  <div>部屋コード: <span id="code">----</span></div>
+</div>
+<div>
+  <input id="join" placeholder="部屋コード" maxlength="4" size="6">
+  <button id="go">参加する（ゲスト）</button>
+</div>
+<div>
+  <button id="ping" disabled>pingを送る</button>
+  <span id="status">未接続</span>
+</div>
+<div id="log"></div>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const log=t=>{const d=$('#log');d.textContent+=t+'\n';d.scrollTop=d.scrollHeight};
+const PRE='mogubato-';
+let peer=null,conn=null,role='',n=0,t0=0;
+const rc=()=>Array.from({length:4},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join('');
+function setConn(c){
+  conn=c;
+  c.on('open',()=>{$('#status').textContent='接続OK（'+role+'）';$('#ping').disabled=false;log('接続しました')});
+  c.on('data',m=>{
+    if(m.k==='ping'){log('受信 ping#'+m.n);c.send({k:'pong',n:m.n,t:m.t})}
+    else if(m.k==='pong'){log('pong#'+m.n+' 往復 '+(Date.now()-m.t)+'ms')}
+  });
+  c.on('close',()=>{$('#status').textContent='切断';$('#ping').disabled=true;log('切断されました')});
+  c.on('error',e=>log('接続エラー: '+e.type));
+}
+function mkPeer(id,onOpen){
+  peer=new Peer(id);
+  peer.on('open',onOpen);
+  peer.on('error',e=>{log('Peerエラー: '+e.type);if(e.type==='unavailable-id'&&role==='host')$('#host').click()});
+  peer.on('disconnected',()=>log('シグナリングサーバーから切断'));
+}
+$('#host').onclick=()=>{
+  if(peer)peer.destroy();
+  role='host';const code=rc();
+  log('部屋を作成中…');
+  mkPeer(PRE+code,()=>{$('#code').textContent=code;log('待機中。コード '+code+' を友達に伝えてください');});
+  peer.on('connection',c=>{log('ゲストが接続しようとしています');setConn(c)});
+};
+$('#go').onclick=()=>{
+  const code=$('#join').value.trim().toUpperCase();
+  if(code.length!==4){log('4文字のコードを入力してください');return}
+  if(peer)peer.destroy();
+  role='guest';
+  log('接続中…');
+  mkPeer(undefined,()=>{setConn(peer.connect(PRE+code,{reliable:true}))});
+  setTimeout(()=>{if(!conn||!conn.open)log('10秒たっても接続できません（相手のネットワーク環境によっては通信できないことがあります）')},10000);
+};
+$('#ping').onclick=()=>{n++;t0=Date.now();log('送信 ping#'+n);conn.send({k:'ping',n:n,t:t0})};
+</script>
+</body>
+</html>
