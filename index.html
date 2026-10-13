@@ -1,0 +1,1410 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>モグバト！</title><script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script><style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f1ea;--fg:#222;--pn:#fff;--bd:#c9c2b3;--ac:#2f6fdb;--bad:#d33;--ok:#2a9d55}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15171c;--fg:#eee;--pn:#232733;--bd:#3a4052;--ac:#6ea0ff}}
+:root[data-theme="dark"]{--bg:#15171c;--fg:#eee;--pn:#232733;--bd:#3a4052;--ac:#6ea0ff}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,"Hiragino Sans","Noto Sans JP",sans-serif}
+body{padding:8px;max-width:980px;margin:0 auto;font-size:17px}
+h1{font-size:22px;margin:6px 0}button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:10px 14px;font-size:16px;cursor:pointer}button:disabled{opacity:.4}
+button.g{background:var(--pn);color:var(--fg);border:1px solid var(--bd)}
+button.g.on{background:var(--ok);color:#fff;border-color:var(--ok)}
+.nav-tabs{display:flex;gap:8px;margin-bottom:12px;border-bottom:2px solid var(--bd);padding-bottom:8px}
+.nav-tabs button{background:var(--pn);color:var(--fg);border:1px solid var(--bd);font-weight:700}
+.nav-tabs button.active{background:var(--ac);color:#fff;border-color:var(--ac)}
+.tab-content{display:none}.tab-content.active{display:block}
+.row{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(142px,1fr));gap:6px}
+.c{position:relative;background:var(--pn);border:2px solid var(--bd);border-radius:8px;padding:24px 5px 28px;min-height:150px;text-align:center;cursor:pointer;user-select:none;border-top:5px solid var(--k,var(--bd));background:color-mix(in srgb,var(--k,var(--pn)) 14%,var(--pn))}
+.c em{position:absolute;left:4px;top:2px;font-style:normal;font-weight:700;background:var(--k,var(--ac));color:#fff;border-radius:50%;width:24px;height:24px;line-height:24px;font-size:14px}
+.c b{display:block;font-size:15px}.c small{display:block;font-size:12.5px;line-height:1.3;opacity:.8;margin-top:3px}.c span{position:absolute;right:5px;bottom:2px;font-weight:700;font-size:15px}
+.c u{position:absolute;left:5px;bottom:2px;text-decoration:none;font-size:14px}.c.in{border-color:var(--fg);border-top-color:var(--k,var(--fg))}
+.c button{position:absolute;right:2px;top:2px;padding:0 8px;font-size:15px;height:26px}
+.field{display:flex;flex-direction:column;gap:6px}
+.lead{background:var(--pn);border:2px solid var(--bd);border-radius:10px;padding:8px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:16px;position:relative}
+.lead.tgt,.u.tgt{border-color:var(--bad);box-shadow:0 0 8px var(--bad);cursor:pointer}
+.bd{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;min-height:116px;background:color-mix(in srgb,var(--pn) 50%,transparent);border-radius:10px;padding:4px}
+.u{position:relative;min-height:116px;background:var(--pn);border:2px solid var(--bd);border-radius:8px;text-align:center;padding:6px 3px 26px;font-size:15px;cursor:pointer;border-top:5px solid var(--k,var(--bd));background:color-mix(in srgb,var(--k,var(--pn)) 14%,var(--pn))}
+.u em{position:absolute;left:2px;top:-3px;font-style:normal;font-weight:700;background:var(--k,var(--ac));color:#fff;border-radius:50%;width:20px;height:20px;line-height:20px;font-size:12px}.u i{display:block;font-style:normal;font-size:14px}.u .a,.u .h{position:absolute;bottom:2px;font-weight:700;font-size:17px;width:30px;border-radius:50%;color:#fff}
+.u .a{left:2px;background:#c77d00}.u .h{right:2px;background:var(--bad)}.u.rdy{border-color:var(--bd);outline:3px solid var(--fg);outline-offset:1px}.u.sel{border-color:var(--ac);outline:3px solid var(--ac);box-shadow:0 0 12px var(--ac)}.u.pk{border-color:#ffd54a;outline:3px dashed #ffd54a;outline-offset:2px;box-shadow:0 0 12px #ffd54a;cursor:pointer;animation:pkp .9s ease-in-out infinite alternate}@keyframes pkp{from{box-shadow:0 0 3px #ffd54a}to{box-shadow:0 0 16px #ffd54a}}.u.rdy.ldr:not(.sel){outline-color:#ff8a3d}.u.rdy:not(.ldr):not(.sel){outline-color:#60a5fa}.tgtm .u:not(.pk){opacity:.45}.tgtm .u.pkd{opacity:1;outline:3px solid #ff9800;outline-offset:2px;box-shadow:0 0 10px #ff9800}
+#log{height:120px;overflow:auto;font-size:14px;background:var(--pn);border-radius:8px;padding:4px;border:1px solid var(--bd)}
+#ov{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:9}#ov div{background:var(--pn);padding:24px;border-radius:12px;text-align:center;font-size:20px}
+.hand{display:flex;gap:6px;overflow-x:auto;padding:12px 2px}.hand .c{box-sizing:border-box;flex:0 0 140px;width:140px;min-width:140px}.hand.dense .c{flex:0 0 100px;width:100px;min-width:100px;padding-left:2px;padding-right:2px}.hand.dense .c b{font-size:13px}.hand.dense .c small{font-size:11px}
+.sl{min-height:116px;border:1px dashed var(--bd);border-radius:8px;text-align:center;opacity:.6;font-size:14px;padding-top:4px;position:relative}.sl.pl{border:3px dashed var(--ac);opacity:1;cursor:pointer;background:color-mix(in srgb,var(--ac) 15%,transparent)}.u small{display:block;font-size:11.5px;line-height:1.25}.c.pd{border-color:var(--ac);border-top-color:var(--k,var(--ac));box-shadow:0 0 0 3px var(--ac)}#log small{opacity:.7}*{touch-action:manipulation}.cv{background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:8px;margin:6px 0}.cvb{display:flex;gap:6px}.cvc{flex:1;display:flex;flex-direction:column;align-items:center;font-size:14px}.cvc .bar{width:100%;height:64px;display:flex;flex-direction:column;justify-content:flex-end}.cvc .n{height:14px}
+.pop{position:absolute;left:50%;top:10%;font-weight:800;font-size:24px;pointer-events:none;z-index:5;text-shadow:0 0 3px #000;animation:pop 1.1s ease-out forwards}
+.pop.hit{color:#ff5a5a}.pop.heal{color:#4ade80}.pop.up{color:#60a5fa}.pop.down{color:#c084fc}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}20%{opacity:1;transform:translate(-50%,-4px) scale(1.2)}100%{opacity:0;transform:translate(-50%,-34px)}}
+.a-hit{animation:shk .45s}@keyframes shk{0%,100%{transform:none}20%{transform:translateX(-6px);background:#ff000055}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.a-atk-p{animation:lp .6s;z-index:3}@keyframes lp{40%{transform:translateY(-30px) scale(1.12)}}
+.a-atk-e{animation:le .6s;z-index:3}@keyframes le{40%{transform:translateY(30px) scale(1.12)}}
+.a-spawn{animation:spw .7s}@keyframes spw{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.15);opacity:1;box-shadow:0 0 18px 6px var(--ac)}100%{transform:none}}
+.a-heal{animation:hl .9s}@keyframes hl{50%{box-shadow:0 0 18px 6px #4ade80}}
+.a-up{animation:up .9s}@keyframes up{50%{box-shadow:0 0 18px 6px #60a5fa;transform:translateY(-4px)}}
+.a-down{animation:dn .9s}@keyframes dn{50%{box-shadow:0 0 18px 6px #c084fc;filter:brightness(.7)}}
+.a-mark{outline:3px solid #ff5a5a;outline-offset:2px;animation:mk .8s}@keyframes mk{50%{outline-color:#fff}}
+.gh{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:#ff3b3b88;border-radius:8px;pointer-events:none;animation:gh 1s forwards;z-index:4}@keyframes gh{0%{transform:scale(1);opacity:1}60%{transform:scale(1.3);opacity:.9}100%{transform:scale(.2) rotate(20deg);opacity:0}}
+.hand .c:not(.ok){opacity:.5;filter:saturate(.5)}
+.c.sp{border-radius:26px 4px 26px 4px;border-style:dashed;border-top-style:solid}
+.c.sp::after{content:'✦';position:absolute;left:50%;top:2px;transform:translateX(-50%);font-size:16px;color:var(--k)}
+.c.sp span{right:auto;left:50%;transform:translateX(-50%);bottom:4px;background:var(--k);color:#fff;border-radius:12px;padding:0 10px;font-size:14px}
+.c.fd{border-radius:8px}
+.nowrow{display:flex;align-items:center;gap:8px}.nowrow .now{flex:1;min-width:0}.spin{display:none;flex:none;width:18px;height:18px;border:3px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spn .8s linear infinite}.spin.on{display:inline-block}@keyframes spn{to{transform:rotate(360deg)}}.now{white-space:normal;word-break:break-word;line-height:1.4;min-height:30px;padding:4px 10px;border-radius:8px;background:var(--pn);border:1px solid var(--bd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px;font-weight:600}.now small{opacity:.8;font-weight:400}
+.st{color:#e0a800;font-size:13px;letter-spacing:1px;line-height:1;margin-top:2px;text-shadow:0 0 2px #0008}.c.r5{outline:3px solid #e0a800;outline-offset:-2px}.c.r4{outline:2px solid #e0a80099;outline-offset:-2px}
+.handicap-box{background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:16px}
+.handicap-item{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:15px;cursor:pointer}
+/* マリガンUI用スタイリング */
+.c.mulligan-selected{outline:3px solid var(--bad);outline-offset:-1px;box-shadow:0 0 10px var(--bad)}
+.c.mulligan-selected::before{content:'交換';position:absolute;top:2px;right:2px;background:var(--bad);color:#fff;font-size:11px;padding:2px 6px;border-radius:4px;font-weight:bold;z-index:2}
+#optbox{position:fixed;inset:0;z-index:40;align-items:center;justify-content:center;background:rgba(0,0,0,.45)}#optbox .optm{background:#1d2433;color:#fff;border:2px solid #e0a800;border-radius:12px;padding:12px;width:min(88vw,360px);margin-top:18vh;box-shadow:0 8px 28px rgba(0,0,0,.6)}#optbox .optt{font-weight:bold;margin-bottom:6px}#optbox button{display:block;width:100%;margin:6px 0;padding:10px;text-align:left;font-size:15px}#optbox .optn{font-size:12px;opacity:.7;margin-top:4px}
+</style></head><body>
+
+<!-- タブヘッダー -->
+<div class="nav-tabs" id="navTabs">
+  <button class="active" data-tab="tabBld">🎴 デッキ構築</button>
+  <button data-tab="tabOnline">🌐 対人戦</button>
+  <button data-tab="tabSetup">🤖 CPU対戦</button>
+</div>
+
+<!-- 1. デッキ構築画面 -->
+<div id="tabBld" class="tab-content active">
+  <h1>🍽 モグバト！ デッキ構築（30枚・同名3枚まで）</h1>
+  <div style="font-size:12px;opacity:.8">料理の精霊「フーズ」を召喚して戦う、シェフたちの戦争。</div>
+  <div style="font-size:12px;opacity:.85;margin:4px 0">🛡守護:前列にいるとき先に狙われる ⚡突進:出たターンにフーズを攻撃可 💨疾走:出たターンからリーダーも攻撃可 🔱貫通:余ったダメージの半分(切り上げ)が後ろのフーズ（いなければリーダー）へ 💤レスト ⏸行動不能 🧪毒:両者のターン終了時1ダメ ☠️猛毒:同2ダメ 橙枠=レストなし 青枠=フーズだけ攻撃可</div>
+  <div class="row"><b id="tot">0/30</b><button class="g" data-p="x">クリア</button><button class="g" data-f="">全色</button><button class="g" data-f="g">🍣和食</button><button class="g" data-f="r">🥟中華</button><button class="g" data-f="b">🍔アメリカ</button><button class="g" data-f="y">🥐欧州</button></div>
+  <div class="row" id="acRow"><small>🎲 色指定オート:</small><button class="g" data-ac="g">🍣和食</button><button class="g" data-ac="r">🥟中華</button><button class="g" data-ac="b">🍔アメリカ</button><button class="g" data-ac="y">🥐欧州</button><button id="acGo">選んだ色で構築</button><small>1〜4色OK（未選択＝全色）</small></div>
+  <div class="cv" id="cv"></div>
+  <div class="grid" id="pool"></div>
+</div>
+
+<!-- 2b. 対人戦（オンライン2人） -->
+<div id="tabOnline" class="tab-content">
+  <h1>🌐 対人戦（2人・P2P）</h1>
+  <div class="handicap-box">
+    <h3>① 部屋を作る／入る</h3>
+    <div class="row">
+      <button id="nwHost">🏠 部屋を作る</button>
+      <span style="opacity:.7">または</span>
+      <input id="nwIn" maxlength="4" placeholder="部屋コード" autocomplete="off" style="width:7em;font-size:18px;letter-spacing:3px;text-transform:uppercase;padding:8px;border-radius:8px;border:1px solid var(--bd);background:var(--pn);color:var(--fg)">
+      <button id="nwJoin">🚪 参加する</button>
+      <button class="g" id="nwBye" style="display:none">切断</button>
+    </div>
+    <div id="nwCode" style="font-size:30px;font-weight:700;letter-spacing:6px;min-height:36px"></div>
+    <div id="nwSt" style="font-size:14px;opacity:.85">未接続</div>
+  </div>
+  <div class="handicap-box">
+    <h3>② 対戦</h3>
+    <div class="row">
+      <button id="nwGo" style="display:none;font-size:18px;padding:12px 24px">🔥 対人戦を始める！</button>
+      <span id="nwWait" style="display:none">ホストが開始するのを待っています…</span>
+      <span id="nwWarn" style="display:none;color:var(--bad);font-size:14px">※デッキを30枚揃えてください（デッキ構築タブ）</span>
+    </div>
+    <small style="opacity:.8">デッキ構築タブで組んだ30枚を使います。先攻・後攻はランダム。手札と山札は相手に見えません（枚数のみ）。</small>
+  </div>
+</div>
+
+<!-- 2. CPU対戦設定画面（試合前） -->
+<div id="tabSetup" class="tab-content">
+  <h1>🤖 CPU対戦</h1>
+  <div class="handicap-box">
+    <h3>🍽 CPUのデッキ</h3>
+    <div class="row" id="ccRow"><button class="g on" id="ccAuto">🎲 おまかせ</button><button class="g" data-cc="g">🍣和食</button><button class="g" data-cc="r">🥟中華</button><button class="g" data-cc="b">🍔アメリカ</button><button class="g" data-cc="y">🥐欧州</button></div>
+    <small style="opacity:.8">おまかせ＝ランダムな色でいい感じに構築。色を選ぶとその色だけで組む（複数OK）</small>
+  </div>
+  <div class="handicap-box">
+    <h3>🤖 CPU強化ハンデ設定</h3>
+    <label class="handicap-item"><input type="checkbox" id="hCpuHp"> CPUの初期HPを増加 (+10HP / 計35HP)</label>
+    <label class="handicap-item"><input type="checkbox" id="hCpuHand"> CPUの開始手札を増やす (+2枚)</label>
+    <label class="handicap-item"><input type="checkbox" id="hCpuPp"> CPUの初期PPブースト (1ターン目からPP2)</label>
+    <label class="handicap-item"><input type="checkbox" id="hCpuStat"> CPUフーズ常時強化 (召喚される全フーズ+1/+1)</label>
+    <label class="handicap-item"><input type="checkbox" id="hCpuRush"> CPU全フーズに【突進】付与 (すぐ攻撃可能)</label>
+  </div>
+  <div class="row">
+    <button id="go" style="font-size:18px;padding:12px 24px;" disabled>🔥 CPU戦を始める！</button>
+    <span id="deckWarn" style="color:var(--bad);font-size:14px;">※デッキを30枚揃えてください</span>
+  </div>
+</div>
+
+<!-- 3. 対戦画面（試合中） -->
+<div id="gm" style="display:none">
+  <div class="field">
+    <div class="lead" id="el"></div>
+    <div class="bd" id="eb"></div>
+    <div class="nowrow"><div class="now" id="now"> </div><span class="spin" id="spin" title="処理中…"></span></div>
+    <div id="optbox" style="display:none"></div>
+    <div class="bd" id="pb"></div>
+    <div class="lead" id="pl"></div>
+    <div class="hand" id="hd"></div>
+    <div class="row">
+      <button id="mulliganConfirm" style="display:none;background:var(--ok);">🔄 マリガン確定</button>
+      <button id="evo">進化</button>
+      <button id="end">ターン終了</button>
+      <button class="g" id="mute">🔊</button>
+      <button class="g" id="surrender">🏳️ 降参する</button>
+    </div>
+    <div style="font-size:12px;opacity:.75;margin:2px 0">橙の枠＝レストなし（リーダーも狙える） ／ 青い枠＝出たターンでフーズだけ攻撃可 ／ 💤＝レスト（持ち主のターン開始で消える） ／ 🧪毒＝どちらのターン終了時も1ダメージ ☠️猛毒＝同2ダメージ ／ 🌿新鮮＝引いたターンだけ[新鮮]効果が有効</div>
+    <div id="log"></div>
+  </div>
+</div>
+
+<div id="ov"><div><p id="ovt"></p><div id="rmst" style="font-size:14px;min-height:20px;margin-bottom:6px"></div><button id="rematch" style="display:none">🔁 再戦</button> <button id="again">対戦設定へ戻る</button> <button id="ovx">閉じる</button></div></div><button id="ovre" style="display:none;position:fixed;right:8px;bottom:8px;z-index:8">対戦設定へ戻る</button>
+
+<script>
+const RAW=`ごまっこ|f|1|1|1|R||||||||||g|1
+ぬか床ベビー|f|1|1|2||||||||||P@sh@1@@フーズを出すたび:体力+1|g|1
+味見|s|1|0|0||dd|1|1枚引く||||||F@hl@2@@自分リーダー2回復|g|2
+玄米ガード|f|2|2|2|W|hl|1|自分リーダー1回復|||||||g|1
+出汁っ子|f|2|1|3||||||||||P@hl@1@@フーズを出すたび:自分リーダー1回復|g|1
+オンタマドラゴン|f|2|1|2|W|hl|1|自分リーダー1回復||||||D@dl@1@@死亡時:敵リーダーに1ダメ|g|2
+ごま祭り|s|2|0|0||su|2|ごまっこを2体出す|||||||g|1
+わさび忍者|f|3|1|1|S|dh|1|攻撃力最大の敵に1ダメ||||||A@db@1@@攻撃時:敵1体の攻撃-1|g|3
+おでん聖女|f|3|1|3||||||||||E@hl@1@@ターン終了時:自分リーダー1回復^D@hl@1@@死亡時:自分リーダー1回復|g|2
+納豆ゾンビ|f|3|2|1||||||||||D@su@2@@死亡時:ごまっこを2体出す^E@sh@1@@ターン終了時:体力+1|g|3
+天ぷら侍|f|4|3|3||||||||||A@dl@1@@攻撃時:敵リーダーに1ダメ^D@dd@1@@死亡時:1枚引く|g|3
+ダシマキ|f|4|2|4||||||||||P@dd@1@@フーズを出すたび:1枚引く|g|4
+手毬寿司ラッシュ|s|5|0|0||su|3|ごまっこを3体出す||||||F@dd@1@@1枚引く^F@am@2@@ごまっこを2枚手札に加える|g|3
+スシガシラ|f|6|3|6||su|2|ごまっこを2体出す||||||P@bf@1@@フーズを出すたび:味方1体+1/+1|g|4
+オートロドラゴン|f|7|6|7|W|dd|1|1枚引く||||||F@hl@3@@F:自分リーダー3回復^P@bf@1@@フーズを出すたび:味方1体+1/+1|g|5
+懐石姫|f|8|2|8|W|dd|2|2枚引く||||||F@hl@5@@F:自分リーダー5回復|g|4
+おせち大将|f|9|6|6|W|su|3|ごまっこを3体出す||||||Q@mm@1@@自フーズが出るたび:敵1体-1/-1|g|5
+ハッピー大宴会|s|10|0|0||su|6|自陣をごまっこで埋める||||||F@dd@1@@1枚引く^F@ba@2@@味方全体+2/+2|g|4
+餃子兵|f|1|2|1||dl|1|敵リーダーに1ダメ|||||||r|1
+猫舌ニャーメン|f|1|1|1|S|||||||||D@zl@1@@死亡時:自リーダーに1ダメ|r|2
+ラー油ストライク|s|1|0|0||dl|2|敵リーダーに2ダメ|||||||r|1
+春巻きボーイ|f|2|3|1|S|zl|2|自分リーダーに2ダメ|||||||r|1
+焼売ダンサー|f|2|2|3||||||||||A@dl@1@@攻撃時:敵リーダーに1ダメ^E@mx@1@@ターン終了時:ランダムな位置に移動|r|1
+肉団子ボム|s|2|0|0||df|3|敵1体に3ダメ|||||||r|1
+麻婆ウルフ|f|3|4|1|S|||||||||E@zl@2@@ターン終了時:自分リーダーに2ダメ|r|2
+タンタンウィッチ|f|3|3|2||df|2|敵1体に2ダメ|||||||r|2
+激辛特攻隊長|f|3|3|1|S|dl|2|敵リーダーに2ダメ||||||F@zl@5@@F:自分リーダーに5ダメ^A@dl@1@@攻撃時:敵リーダーに1ダメ|r|5
+油ハネ|s|2|0|0||df|2|敵1体に2ダメ||||||F@dl@1@@敵リーダーに1ダメ|r|1
+炒飯剣士|f|4|3|3||||||||||A@dl@1@@攻撃時:敵リーダーに1ダメ^D@dl@2@@死亡時:敵リーダーに2ダメ|r|3
+小籠包ドラゴン|f|4|2|4||df|2|敵1体に2ダメ||||||F@dl@2@@F:敵リーダーに2ダメ|r|3
+花椒ショット|s|4|0|0||d2|3|敵2体に3ダメ||||||F@dl@2@@敵リーダーに2ダメ|r|3
+餃子将軍|f|5|4|4|R|dl|2|敵リーダーに2ダメ||||||A@dl@1@@攻撃時:敵リーダーに1ダメ|r|4
+火鍋炎竜|f|6|6|6||df|6|敵1体に6ダメ||||||F@zl@3@@F:自分リーダーに3ダメ|r|4
+中華鍋業火|s|7|0|0||dl|8|敵リーダーに6ダメ||||||F@zl@3@@自分リーダーに3ダメ|r|2
+北京ダックキング|f|9|8|6|R|dh|99|最強の敵1体破壊||||||A@dl@4@@攻撃時:敵リーダーに4ダメ|r|5
+満漢全席|s|10|0|0||dl|8|敵リーダーに8ダメ||||||F@dh@10@@最強の敵に10ダメ^F@zl@4@@自分リーダーに4ダメ|r|4
+ケチャップブースト|s|2|0|0||bf|2|味方1体+2/+2|||||||b|1
+コーンドッグ兵|f|1|2|1|R||||||||||b|1
+爆弾ポップコーン|f|2|2|1|R|||||||||D@dl@1@@死亡時:敵リーダーに1ダメ|b|2
+ナゲット斥候|f|2|2|2|RT||||||||||b|3
+ジャンクな呪い|s|2|0|0||db|2|敵1体の攻撃-2||||||F@df@1@@敵1体に1ダメ|b|1
+ステーキナイト|f|3|3|3|T||||||||||b|2
+コーラポップ|s|3|0|0||d3|3|敵3体それぞれに3ダメ、2ダメ、1ダメ|||||||b|4
+炭酸ボトルマン|f|4|4|4||da|1|敵全体に1ダメ|||||||b|2
+フライドチキン兵|f|4|4|2|RT||||||||||b|3
+ホットケーキゴーレム|f|4|3|5|W|||||||||H@sh@1@@被ダメ時:体力+1|b|1
+ピザ・カッター|f|5|5|3|T|cl|2|正面の敵全員に2ダメ||||||H@sa@1@@被ダメ時:攻撃+1|b|4
+ミートハンマー|s|5|0|0||dh|99|攻撃力最大の敵を1体破壊|||||||b|4
+ポップコーンテンペスト|s|4|0|0||dn|2|全体に2ダメ|||||||b|1
+BBQ番長|f|6|7|5|T|ab|1|ステーキナイトと全部のせを手札に加える|||||||b|3
+フライ魔人|f|6|5|4||da|2|敵全体に2ダメ|||||||b|2
+ミートローフ将軍|f|7|5|5|T|dh|99|攻撃力最大の敵を破壊|||||||b|5
+灼熱バーベキュー|s|8|0|0||da|4|敵全体に4ダメ||||||F@dl@3@@敵リーダーに3ダメ|b|2
+ジャンボ・ケバブ砲|f|9|3|3|T|da|2|敵全体に2ダメ||||||E@cl@3@@ターン終了時:正面の敵全員に3ダメ|b|4
+バーガージャイアント|f|10|6|9|WT|da|4|敵全体に4ダメ||||||F@dd@1@@F:1枚引く^D@da@3@@死亡時:敵全体に3ダメ|b|5
+前菜サラダ|s|1|0|0||pp|2|このターンPP+2|||||||y|3
+見習いパティシエ|f|1|1|2||||||||||S@sa@1@@特技を使うたび:攻撃+1|y|1
+エスプレッソ魔導士|f|2|2|2||as|1|特技を1枚手札に加える|||||||y|2
+酵母パン坊|f|2|1|3||||||||||T@pp@1@@ターン開始時:PP+1|y|3
+見習いグレープ|f|2|1|1||dd|1|1枚引く||||||S@sh@1@@特技を使うたび:体力+1|y|2
+チーズ賢者|f|3|1|4||||||||||S@dd@1@@特技を使うたび:1枚引く|y|2
+ワインペアリング|s|3|0|0||ba|1|味方全体+1/+1||||||F@dd@1@@1枚引く|y|1
+ソムリエの采配|s|3|0|0||dd|1|1枚引く||||||F@ac@1@@特技を1枚手札に加え、そのコストを-1|y|3
+バゲット騎兵|f|3|3|3|R|||||||||S@sa@1@@特技を使うたび:攻撃+1|y|2
+黒胡椒スナイプ|s|4|0|0||df|3|敵1体に3ダメ||||||F@dw@1@@敵全体の攻撃-1|y|2
+グラタンバースト|s|4|0|0||dl|3|敵リーダーに3ダメ||||||F@hl@3@@自分リーダー3回復|y|1
+ワイン伯爵|f|4|1|5||||||||||S@sf@1@@特技を使うたび:自身+1/+1|y|3
+クロワッサンナイト|f|5|3|5|R|as|1|特技を1枚手札に加える||||||S@sa@1@@特技を使うたび:攻撃+1|y|3
+ミセスティラミス|f|6|2|5||as|2|特技を2枚手札に加える||||||F@mp@1@@F:PP最大値+1|y|4
+岩塩ゴーレム|f|6|2|9|W|hl|3|自分リーダー3回復|||||||y|3
+灼熱ポワル|f|7|4|3||af|3|火力全開を3枚手札に加える||||||S@sf@1@@特技を使うたび:自身+1/+1|y|4
+レシピ大全|s|8|0|0||as|3|特技を3枚手札に加える||||||F@cd@2@@手札の全特技のコスト-2|y|5
+ミルフィーユ姫|f|9|3|9|W|as|2|特技を2枚手札に加える||||||S@df@3@@特技を使うたび:敵1体に3ダメ|y|4
+フルコース皇帝|f|10|3|10||||||||||S@ba@1@@特技を使うたび:味方全体+1/+1^C@th@0@@玉座にいる間:手札の全特技のコスト-2|y|5
+白飯ゴースト|f|2|1|3||||||||||D@rt@1@@死亡時:手札に戻る|g|2
+お重マダム|f|4|1|5||||||||||E@fa@1@@ターン終了時:正面の味方+1/+1|g|3
+手巻きレディ|f|5|3|3||||||||||F@am@1@@F:ごまっこを1枚手札に加える^P@su@1@@フーズを出すたび:ごまっこを1体出す|g|3
+ラー油チャージ|s|1|0|0||zl|3|自分リーダーに3ダメ||||||F@pp@3@@このターンPP+3|r|2
+天津リベンジャー|f|3|1|5||||||||||H@dl@2@@被ダメ時:敵リーダーに2ダメ|r|3
+酸辣湯バーサーカー|f|4|7|4||||||||||F@zl@3@@F:自分リーダーに3ダメ^C@hm@15@@自分リーダーのHPが15以上の間:攻撃-3|r|2
+ホットドッグスナイパー|f|4|3|3||rb|2|敵の後列全体に2ダメ|||||||b|1
+空爆ポテト|s|4|0|0||rf|3|敵の前列全体に3ダメ||||||F@rb@1@@敵の後列全体に1ダメ|b|3
+ロングサンドタンク|f|7|4|5|T|||||||||A@cl@3@@攻撃時:正面の敵全員に3ダメ|b|3
+ショコラウィザード|f|3|3|2||||||||||S@dl@1@@特技を使うたび:敵リーダーに1ダメ|y|2
+優しきデザートワゴン|f|5|1|7||||||||||E@ac@2@@ターン終了時:特技を1枚手札に加え、そのコスト-2|y|4
+ワイン樽ガーディアン|f|5|3|3|W|||||||||D@mp@1@@死亡時:PP最大値+1|y|3
+御膳ノイド|f|3|1|3||hh|3|手札の枚数ぶん自分リーダーを回復(最大3)|||||||g|1
+おでん鍋仕込み|s|2|0|0||od|5|このターンに出したフーズ1体につき1枚引く(最大5)|||||||g|2
+出汁ミスト|s|2|0|0||st|2|敵フーズ2体は次の相手ターン攻撃できない|||||||g|2
+大福ベヒーモス|f|5|3|5||||||||||E@ed@2@@ターン終了時:自分のHPが最大なら2枚引く|g|2
+火力全開|s|0|0|0||pf|0|残りPPをすべて使い、使った量だけ敵1体にダメージ|||||||r|3
+デスソース一気飲み|s|2|0|0||dx|3|自分リーダーに3ダメ。手札の枚数ぶん敵リーダーにダメージ|||||||r|2
+ダブルチーズオーク|f|4|3|3|T|bh|2|手札が3枚以下なら+2/+2|||||||b|2
+全部のせ|s|5|0|0||dn|1|場のフーズ1体につき全体に1ダメ|||||||b|3
+ストローワイバーン|f|5|4|2|T|cs|2|敵の左列と右列の全員に2ダメ|||||||b|3
+ドリンクバーキマイラ|f|4|3|1||dr|2|手札を2枚ランダムに捨てて4枚引く|||||||b|3
+熟成ワインミミック|f|2|2|1||||||||||E@ep@0@@ターン終了時:残りPPぶん体力+|y|1
+ブルギニョンドラゴン|f|6|4|3||a8|3|PP最大値が8以上なら特技を3枚手札に加える||||||F@sp@1@@F:手札の特技の枚数分+0/+1|y|3
+アフタヌーンティー|s|3|0|0||ts|1|手札の特技の枚数ぶん味方全体に+1/+0|||||||y|2
+フォアグラグラトニー|f|5|0|2|R|sm|0|攻撃力をPP最大値にする(出したときの数字で固定)|||||||y|2
+ラー油サラマンダー|f|4|2|2||zl|1|自分リーダーに1ダメ||||||L@dl@2@@自ターン中に自分リーダーがダメージを受けるたび:敵リーダーに2ダメ|r|3
+唐辛子ゴブリン|f|2|2|2||||||||||L@sa@1@@自ターン中に自分リーダーがダメージを受けるたび:このフーズの攻撃+1|r|1
+麻辣スライム|f|4|2|3||||||||||L@df@2@@自ターン中に自分リーダーがダメージを受けるたび:敵フーズ1体に2ダメ|r|3
+ところてんスライム|f|3|1|3||||||||||M@dd@1@@自分リーダーがダメージを受けるたび:1枚引く|g|2
+麻婆オーガ|f|3|3|2||||||||||C@lo@10@@自分リーダーのHPが10以下の間:攻撃+3と疾走|r|2
+おむすびタイタン|f|4|3|4||||||||||C@hi@20@@自分リーダーのHPが20以上の間:体力+3と守護|g|3
+熟成チーズドレイク|f|4|2|2||dq|0|敵1体にPP最大値の半分ダメ（切り上げ）||||||C@pp@8@@PP最大値が8以上の間:+2/+2|y|4
+ナゲットサイクロプス|f|3|2|3||||||||||C@hd@3@@手札が3枚以下の間:攻撃+2と貫通|b|2
+ピクルスバイパー|f|2|2|2||py|1|敵1体を毒にする|||||||b|3
+ガンボゴースト|f|4|3|5||||||||||D@pr@1@@死亡時:ランダムな敵1体を毒にする|b|2
+ブルーチーズゾンビ|f|5|5|4||pc|1|毒状態の敵の数ぶん+1/+1|||||||b|1
+ポイズン・ポップコーン|s|4|0|0||pa|1|敵フーズ全体を毒にする|||||||b|2
+ビストロゴブリン|f|3|1|2||ch|1|①1枚引く②+2/+2|||||||y|3
+バイキングソーセージ|f|4|5|3||||||||||A@ch@2@@攻撃時:①+3/+0②敵1体に5ダメ|y|2
+フルコースミノタウロス|f|7|5|8||ch|3|①敵1体に4ダメ②他の味方全体+2/+2③2枚引く|||||||y|4
+ロシアンルーレットペッパー|f|3|3|2||rc|4|ランダムで①敵1体に3ダメ②他の味方全体+1/+1|||||||y|1
+スモーガスボード|s|3|0|0||ca|1|このターン中、選択効果をすべて発動する||||||F@dd@1@@1枚引く|y|3
+朝採れキューガッパ|f|2|2|2||||||||||F@sf@2@N@[新鮮]F:+2/+2^F@dc@1@@F:手札1枚(ランダム)を捨てて1枚引く|g|2
+直送マグランナー|f|3|4|3|s|||||||||A@dd@1@N@[新鮮]攻撃時:1枚引く|g|3
+朝市白菜ガメ|f|3|3|4|W|||||||||Z@zd@0@N@[新鮮]このフーズが受けるダメージを0にする|g|2
+目利き寿司ミーミル|f|5|5|5||fn|1|手札の新鮮なカード1枚につき+1/+1||||||F@fd@3@@F:手札の新鮮なカード1枚につきランダムな敵1体に3ダメ|g|4
+朝市競り|s|2|0|0||fh|1|手札のカードをすべて新鮮にする||||||F@dd@1@@1枚引く|g|3
+フリッジガーディアン|f|5|3|6|W|sn|1|敵1体は次の相手ターン攻撃できない||||||Z@kf@0@@前列にいる間、あなたの手札と場の新鮮を保つ|g|3
+パオズスライム|f|2|2|2||||||||||D@mq@1@@死亡時:敵1体をランダムな位置に移動|r|2
+チャーハンゴーレム|f|3|3|3||mb|1|敵1体を後列に移動|||||||r|1
+飲茶キョンシー|f|3|2|3||mv|1|味方1体を好きな位置に移動させる|||||||r|2
+エビチリ・ダンサー|f|2|1|2||||||||||V@sa@1@@フーズが移動するたび:+1/+0|r|3
+八宝菜ヒドラ|f|5|3|5||mh|1|敵1体を好きな位置に移動||||||V@dl@1@@フーズが移動するたび:敵リーダーに1ダメ|r|3
+回転テーブル|s|3|0|0||mc|1|全フーズを時計回りに移動|||||||r|3
+ピチイクラ|f|3|2|2||hr|2|手札を2枚まで選び山札に戻し、同じ数枚引く|||||||g|2
+バオシロガシラ|f|3|3|3||hd|1|手札を1枚選び捨てる||||||E@bz@5@@ターン終了時:正面の後列の敵に5ダメ|r|2
+トッピングベア|f|2|2|1||hb|1|手札のフーズを1枚選び+1/+1|||||||b|2
+アミューズ・ブーシュ|s|3|0|0||hp|1|手札のコスト3以下のフーズを選び場に出す|||||||y|3
+活気トビウオ|f|1|2|1|s|nd|1|次の自分のターン開始時に1枚引く|||||||g|1
+チーユ|s|1|0|0||cy|1|フーズ1体の前後を移動（前後に2体いるときは入れ替える）|||||||r|2
+シュガーケーキ|f|3|4|3|X|||||||||T@sf@2@@ターン開始時:+2/+2|b|2
+神域ロマネ・コンティ|f|15|15|15||xm|10|相手のPP最大値を-10する|||||||y|5
+てっちりアーマー|s|1|0|0||gy|1|味方1体に頑丈を与える|||||||g|1
+白銀てっさ将軍|f|9|5|7|G|||||||||F@pz@1@N@[新鮮]F:敵全員を猛毒にする^F@ar@1@@F:てっちりアーマーを手札に加える|g|4
+金華朱雀|f|8|8|8|S|xs|4|自分のPP最大値-4|||||||r|4
+アボカドモアイ|f|6|3|3|W|rw|1|横1列にアボカドモアイを出す||||||K@pc@1@@毒フーズ1体につきコスト-1|b|3
+メガトンマッケンチーズ|f|8|4|7|T|py|1|敵1体を毒にする||||||F@pe@1@@F:毒状態のフーズを全て1/1にする|b|4
+キャビアテンダント|f|8|1|1|W|rq|2|レア4以上のフーズをコスト-5して2枚手札に加える|||||||y|4`;
+const TOK=new Set(['てっちりアーマー']);
+const C=RAW.split('\n').map((l,i)=>{const[n,t,c,a,h,k,f,v,x,tr,tf,tv,cd,tx,ex,col,rar]=l.split('|');const ts=[];if(tr&&tf)ts.push({tr,tf,tv:+tv,cd,tx});(ex||'').split('^').filter(Boolean).forEach(z=>{const[r,g,w,q,y]=z.split('@');ts.push({tr:r,tf:g,tv:+w,cd:q,tx:y})});return{id:i,n,t,c:+c,a:+a,h:+h,k,f,v:+v,x,ts,col,rar:+rar||1,tok:TOK.has(n)}});
+const $=s=>document.querySelector(s),sl=ms=>new Promise(r=>setTimeout(r,ms)),rnd=a=>a[Math.floor(Math.random()*a.length)];
+const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const KW={G:'頑丈',X:'毒',W:'守護',R:'突進',S:'疾走',T:'貫通',w:'[新鮮]守護',r:'[新鮮]突進',s:'[新鮮]疾走',t:'[新鮮]貫通'};
+const hasFresh=c=>/[a-z]/.test(c.k||'')||(c.ts||[]).some(t=>t.cd=='N');
+const dparts=c=>[[...c.k].map(x=>KW[x]).join(' '),c.x?(c.t=='f'&&c.f?'F:':'')+c.x:'',...(c.ts||[]).map(t=>t.tx)].filter(Boolean);const desc=c=>dparts(c).join(' / '),descH=c=>dparts(c).join('<br>');
+const KC={g:'#3a9d5d',r:'#d94a3a',b:'#3b82f6',y:'#e0a800'},IC={g:'🍣',r:'🥟',b:'🍔',y:'🥐'};let flt='';
+let cnt=C.map(()=>0),G=null;
+
+// --- 色指定オート構築 ---
+// 選んだ色だけのプールから、色ごとの目標カーブに沿って30枚を組む。
+// ★5は1枚・★4は2枚まで（足りなければ3枚まで緩和）、特技は10枚まで、複数色は枚数が偏らないよう重み付け。
+const CURVE={g:[2,5,6,5,4,3,3,2],r:[3,6,6,5,4,3,2,1],b:[2,4,6,5,4,4,3,2],y:[1,4,5,5,4,4,4,3]}; // コスト1〜8+の目標枚数（各30）
+function autoColors(cols){
+  cols=[...cols];if(!cols.length)cols=['g','r','b','y'];
+  const k=cols.length,pool=C.filter(c=>cols.includes(c.col)&&!c.tok);
+  const raw=[...Array(8)].map((_,i)=>cols.reduce((a,c)=>a+CURVE[c][i],0)/k),tgt=raw.map(Math.floor);
+  raw.map((v,i)=>({i,f:v-Math.floor(v)})).sort((a,b)=>b.f-a.f).slice(0,30-tgt.reduce((a,b)=>a+b,0)).forEach(x=>tgt[x.i]++);
+  const bk=c=>Math.max(0,Math.min(c.c,8)-1);
+  let r;
+  for(const strict of[true,false]){
+    r=C.map(()=>0);const cc={},need=tgt.slice();let n=0,sp=0;
+    const cap=c=>strict?(c.rar>=5?1:c.rar==4?2:3):3;
+    const cand=b=>pool.filter(c=>r[c.id]<cap(c)&&(b==null||bk(c)==b)&&!(c.t=='s'&&sp>=10));
+    const wt=c=>{let x=1+.12*(c.rar-1);x*=[1,.6,.35][Math.min(r[c.id],2)];if(k>1)x*=Math.max(.1,1.3-(cc[c.col]||0)/(30/k));if(c.t=='s')x*=.7;return x};
+    while(n<30){
+      const bs=need.map((v,i)=>({v,i})).filter(x=>x.v>0&&cand(x.i).length);
+      let list;
+      if(bs.length){const m=Math.max(...bs.map(x=>x.v));list=cand(rnd(bs.filter(x=>x.v==m)).i)}else list=cand(null);
+      if(!list.length)break;
+      const ws=list.map(wt);let t=Math.random()*ws.reduce((a,b)=>a+b,0),c=list[list.length-1];
+      for(let i=0;i<list.length;i++){t-=ws[i];if(t<=0){c=list[i];break}}
+      r[c.id]++;n++;cc[c.col]=(cc[c.col]||0)+1;if(c.t=='s')sp++;need[bk(c)]=Math.max(0,need[bk(c)]-1);
+    }
+    if(n>=30)break;
+  }
+  return r;
+}
+const acSel=new Set();
+const ccSel=new Set(); // 対戦設定のCPUデッキ色（空＝おまかせ）
+// おまかせ: 7割は2色、3割は単色（ランダムな色）
+function omakase(){const a=shuf(['g','r','b','y']);return Math.random()<.7?a.slice(0,2):a.slice(0,1)}
+const tot=()=>cnt.reduce((a,b)=>a+b,0);
+
+// --- タブ切り替え制御 ---
+$('#navTabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+document.querySelectorAll('#navTabs button').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+b.classList.add('active');$(`#${b.dataset.tab}`).classList.add('active')};
+
+function bld(){$('#pool').innerHTML=C.filter(c=>!c.tok&&(!flt||c.col==flt)).sort((a,b)=>'grby'.indexOf(a.col)-'grby'.indexOf(b.col)||a.c-b.c).map(c=>`<div class="c ${c.t=='s'?'sp':'fd'} r${c.rar} ${cnt[c.id]?'in':''}" data-b="${c.id}" style="--k:${KC[c.col]}"><em>${c.c}</em><b>${c.n}</b><div class="st">${'★'.repeat(c.rar)}</div><small>${descH(c)}</small><span>${c.t=='f'?c.a+'/'+c.h:'特技'}</span><u>×${cnt[c.id]}</u>${cnt[c.id]?`<button data-b="-${c.id}">−</button>`:''}</div>`).join('');
+const isReady=tot()==30;
+$('#tot').textContent=tot()+'/30';
+$('#go').disabled=!isReady;if(typeof updateLobby=='function')updateLobby();
+$('#deckWarn').style.display=isReady?'none':'inline';
+
+const cb=[...Array(8)].map(()=>[0,0]);let fo=0,sp=0,sm=0;const cc={};C.forEach(c=>{const n=cnt[c.id];if(!n)return;cc[c.col]=(cc[c.col]||0)+n;cb[Math.max(0,Math.min(c.c,8)-1)][c.t=='f'?0:1]+=n;c.t=='f'?fo+=n:sp+=n;sm+=c.c*n});const mx=Math.max(6,...cb.map(x=>x[0]+x[1]));
+$('#cv').innerHTML='<div class="cvb">'+cb.map((x,i)=>`<div class="cvc"><span class="n">${x[0]+x[1]||''}</span><div class="bar"><div style="height:${x[1]/mx*100}%;background:#c77d00"></div><div style="height:${x[0]/mx*100}%;background:var(--ac)"></div></div><span class="x">${i==7?'8+':i==0?'0-1':i+1}</span></div>`).join('')+`</div><small>マナカーブ <span style="color:var(--ac)">■</span>フーズ ${fo} <span style="color:#c77d00">■</span>特技 ${sp} 平均コスト ${tot()?(sm/tot()).toFixed(1):'-'} ${[...'grby'].map(k=>IC[k]+(cc[k]||0)).join(' ')}</small>`}
+
+$('#tabBld').addEventListener('click',e=>{const f=e.target.closest('[data-f]');if(f){flt=f.dataset.f;bld();return}const p=e.target.closest('[data-p]');if(p){cnt=C.map(()=>0);bld();return}const d=e.target.closest('[data-b]');if(!d)return;const v=d.dataset.b,i=Math.abs(+v);if(v[0]=='-')cnt[i]--;else if(cnt[i]<3&&tot()<30)cnt[i]++;bld()});
+
+$('#acRow').addEventListener('click',e=>{
+  const t=e.target.closest('[data-ac]');
+  if(t){const c=t.dataset.ac;if(acSel.has(c)){acSel.delete(c);t.classList.remove('on')}else{acSel.add(c);t.classList.add('on')}return}
+  if(e.target.closest('#acGo')){cnt=autoColors(acSel);bld()}
+});
+$('#ccRow').addEventListener('click',e=>{
+  const t=e.target.closest('[data-cc]');
+  if(t){const c=t.dataset.cc;if(ccSel.has(c)){ccSel.delete(c);t.classList.remove('on')}else{ccSel.add(c);t.classList.add('on')}}
+  else if(!e.target.closest('#ccAuto'))return;
+  else{ccSel.clear();document.querySelectorAll('#ccRow [data-cc]').forEach(b=>b.classList.remove('on'))}
+  $('#ccAuto').classList.toggle('on',!ccSel.size);
+});
+$('#go').onclick=()=>start();
+$('#ovx').onclick=()=>{$('#ov').style.display='none';$('#ovre').style.display='block'};
+$('#ovre').onclick=()=>{if(G&&G.online){$('#ov').style.display='flex';$('#ovre').style.display='none'}else $('#again').click()};
+$('#again').onclick=()=>{
+  $('#ov').style.display='none';$('#ovre').style.display='none';
+  $('#gm').style.display='none';
+  $('#navTabs').style.display='flex';
+  document.querySelector(G&&G.online?'[data-tab="tabOnline"]':'[data-tab="tabSetup"]').click();
+};
+$('#surrender').onclick=()=>fin('🏳️ 降参しました');
+
+const mk=()=>({hp:25,maxHp:25,deck:[],hand:[],board:[],pp:0,mpp:0,cap:10,ep:3,ev:false});
+const opp=s=>s===G.p?G.e:G.p;
+const HC=id=>!(G&&G.online)&&$(id).checked;
+const unit=(c,pos,isCpu=false)=>({
+  pos,d:descH(c),n:c.n,col:c.col,ts:c.ts,
+  a:c.a + (isCpu && HC('#hCpuStat') ? 1 : 0),
+  h:c.h + (isCpu && HC('#hCpuStat') ? 1 : 0),
+  cost:c.c,w:c.k.includes('W')||(!!c.fr&&c.k.includes('w')),t:c.k.includes('T')||(!!c.fr&&c.k.includes('t')),
+  r:c.k.includes('R') || (!!c.fr&&c.k.includes('r')) || (isCpu && HC('#hCpuRush')),
+  s:c.k.includes('S')||(!!c.fr&&c.k.includes('s')),fr:!!c.fr,fx:hasFresh(c),fk:[...c.k].filter(x=>/[a-z]/.test(x)),zd:(c.ts||[]).some(t=>t.tr=='Z'&&t.tf=='zd'),sick:true,done:false,evo:false,psn:c.k.includes('X')?1:0,ty:c.k.includes('G')
+});
+
+let lgRun=false,lgGrp=0,lgHead=null,lgRes=null,lgFc=null,lgCause=null;
+const ng=()=>{lgGrp++;lgHead=null;lgRes=null};
+const cLog=t=>String(t).replace(/^(あなた|CPU|相手)：/,'').replace(/\s*<small>(.*?)<\/small>/g,' $1').trim();
+const nowHtml=(c,t)=>!c?t:(c+t).replace(/<[^>]*>/g,'').length>26?`${c}<br>→ ${t}`:`${c} → ${t}`;
+async function pumpLg(){
+  if(lgRun)return;lgRun=true;
+  try{
+    while(G&&G.q&&G.q.length){
+      const it=G.q.shift();
+      const html=nowHtml(it.c,cLog(it.t));G.nb=[html];
+      const nw=$('#now');if(nw)nw.innerHTML=html;
+      const vl=(G.vl=G.vl||[]);vl.push(it.t);
+      const l=$('#log');if(l){l.innerHTML=vl.slice(-30).join('<br>');l.scrollTop=1e9}
+      await sl(G.q.length>10?150:500)
+    }
+  }finally{lgRun=false}
+}
+const lgIdle=async()=>{while(lgRun)await sl(30)};
+const lg=(t,k)=>{const tx=cLog(t);let c=null;if(k!='r')lgCause=tx;if(k=='r')c=lgRes;else if(k=='f'){c=lgFc;lgHead=lgRes=tx}else if(k=='x'){c=lgHead;lgRes=tx}else{c=lgHead;lgHead=lgRes=tx}if(G.online&&G.cur=='p'&&G.outLg)G.outLg.push([t,k||'']);G.log.push(t);(G.q=G.q||[]).push({t,g:lgGrp,c});pumpLg()};
+
+const START_HAND_P=3, START_HAND_E=4; // 先攻3枚/後攻4枚（シャドバ準拠）。CPUハンデ手札増は+2
+function start(){
+  const p=mk(),e=mk();
+  
+  if($('#hCpuHp').checked){ e.maxHp += 10; e.hp += 10; }
+  if($('#hCpuPp').checked){ e.mpp = 1; e.pp = 1; }
+
+  const ids=[];cnt.forEach((n,i)=>{for(let k=0;k<n;k++)ids.push(i)});p.deck=shuf(ids).map(i=>C[i]);
+  const ecols=ccSel.size?[...ccSel]:omakase();const pr=autoColors(ecols);const eid=[];pr.forEach((n,i)=>{for(let k=0;k<n;k++)eid.push(i)});e.deck=shuf(eid).map(i=>C[i]);
+
+  G={p,e,turn:0,over:false,sel:null,evo:false,log:[],cur:'p',busy:false,ev:[],dq:[],nb:[],lt:0,mulligan:true,mulSel:new Set()};
+  
+  const eHand = START_HAND_E + ($('#hCpuHand').checked ? 2 : 0);
+  draw(p, START_HAND_P);
+  draw(e, eHand);
+  lg(`開始手札: あなた${START_HAND_P}枚 / CPU${eHand}枚　CPUデッキ: ${ecols.map(k=>IC[k]).join('')}`);
+
+  // CPUのマリガン処理（7コスト以上:確実、4〜6コスト:50%、3以下:保持）
+  cpuMulligan(e);
+
+  $('#navTabs').style.display='none';
+  document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+  $('#gm').style.display='';
+  
+  lg('🃏 マリガンフェーズ: 交換したいカードを選んで確定（選ばなければキープ）');
+  render();
+}
+
+// 確実に戻したカードが来ないようにするマリガン（引き直し）処理
+function replaceHandCards(s, indexesToReturn){
+  if(!indexesToReturn.length) return;
+  
+  // 1. 戻すカードを一時避難
+  const returnedCards = [];
+  indexesToReturn.sort((a,b)=>b-a).forEach(idx => {
+    returnedCards.push(s.hand.splice(idx, 1)[0]);
+  });
+  
+  // 2. 山札から新しいカードを引く（引いたばかりのカードは手札に入り、避難カードは含まれない）
+  draw(s, indexesToReturn.length);
+  
+  // 3. 避難させていたカードを山札に戻して再シャッフル
+  s.deck.push(...returnedCards);
+  s.deck = shuf(s.deck);
+}
+
+function cpuMulligan(e){
+  const toReturn = [];
+  e.hand.forEach((c, idx) => {
+    if(c.c >= 7){
+      toReturn.push(idx);
+    } else if(c.c >= 4 && c.c <= 6){
+      if(Math.random() < 0.5) toReturn.push(idx);
+    }
+  });
+  // 下限: 残る手札に3コスト以下が1枚もなければ、戻す予定の4コストを1枚キープ
+  const keepsEarly = e.hand.some((c, idx) => c.c <= 3 && !toReturn.includes(idx));
+  if(!keepsEarly){
+    const k = toReturn.find(idx => e.hand[idx].c === 4);
+    if(k !== undefined) toReturn.splice(toReturn.indexOf(k), 1);
+  }
+  if(toReturn.length > 0){
+    replaceHandCards(e, toReturn);
+  }
+}
+
+function confirmMulligan(){
+  if(!G || !G.mulligan) return;
+  const p = G.p;
+  const toReturn = Array.from(G.mulSel);
+  
+  if(toReturn.length > 0){
+    replaceHandCards(p, toReturn);
+    lg(`あなた: ${toReturn.length}枚のカードを引き直しました`);
+  } else {
+    lg(`あなた: 手札をキープしました`);
+  }
+  
+  G.mulligan = false;
+  G.mulSel.clear();
+  if(G.online){onMulDone();return}
+  begin(p);
+}
+
+function draw(s,n){for(let i=0;i<n;i++){if(!s.deck.length){fin(s===G.p?'💀 デッキ切れ…敗北':'🎉 '+OPN()+'がデッキ切れ！勝利');return}const c=s.deck.pop();if(G.online&&s===G.e)G.xd=(G.xd||0)+1;if(s.hand.length<HMAX)s.hand.push(hasFresh(c)?{...c,fr:true}:c)}}
+function fin(t){if(G.over)return;G.over=true;G.result=t.includes('勝利')?'w':'l';sfx(t.includes('勝利')?'win':'lose');$('#ovt').textContent=t;$('#ov').style.display='flex';const on=!!G.online;$('#rematch').style.display=on?'':'none';$('#rmst').textContent='';$('#again').textContent=on?'対人画面へ戻る':'対戦設定へ戻る';$('#ovre').textContent=on?'結果・再戦':'対戦設定へ戻る';if(on)netFin()}
+const AU={lo:{p:(s,t)=>s.hp<=t,a:3,h:0,k:'s'},hi:{p:(s,t)=>s.hp>=t,a:0,h:3,k:'w'},pp:{p:(s,t)=>s.mpp>=t,a:2,h:2,k:''},hd:{p:(s,t)=>s.hand.length<=t,a:2,h:0,k:'t'},hm:{p:(s,t)=>s.hp>=t,a:-3,h:0,k:''}};
+function aura(s){s.board.forEach(u=>{const t=(u.ts||[]).find(x=>x.tr=='C');if(!t)return;const d=AU[t.tf];if(!d)return;const on=d.p(s,t.tv);if(on&&!u.cOn){u.cOn=true;u.a+=d.a;u.h+=d.h;if(d.k){u.cx=!!u[d.k];u[d.k]=true}ev('up',s,u.pos,'+'+d.a+'/+'+d.h)}else if(!on&&u.cOn){u.cOn=false;u.a-=d.a;u.h=Math.max(1,u.h-d.h);if(d.k&&!u.cx)u[d.k]=false}})}
+function chk(){flushH();[G.p,G.e].forEach(aura);for(const s of[G.p,G.e]){const dead=s.board.filter(u=>u.h<=0);s.board=s.board.filter(u=>u.h>0);dead.forEach(u=>{G.dq.push([s,u]);ev('die',s,u.pos,u.n)})}const pd=G.p.hp<=0,ed=G.e.hp<=0;if(pd&&ed){const w=G.src||(G.cur=='p'?G.p:G.e);fin(w===G.p?'🎉 勝利！':'😵 敗北…')}else if(pd)fin('😵 敗北…');else if(ed)fin('🎉 勝利！')}
+function begin(s){if(G.online&&s===G.e){onHandoff();return}G.p.allCh=G.e.allCh=false;ng();G.cur=s===G.p?'p':'e';if(G.online){G.xd=0;G.xc=0}s.mpp=Math.min(s.cap||10,s.mpp+1);s.pp=s.mpp;s.ev=false;s.sc=0;s.board.forEach(u=>{u.sick=false;u.done=false;u.stunned=false;if(u.stun){u.done=true;u.stunned=true;u.stun=false}});if(!(G.turn==0))draw(s,1);if(s.nd){draw(s,s.nd);s.nd=0}G.turn++;G.sel=null;G.evo=false;G.pend=null;G.tgt=null;G.choices=[];lg(`— ${s===G.p?'あなた':OPN()}のターン (PP${s.pp}) —`);s.board.slice().forEach(u=>trig(s,u,'T'));[G.p,G.e].forEach(aura);render();if(s===G.e&&!G.over&&!G.online)cpu()}
+const ready=u=>!u.done&&!u.stunned&&(!u.sick||u.s||u.r),face=u=>!u.sick||u.s;
+const vis=(o,x)=>x.pos<3||!o.board.some(y=>y.pos==x.pos-3);
+const free=s=>[0,1,2,3,4,5].filter(i=>!s.board.some(u=>u.pos==i));
+const cols=s=>new Set(s.board.map(x=>x.pos%3)).size;
+function targets(s,u){const o=opp(s),ex=o.board.filter(x=>vis(o,x)),w=ex.filter(x=>x.w&&x.pos<3);if(w.length)return w;const t=ex.slice();if(face(u)&&cols(o)<3)t.push('L');return t}
+function cpos(s,c){const cv=new Set(s.board.map(u=>u.pos%3)),tank=c.k.includes('W')||c.h>c.a,tf=(c.ts||[]).map(t=>t.tf),back=tf.includes('fa'),thr=tf.includes('th');const clv=Math.max(0,c.f=='cl'?c.v:0,...(c.ts||[]).filter(t=>(t.tr=='F'||t.tr=='E')&&t.tf=='cl').map(t=>t.tv)),fo=opp(s).board;return free(s).map(p=>{let r=Math.random();if(clv>0)r+=fo.filter(u=>u.pos%3==p%3).reduce((a,u)=>a+(u.h<=clv?val(u)+4:Math.min(clv,u.h)*.5),0);if(!cv.has(p%3))r+=3;if(p<3)r+=tank?2:-.5;else r+=s.board.some(u=>u.pos==p-3)?(tank?0:2):-3;if(back)r+=p>=3?(s.board.some(u=>u.pos==p-3)?5:3):-6;if(thr)r+=p==4?6:0;return{p,r}}).sort((a,b)=>b.r-a.r)[0].p}
+
+const canEvo=s=>s.ep>0&&!s.ev&&s.mpp>=(s===G.p?5:4);
+
+function evolve(s,u){ng();s.ep--;s.ev=true;buff(s,u,2,2);u.evo=true;if(u.sick&&!u.stunned)u.r=true;lg(`${u.n}が進化！(+2/+2)`)}
+let ac,muted=false;
+const sd=s=>s===G.p?'p':'e';
+const ev=(k,s,pos,v)=>{const a=[k,typeof s=='string'?s:sd(s),pos,v];G.ev.push(a);if(G.online&&G.cur=='p'&&G.outEv)G.outEv.push(a)};
+const hurt=(o,x,v)=>{if(v>0&&x.zd&&x.fr){ev('up',o,x.pos,'🌿0');return}if(v>0&&x.ty)v=Math.ceil(v/2);x.h-=v;if(v>0){ev('hit',o,x.pos,'-'+v);if(o===G.p||o===G.e)(G.hq=G.hq||[]).push([o,x])}};
+function flushH(){const q=G.hq||[];while(q.length){const[o,x]=q.shift();if(!G.over&&x.h>0&&o.board.includes(x))trig(o,x,'H')}}
+const lhit=(o,v)=>{o.hp-=v;if(v>0){ev('hit',o,-1,'-'+v);if(!G.over){const mine=(G.cur=='p')===(o===G.p);o.board.slice().forEach(u=>{trig(o,u,'M');if(mine)trig(o,u,'L')})}}};
+
+const lheal=(s,v)=>{const b=s.hp;s.hp=Math.min(s.maxHp,s.hp+v);if(s.hp>b)ev('heal',s,-1,'+'+(s.hp-b))};
+
+const buff=(s,x,a,h)=>{x.a+=a;x.h+=h;ev('up',s,x.pos,'+'+a+'/+'+h)};
+const nerf=(o,x,v)=>{const q=Math.min(v,x.a);x.a-=q;if(q)ev('down',o,x.pos,'-'+q)};
+function tone(t,f0,f1,d,v=.15,at=0){if(!ac||muted)return;const n=ac.currentTime+at,o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.setValueAtTime(f0,n);o.frequency.exponentialRampToValueAtTime(f1,n+d);g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g);g.connect(ac.destination);o.start(n);o.stop(n+d)}
+function noise(d,v=.2,at=0){if(!ac||muted)return;const n=ac.currentTime+at,b=ac.createBuffer(1,Math.floor(ac.sampleRate*d),ac.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*(1-i/a.length);const s=ac.createBufferSource(),g=ac.createGain();g.gain.value=v;s.buffer=b;s.connect(g);g.connect(ac.destination);s.start(n)}
+const SE={spawn:()=>tone('sine',330,880,.18,.15),cast:()=>{tone('sine',700,1400,.2,.12);tone('triangle',1050,1050,.15,.08,.08)},atk:()=>{tone('sawtooth',600,120,.12,.1);noise(.08,.08)},hit:()=>{noise(.16,.25);tone('square',180,50,.16,.12)},die:()=>{tone('sawtooth',320,40,.5,.12);noise(.35,.2)},heal:()=>{tone('sine',523,523,.14,.14);tone('sine',784,784,.28,.14,.12)},up:()=>[440,554,659].forEach((f,i)=>tone('triangle',f,f,.12,.12,i*.07)),down:()=>tone('triangle',360,140,.35,.14),win:()=>[523,659,784,1047].forEach((f,i)=>tone('triangle',f,f,.25,.15,i*.14)),lose:()=>[392,330,262,196].forEach((f,i)=>tone('sawtooth',f,f,.3,.1,i*.2))};
+const sfx=k=>SE[k]&&SE[k]();
+document.addEventListener('click',()=>{try{if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state=='suspended')ac.resume()}catch(e){}},true);
+function fxPlay(){netPing();const Q=G.ev;G.ev=[];const seen=new Set();Q.forEach(([k,side,pos,v],i)=>setTimeout(()=>{if(!seen.has(k)){seen.add(k);sfx(k)}if(k=='cast')return;const el=pos>=0?document.querySelector(`[data-s="${side}${pos}"]`):$(side=='p'?'#pl':'#el');if(!el)return;const add=c=>{el.classList.add(c);setTimeout(()=>el.classList.remove(c),1000)};
+if(k=='die'){const g=document.createElement('div');g.className='gh';g.textContent='💥'+v;el.appendChild(g);setTimeout(()=>g.remove(),1100);return}
+add(k=='atk'?'a-atk-'+side:'a-'+k);
+if(v&&'hit heal up down'.includes(k)){const q=document.createElement('div');q.className='pop '+k;q.textContent=v;el.appendChild(q);setTimeout(()=>q.remove(),1200)}},Math.min(i,6)*140))}
+async function settle(){if(!G||G.settling||!G.dq.length)return;G.settling=true;const b=G.busy,ak=G.ask;G.busy=true;render();
+while(G.dq.length&&!G.over){await sl(1000);const q=G.dq.splice(0);if(q.length&&!G.over){const nm=q.filter(x=>!x[1].rep).map(x=>x[1].n);if(nm.length){ng();lg((nm.length>1?nm.slice(0,-1).join('、')+'と'+nm[nm.length-1]:nm[0])+'が倒れた')}}for(const[s,u]of q){if(G.over)break;G.ask=G.cur=='p';G.src=s;ng();lgHead=lgRes=u.dmsg||`${u.n}が倒れた`;try{trig(s,u,'D');chk()}finally{G.ask=ak;G.src=null}render();await sl(900)}}
+G.busy=b;G.settling=false;askNext();render();if(G.dq.length&&!G.over)settle()}
+function trig(s,u,type,pick){if(type=='E'||type=='T')ng();(u.ts||[]).forEach(t=>{if(t.tr!=type)return;if(t.cd=='N'&&!u.fr)return;if(type!='D'&&u.h<=0)return;if((t.cd=='F'&&u.pos>=3)||(t.cd=='B'&&u.pos<3))return;lg(`<b>${u.n}</b> <small>${t.tx}</small>`,type=='F'?'f':'HMLPQSV'.includes(type)?'x':undefined);fx(s,{f:t.tf,v:t.tv},u,pick)})}
+const cst=(s,c)=>{const k=(c.ts||[]).find(t=>t.tr=='K'&&t.tf=='pc'),d=k?k.tv*[...G.p.board,...G.e.board].filter(u=>u.h>0&&u.psn>0).length:0;return c.t!='s'?Math.max(0,c.c-d):cst0(s,c)};
+const cst0=(s,c)=>Math.max(0,c.c-(s.board.some(u=>u.pos==4&&u.h>0&&(u.ts||[]).some(t=>t.tr=='C'&&t.tf=='th'))?2:0));
+const fireQ=(s,nu)=>s.board.filter(x=>x!==nu).forEach(x=>trig(s,x,'Q'));
+const addCard=(s,c,d=0)=>{if(c&&s.hand.length<HMAX)s.hand.push(d?{...c,c:Math.max(0,c.c-d),dc:true}:c)};
+const HMAX=15;
+const ADD={ar:['てっちりアーマー'],am:['ごまっこ'],af:['火力全開'],ab:['ステーキナイト','全部のせ']};
+// 対象選択テーブル: 効果コード→{side:'foe'|'ally'|'any', ok:(u,s,c)=>bool(任意の追加条件)}。ここに足すと選択式にできる
+// 移動: 位置(0-2前列/3-5後列)の変更。移動先に味方がいれば入れ替わる。移動したフーズごとに全フーズの誘発'V'(フーズが移動するたび)が発動
+const fireV=()=>[G.p,G.e].forEach(sd=>sd.board.slice().forEach(x=>trig(sd,x,'V')));
+const moveU=(o,u,np)=>{if(u.h<=0||u.pos===np||np<0||np>5)return false;const w=o.board.find(x=>x!==u&&x.h>0&&x.pos==np),op=u.pos;u.pos=np;if(w)w.pos=op;ev('up',o,np,'移動');lg(w?`${u.n}が${w.n}と入れ替わった`:`${u.n}が${np<3?'前列':'後列'}へ移動`,'r');fireV();if(w)fireV();return true};
+const CWP={0:1,1:2,2:5,5:4,4:3,3:0},CWE={3:4,4:5,5:2,2:1,1:0,0:3};
+const cpuGy=s=>s.board.filter(u=>u.h>0&&!u.ty).sort((a,b)=>(b.a+b.h)-(a.a+a.h))[0];
+const cpuCy=(s,o)=>{const A=o.board.filter(u=>u.h>0);return A.find(u=>u.w&&u.pos<3)||A.filter(u=>u.pos>=3).sort((a,b)=>a.h-b.h)[0]||A[0]};
+const cpuFoeT=A=>[...A].sort((a,b)=>(b.w?1:0)-(a.w?1:0)||b.a-a.a)[0];
+const cpuDestFoe=(o,t)=>{const fr=free(o).filter(i=>i!==t.pos),pf=(t.w?[3,4,5]:[0,1,2]).filter(i=>fr.includes(i)),L=pf.length?pf:fr.length?fr:[0,1,2,3,4,5].filter(i=>i!==t.pos);return rnd(L)};
+const movePickFoe=(s,o,t)=>{if(G.ask&&s===G.p){(G.choices=G.choices||[]).push({s:o,mvu:1,u:t,got:[],cs:lgCause});return}moveU(o,t,cpuDestFoe(o,t))};
+const handCands=(s,k)=>k=='hb'?s.hand.filter(c=>c.t=='f'):k=='hp'?(free(s).length?s.hand.filter(c=>c.t=='f'&&c.c<=3):[]):s.hand.slice();
+const summonHand=(s,c,pos)=>{const i=s.hand.indexOf(c);if(i<0||s.board.some(u=>u.pos==pos))return;s.hand[i]={...c,c:0};runG(play0g(s,i,pos))};
+function applyHand(s,k,v,picks,pos){if(k=='hr'){let n=0;picks.forEach(c=>{const i=s.hand.indexOf(c);if(i<0)return;s.hand.splice(i,1);s.deck.splice(Math.floor(Math.random()*(s.deck.length+1)),0,C.find(x=>x.n==c.n)||c);n++});if(n){lg(`${n}枚を山札に戻した`,'r');draw(s,n)}return}
+const c=picks[0];if(!c)return;if(k=='hd'){const i=s.hand.indexOf(c);if(i>=0){s.hand.splice(i,1);lg(`${c.n}を捨てた`,'r')}return}
+if(k=='hb'){const i=s.hand.indexOf(c);if(i>=0){s.hand[i]={...c,a:c.a+1,h:c.h+1};lg(`手札の${c.n}が+1/+1`,'r')}return}
+if(k=='hp'){if(pos===undefined)pos=cpos(s,c);summonHand(s,c,pos)}}
+function cpuHand(s,k,v,L){const hi=(a,b)=>b.c-a.c;if(k=='hr'){applyHand(s,k,v,L.filter(c=>c.c>s.mpp+2).sort(hi).slice(0,v));return}
+if(k=='hd'){applyHand(s,k,v,[[...L].sort((a,b)=>(a.rar||1)-(b.rar||1)||a.c-b.c)[0]]);return}
+applyHand(s,k,v,[[...L].sort(hi)[0]])}
+const handFx=(s,k,v)=>{const L=handCands(s,k);if(!L.length)return;if(G.ask&&s===G.p){(G.choices=G.choices||[]).push({s,hsel:1,kind:k,v,got:[],cs:lgCause});return}cpuHand(s,k,v,L)};
+const HTT={hr:'🔄 山札に戻す手札を選択（2枚まで）',hd:'🗑 捨てる手札を選択',hb:'💪 +1/+1するフーズを選択',hp:'🍽 場に出すフーズを選択'};
+const hbtn=c=>`${c.n} <small>(${c.c}${c.t=='f'?' '+c.a+'/'+c.h:''})</small>`;
+const POSL=['前列・左','前列・中','前列・右','後列・左','後列・中','後列・右'];
+const cpuDest=(s,t)=>{const pref=t.h>t.a?[0,1,2]:[3,4,5],fr=free(s),f1=pref.filter(i=>fr.includes(i)),L=f1.length?f1:fr;return L.length?rnd(L):t.pos};
+const movePick=(s,t)=>{if(G.ask&&s===G.p){(G.choices=G.choices||[]).push({s,mvu:1,u:t,got:[],cs:lgCause});return}moveU(s,t,cpuDest(s,t))};
+// 選択効果テーブル: id→選択肢(f=効果コード,v=値,t=表示)。F/攻撃時などはtf='ch'(選ぶ)/'rc'(ランダム),tv=idで参照。s.allCh中は全選択肢を発動
+const CHT={1:{o:[{f:'dd',v:1,t:'1枚引く'},{f:'sf',v:2,t:'+2/+2'}]},2:{o:[{f:'sa',v:3,t:'+3/+0'},{f:'df',v:5,t:'敵1体に5ダメ'}]},3:{o:[{f:'df',v:4,t:'敵1体に4ダメ'},{f:'ba',v:2,t:'他の味方全体+2/+2'},{f:'dd',v:2,t:'2枚引く'}]},4:{o:[{f:'df',v:3,t:'敵1体に3ダメ'},{f:'ba',v:1,t:'他の味方全体+1/+1'}]}};
+const runOpt=(s,o,self,pk0)=>{let pk=pk0;if(pk===undefined&&s===G.e&&o.f=='df')pk=pickKill(opp(s),o.v)||undefined;fx(s,{f:o.f,v:o.v},self,pk)};
+const cpuOpt=(s,L)=>{const A=opp(s).board.filter(u=>u.h>0);const sc=o=>o.f=='df'?(A.some(u=>u.h<=o.v)?9+Math.min(6,Math.max(...A.filter(u=>u.h<=o.v).map(val))*.4):A.length?4:0):o.f=='dd'?(s.hand.length<HMAX-2?5:1):o.f=='ba'?(s.board.length>1?2+s.board.length:0):3;return[...L].sort((a,b)=>sc(b)-sc(a))[0]};
+function chooseFx(s,id,self,rd,pick){const L=(CHT[id]||{o:[]}).o;if(!L.length)return;
+  if(!s.allCh&&pick&&pick.opt!==undefined&&L[pick.opt]){const o=L[pick.opt];lg(`${o.t}を選択`,'r');runOpt(s,o,self,pick.t);return}
+  if(s.allCh){lg('すべて選択！','r');L.forEach(o=>{if(!G.over)runOpt(s,o,self)});return}
+  if(rd){const o=rnd(L);lg(`ランダム：${o.t}`,'r');runOpt(s,o,self);return}
+  if(G.ask&&s===G.p){(G.choices=G.choices||[]).push({s,c:{f:'ch',v:id},self,opt:id,n:1,got:[],cs:lgCause});return}
+  const o=cpuOpt(s,L);lg(`${o.t}を選択`,'r');runOpt(s,o,self)}
+const MOD=T=>T.k=='opt'||T.k=='popt'||T.k=='mvd'||T.k=='hsel'||T.k=='hpos';
+const needOpt=(p,c)=>!!c&&c.f=='ch'&&!p.allCh;
+const launchP=(T,pick)=>{const pp=G.p;if(T.atk){if(!pp.board.includes(T.u))return null;ev('atk','p',T.u.pos);G.sel=null;return attackA(pp,T.u,T.t,pick)}const cc=pp.hand[T.i];if(!cc||cst(pp,cc)>pp.pp||(cc.t=='f'&&pp.board.some(u=>u.pos==T.pos)))return null;return playA(pp,T.i,T.pos,pick)};
+function renderOpt(){const bx=$('#optbox');if(!bx)return;const T=G.tgt;if(T&&T.k=='hpos'){const sd=T.ch.s;bx.style.display='flex';bx.innerHTML='<div class="optm"><div class="optt">📍 出す位置を選択</div><small>'+T.card.n+'</small>'+free(sd).map(i=>`<button data-a="hp:${i}">${POSL[i]}</button>`).join('')+'<div class="optn">この効果は取り消せません</div></div>';return}
+if(T&&T.k=='hsel'){const ch=T.ch,L=handCands(ch.s,ch.kind);bx.style.display='flex';bx.innerHTML='<div class="optm"><div class="optt">'+HTT[ch.kind]+'</div>'+L.map((c,i)=>`<button data-a="hs:${i}">${T.sel.includes(c)?'✅ ':''}${hbtn(c)}</button>`).join('')+(ch.kind=='hr'?`<button data-a="hok">決定（${T.sel.length}枚を戻す）</button>`:'')+'<div class="optn">この効果は取り消せません</div></div>';return}
+if(T&&T.k=='mvd'){const ch=T.ch,sd=ch.s;bx.style.display='flex';bx.innerHTML='<div class="optm"><div class="optt">📍 移動先を選択</div><small>'+ch.u.n+'をどこへ移動する？</small>'+POSL.map((l,i)=>{const w=sd.board.find(x=>x.h>0&&x.pos==i);return `<button data-a="mvp:${i}">${l} ${i==ch.u.pos?'(現在地)':w?'(入れ替え:'+w.n+')':'(空き)'}</button>`}).join('')+'<div class="optn">この効果は取り消せません</div></div>';return}if(T&&MOD(T)){const id=T.k=='popt'?T.id:T.ch.opt,cs=T.k=='opt'&&T.ch.cs?'<small>'+T.ch.cs+'</small>':'',can=T.k=='popt';bx.style.display='flex';bx.innerHTML='<div class="optm"><div class="optt">🎯 効果を選択</div>'+cs+CHT[id].o.map((o,i)=>`<button data-a="opt:${i}">${'①②③'[i]} ${o.t}</button>`).join('')+'<div class="optn">'+(can?'枠の外をクリックでキャンセル':'この効果は取り消せません')+'</div></div>'}else if(bx.innerHTML){bx.style.display='none';bx.innerHTML=''}}
+const TSEL={df:{side:'foe'},py:{side:'foe'},sn:{side:'foe'},mb:{side:'foe',ok:u=>u.pos<3},mf:{side:'foe',ok:u=>u.pos>=3},cy:{side:'any'},gy:{side:'ally'},dq:{side:'foe'},mq:{side:'foe'},mh:{side:'foe'},mv:{side:'ally'},db:{side:'foe'},dm:{side:'foe'},pf:{side:'foe'},mm:{side:'foe'},d2:{side:'foe',n:2},d3:{side:'foe',n:3,ord:true,lab:['3ダメ','2ダメ','1ダメ']},bf:{side:'ally',ok:(u,s,c,self)=>u!==self}};
+const selCands=(s,c,self)=>{const r=c&&TSEL[c.f];if(!r)return[];const o=opp(s),L=r.side=='ally'?s.board:r.side=='any'?s.board.concat(o.board):o.board;return L.filter(u=>u.h>0&&(!r.ok||r.ok(u,s,c,self)))};
+const needSel=(r,len)=>r.ord?len>=2:len>(r.n||1);
+const needPick=(s,c)=>{const r=c&&TSEL[c.f];return !!r&&needSel(r,selCands(s,c).length)};
+// 誘発効果の選択待ち: 自分の操作中(G.ask)に出た選択式効果はG.choicesに積み、操作完了後に1件ずつ対象を選ばせる
+const effCands=ch=>selCands(ch.s,ch.c,ch.self).filter(u=>!ch.got.includes(u));
+function askNext(){while(G.choices&&G.choices.length&&!G.tgt&&!G.over){const ch=G.choices.shift();if(ch.hsel){if(handCands(ch.s,ch.kind).length){G.tgt={k:'hsel',ch,sel:[]};return}continue}if(ch.mvu){if(ch.u.h>0){G.tgt={k:'mvd',ch};return}continue}if(ch.opt!==undefined){G.tgt={k:'opt',ch};return}const L=effCands(ch);if(!L.length)continue;if(needSel(TSEL[ch.c.f],L.length)){G.tgt={k:'eff',ch};return}fx(ch.s,ch.c,ch.self,ch.n>1?L:L[0]);chk()}}
+const pickOf=(L,p)=>p&&L.includes(p)?p:rnd(L);
+const dlog=(t,v,km)=>{if(t.h<=0){const m=km||`${t.n}を倒した！`;t.rep=1;t.dmsg=m;lg(m,'r')}else lg(`${t.n}に${v}ダメ`,'r')};
+function fx(s,c,self,pick){const o=opp(s),v=c.v,A=o.board.filter(u=>u.h>0);
+if(pick===undefined&&G.ask&&s===G.p){const r=TSEL[c.f];if(r&&needSel(r,selCands(s,c,self).length)){(G.choices=G.choices||[]).push({s,c:{f:c.f,v:c.v},self,n:r.n||1,got:[],cs:lgCause});return}}switch(c.f){
+case'dl':lhit(o,v);break;
+case'am':case'af':case'ab':case'ar':for(let i=0;i<v;i++)ADD[c.f].forEach(n=>addCard(s,C.find(x=>x.n==n)));break;
+case'ac':addCard(s,rnd(C.filter(x=>x.t=='s'&&!x.tok)),v);break;
+case'cd':s.hand=s.hand.map(x=>x.t=='s'?{...x,c:Math.max(0,x.c-v),dc:true}:x);break;
+case'df':{const t=pickOf(A,pick);if(t){hurt(o,t,v);dlog(t,v)}break}
+case'da':A.slice().forEach(u=>hurt(o,u,v));break;
+case'dh':{const t=[...A].sort((a,b)=>b.a-a.a)[0];if(t){hurt(o,t,v);dlog(t,v,v>50?`${t.n}を破壊`:null)}break}
+case'dd':draw(s,v);break;case'hl':lheal(s,v);break;
+case'bf':{const t=pickOf(s.board.filter(u=>u!==self),pick);if(t)buff(s,t,v,v);break}
+case'ba':s.board.forEach(u=>{if(u!==self)buff(s,u,v,v)});break;
+case'sa':if(self)buff(s,self,v,0);break;case'sh':if(self)buff(s,self,0,v);break;case'sf':if(self)buff(s,self,v,v);break;
+case'aj':if(self)s.board.forEach(x=>{if(x!==self&&(x.pos/3|0)==(self.pos/3|0)&&Math.abs(x.pos-self.pos)==1)buff(s,x,v,v)});break;
+case'rf':A.filter(x=>x.pos<3).forEach(x=>hurt(o,x,v));break;
+case'rb':A.filter(x=>x.pos>=3).forEach(x=>hurt(o,x,v));break;
+case'cl':if(self)A.filter(x=>x.pos%3==self.pos%3).forEach(x=>hurt(o,x,v));break;case'db':{const t=pickOf(A,pick);if(t)nerf(o,t,v);break}
+case'dw':A.forEach(x=>nerf(o,x,v));break;
+case'zl':lhit(s,v);break;case'mp':s.cap=(s.cap||10)+v;s.mpp=Math.min(s.cap,s.mpp+v);s.pp+=v;break;case'as':for(let i=0;i<v;i++)if(s.hand.length<HMAX)s.hand.push(rnd(C.filter(c=>c.t=='s'&&!c.tok)));break;case'pp':s.pp+=v;break;
+case'rt':if(self){const c=C.find(x=>x.n==self.n);if(c&&s.hand.length<HMAX)s.hand.push(c)}break;case'hh':lheal(s,Math.min(v,s.hand.length));break;
+case'pf':{const n=s.pp;s.pp=0;const t=pickOf(A,pick);if(t&&n>0){hurt(o,t,n);dlog(t,n)}break}
+case'dx':lhit(s,2);lhit(o,s.hand.length);break;
+case'dn':{const n=s.board.length+A.length;A.slice().forEach(u=>hurt(o,u,n));s.board.slice().forEach(u=>hurt(s,u,n));break}
+case'd2':{const a=Array.isArray(pick)?pick.filter(x=>A.includes(x)).slice(0,2):A.slice().sort(()=>Math.random()-.5).slice(0,2);a.forEach(t=>{hurt(o,t,v);lg(`${t.n}に${v}ダメ`,'r')});break}
+case'd3':{const a=Array.isArray(pick)?pick.filter(x=>A.includes(x)).slice(0,3):[...A].sort((x,y)=>y.a-x.a).slice(0,3);a.forEach((t,i)=>{const d=3-i;hurt(o,t,d);lg(`${t.n}に${d}ダメ`,'r')});break}
+case'fa':if(self&&self.pos>=3){const t=s.board.find(x=>x.pos==self.pos-3);if(t)buff(s,t,v,v)}break;
+case'mb':{const L=A.filter(u=>u.pos<3),t=pickOf(L,pick===undefined&&s===G.e?[...L].sort((a,b)=>(b.w?1:0)-(a.w?1:0)||b.a-a.a)[0]:pick);if(t)moveU(o,t,t.pos+3);break}case'mf':{const t=pickOf(A.filter(u=>u.pos>=3),pick);if(t)moveU(o,t,t.pos-3);break}case'mv':{const t=pickOf(s.board.filter(u=>u.h>0),pick);if(t)movePick(s,t);break}case'mr':{const L=o.board.filter(u=>u.h>0);if(!L.length)break;L.forEach(u=>{u.pos=u.pos<3?u.pos+3:u.pos-3});lg('敵の前列と後列がすべて入れ替わった','r');L.forEach(()=>fireV());break}case'dc':{let k=0;for(;k<v&&s.hand.length;k++){const x=s.hand.splice(Math.floor(Math.random()*s.hand.length),1)[0];if(x&&x.dummy)G.xc=(G.xc||0)+1;lg(`${x.n}を捨てた`,'r')}if(k)draw(s,k);break}case'fd':{const n=s.hand.filter(c=>c.fr).length;for(let k=0;k<n&&!G.over;k++){const L=o.board.filter(u=>u.h>0);if(!L.length)break;const t=rnd(L);hurt(o,t,v);dlog(t,v)}break}case'sn':{const t=pickOf(A,pick);if(t){t.stun=true;ev('down',o,t.pos,'⏸')}break}case'fn':{const n=s.hand.filter(c=>c.fr).length;if(self&&n)buff(s,self,n,n);break}case'fh':s.hand=s.hand.map(c=>hasFresh(c)?{...c,fr:true}:c);lg('手札がすべて新鮮に','r');break;case'py':{const t=pickOf(A,pick);if(t)pois(o,t);break}case'pr':{const t=rnd(A);if(t)pois(o,t);break}case'ch':chooseFx(s,v,self,false,pick);break;case'rc':chooseFx(s,v,self,true);break;case'ca':s.allCh=true;lg('このターン中、選択効果はすべて発動','r');break;case'pa':A.slice().forEach(u=>pois(o,u));break;case'pc':{const n=A.filter(u=>u.psn>0).length;if(self&&n)buff(s,self,n,n);break}case'cs':A.filter(x=>x.pos%3!=1).forEach(x=>hurt(o,x,v));break;
+case'dm':{const t=pickOf(A,pick);if(t){hurt(o,t,s.mpp);lg(`${t.n}に${s.mpp}ダメ`,'r')}break}
+case'dq':{const t=pickOf(A,pick),d=Math.ceil(s.mpp/2);if(t){hurt(o,t,d);lg(`${t.n}に${d}ダメ`,'r')}break}
+case'mx':if(self&&self.h>0){const L=[0,1,2,3,4,5].filter(i=>i!==self.pos);moveU(s,self,rnd(L))}break;
+case'mq':{const t=pickOf(A,pick===undefined&&s===G.e?cpuFoeT(A):pick);if(t){const L=[0,1,2,3,4,5].filter(i=>i!==t.pos);moveU(o,t,rnd(L))}break}
+case'mh':{const t=pickOf(A,pick===undefined&&s===G.e?cpuFoeT(A):pick);if(t)movePickFoe(s,o,t);break}
+case'hr':case'hd':case'hb':case'hp':handFx(s,c.f,v);break;
+case'bz':if(self&&self.h>0){const t=o.board.find(x=>x.h>0&&x.pos==3+self.pos%3);if(t){hurt(o,t,v);dlog(t,v)}}break;
+case'gy':{const t=pickOf(s.board.filter(u=>u.h>0),pick===undefined&&s===G.e?cpuGy(s):pick);if(t){t.ty=true;ev('up',s,t.pos,'🪨');lg(`${t.n}が頑丈に`,'r')}break}
+case'pz':{if(!A.length)break;A.forEach(u=>{u.psn=2;ev('down',o,u.pos,'猛毒')});lg('敵全員が猛毒状態に','r');break}
+case'xs':s.mpp=Math.max(0,s.mpp-v);s.pp=Math.min(s.pp,s.mpp);lg(`自分のPP最大値が${v}減った（${s.mpp}）`,'r');break;
+case'rw':{if(!self)break;const base=self.pos<3?0:3,cd=C.find(x=>x.n==self.n);for(let i=0;i<3;i++){const q=base+i;if(!free(s).includes(q))continue;const nu=unit(cd,q,s===G.e);s.board.push(nu);ev('spawn',s,q,'');fireQ(s,nu)}break}
+case'pe':{let n=0;[G.p,G.e].forEach(sd=>sd.board.forEach(u=>{if(u.h>0&&u.psn>0){u.a=1;u.h=1;n++;ev('up',sd,u.pos,'1/1')}}));if(n)lg('毒状態のフーズがすべて1/1に','r');break}
+case'rq':for(let i=0;i<v;i++)addCard(s,rnd(C.filter(x=>x.t=='f'&&x.rar>=4&&!x.tok)),5);break;
+case'nd':s.nd=(s.nd||0)+v;lg('次の自分のターン開始時に1枚引く','r');break;
+case'xm':o.mpp=Math.max(0,o.mpp-v);o.pp=Math.min(o.pp,o.mpp);lg(`相手のPP最大値が${v}減った（${o.mpp}）`,'r');break;
+case'cy':{const L=A.concat(s.board.filter(u=>u.h>0)),t=pickOf(L,pick===undefined&&s===G.e?cpuCy(s,o):pick);if(t){const ow=s.board.includes(t)?s:o;moveU(ow,t,t.pos<3?t.pos+3:t.pos-3)}break}
+case'mc':{let n=0;[s,o].forEach(sd=>{const m=sd===G.p?CWP:CWE;sd.board.filter(u=>u.h>0).forEach(u=>{u.pos=m[u.pos];n++})});if(!n)break;lg('全フーズが時計回りに1つ移動した','r');for(let k=0;k<n;k++)fireV();break}
+case'bh':if(self&&s.hand.length<=3)buff(s,self,v,v);break;
+case'dr':{for(let i=0;i<2&&s.hand.length;i++)s.hand.splice(Math.floor(Math.random()*s.hand.length),1);draw(s,4);break}
+case'ep':if(self&&s.pp>0)buff(s,self,0,s.pp);break;
+case'ed':if(s.hp>=s.maxHp)draw(s,v);break;
+case'a8':if(s.mpp>=8)for(let i=0;i<3;i++)if(s.hand.length<HMAX)s.hand.push(rnd(C.filter(c=>c.t=='s'&&!c.tok)));break;
+case'sp':{const n=s.hand.filter(c=>c.t=='s').length;if(self&&n)buff(s,self,0,n);break}
+case'ts':{const n=s.hand.filter(c=>c.t=='s').length;if(n)s.board.forEach(u=>buff(s,u,n,0));break}
+case'sm':if(self){self.a=s.mpp;ev('up',s,self.pos,'ATK='+s.mpp)}break;
+case'od':draw(s,Math.min(v,s.sc||0));break;
+case'st':[...A].sort((a,b)=>b.a-a.a).slice(0,v).forEach(u=>{u.stun=true;ev('down',o,u.pos,'⏸')});break;
+case'su':for(let i=0;i<v;i++){const f=free(s)[0];if(f!==undefined){{const nu=unit(C[0],f,s===G.e);s.board.push(nu);ev('spawn',s,f,'');fireQ(s,nu)}}}break;
+case'mm':{const t=pickOf(A,pick);if(t){t.a=Math.max(0,t.a-v);t.h-=v;ev('down',o,t.pos,'-'+v+'/-'+v);lg(`${t.n}に-${v}/-${v}`,'r')}break}}}
+
+function play(s,i,pos,pick){const a=G.ask;G.ask=s===G.p&&G.cur=='p';try{return play0(s,i,pos,pick)}finally{G.ask=a}}
+const runG=g=>{let r;while(!(r=g.next()).done);return r.value};
+function* play0g(s,i,pos,pick){
+  ng();
+  const c=s.hand[i];s.pp-=cst(s,c);if(c.t=='f')s.sc=(s.sc||0)+1;s.hand.splice(i,1);
+  const pl=c.t=='f'?`${s===G.p?'あなた':OPN()}：<b>${c.n}</b>を出した`:`${s===G.p?'あなた':OPN()}：<b>${c.n}</b> <small>${desc(c)||'(効果なし)'}</small>`;lg(pl);
+  lgFc=c.t=='f'?cLog(pl):null;
+  const st=f=>{const a=G.log.length,b=G.ev.length,c0=(G.choices||[]).length;f();return G.log.length>a||G.ev.length>b||(G.choices||[]).length>c0};
+  if(c.t=='f'){
+    const u=unit(c,pos,s===G.e);s.board.push(u);ev('spawn',s,pos,'');yield;
+    if(c.f&&c.x)lg(`<b>${c.n}</b> <small>F:${c.x}</small>`,'f');
+    if(st(()=>fx(s,c,u,pick))){chk();if(G.over)return;yield}
+    if(st(()=>trig(s,u,'F'))){chk();if(G.over)return;yield}
+    lgHead=lgRes=cLog(pl);
+    for(const x of s.board.filter(x=>x!==u))if(st(()=>trig(s,x,'P'))){chk();if(G.over)return;yield}
+    for(const x of s.board.filter(x=>x!==u))if(st(()=>trig(s,x,'Q'))){chk();if(G.over)return;yield}
+  }else{
+    ev('cast',s,-1,'');yield;
+    if(st(()=>fx(s,c,null,pick))){chk();if(G.over)return;yield}
+    for(const t of(c.ts||[]).filter(t=>t.tr=='F'))if(st(()=>fx(s,{f:t.tf,v:t.tv},null))){chk();if(G.over)return;yield}
+    for(const x of s.board.slice())if(st(()=>trig(s,x,'S'))){chk();if(G.over)return;yield}
+  }
+  chk()
+}
+function play0(s,i,pos,pick){return runG(play0g(s,i,pos,pick))}
+async function driveA(mk,s){
+  const G0=G,a=G.ask,b=G.busy;G.ask=s===G.p&&G.cur=='p';G.busy=true;
+  try{const g=mk();let r;while(!(r=g.next()).done){render();await lgIdle();if(G!==G0||G.over)break;
+    while(G===G0&&!G.over&&G.ask&&((G.choices&&G.choices.length)||G.tgt||G.settling)){const had=!!G.tgt;askNext();if(!had&&G.tgt)render();await new Promise(r=>setTimeout(r,60))}}}
+  finally{if(G===G0){G.ask=a;G.busy=b}}
+}
+const playA=(s,i,pos,pick)=>driveA(()=>play0g(s,i,pos,pick),s);
+function attack(s,u,t,pick){const a=G.ask;G.ask=s===G.p&&G.cur=='p';try{return attack0(s,u,t,pick)}finally{G.ask=a}}
+// 攻撃時効果で対象選択が要るもの(単体・選択式)を返す。なければnull
+const pickA=(s,u)=>(u.ts||[]).find(t=>t.tr=='A'&&!((t.cd=='F'&&u.pos>=3)||(t.cd=='B'&&u.pos<3))&&TSEL[t.tf]&&!(TSEL[t.tf].n>1)&&!TSEL[t.tf].ord&&needSel(TSEL[t.tf],selCands(s,{f:t.tf},u).length))||null;
+function* attack0g(s,u,t,pick){ng();const o=opp(s);u.done=true;const a0=G.log.length,e0=G.ev.length;trig(s,u,'A',pick);chk();if(G.log.length>a0||G.ev.length>e0)yield;if(G.over)return;if(u.h<=0||(t!=='L'&&t.h<=0)){lg(`${u.n}の攻撃は不発`);return}if(t==='L'){lg(`${u.n}が${s===G.p?'敵リーダー':'あなた'}に${u.a}ダメ`);lhit(o,u.a)}else{const th=t.h,ed=t.ty?Math.ceil(u.a/2):u.a;hurt(o,t,u.a);hurt(s,u,t.a);const td=t.h<=0,ud=u.h<=0,rp=(x,m)=>{x.rep=1;x.dmsg=m};let m;if(td&&ud){m=`${u.n}と${t.n}が相打ち！`;rp(u,m);rp(t,m)}else if(td){m=`${u.n}が${t.n}を倒した！`;rp(t,m)}else if(ud){m=`${t.n}が${u.n}を倒した！`;rp(u,m)}else m=`${u.n}⚔${t.n}`;lg(m);if(u.t&&ed>th){const q=Math.ceil((ed-th)/2),bk=t.pos<3?o.board.find(x=>x.pos==t.pos+3):null;if(bk){hurt(o,bk,q);if(bk.h<=0){const mm=`${u.n}の貫通で${bk.n}を倒した！`;rp(bk,mm);lg(mm,'r')}else lg(`${u.n}の貫通で${bk.n}に${q}ダメージ`,'r')}else{lg(`${u.n}の貫通で${o===G.p?'あなた':'敵リーダー'}に${q}ダメージ`,'r');lhit(o,q)}trig(s,u,'X')}}flushH();chk()}
+function attack0(s,u,t,pick){return runG(attack0g(s,u,t,pick))}
+const attackA=(s,u,t,pick)=>driveA(()=>attack0g(s,u,t,pick),s);
+// 毒: ターン終了時(どちらのターンでも)、毒1ダメ/猛毒2ダメ。2回かかると猛毒、効果は死ぬまで続く
+const pois=(o,t)=>{t.psn=Math.min(2,(t.psn||0)+1);const nm=t.psn>1?'猛毒':'毒';ev('down',o,t.pos,nm);lg(`${t.n}が${nm}状態に`,'r')};
+async function poisonTick(s){const us=[s,opp(s)].flatMap(x=>x.board.filter(u=>u.psn>0&&u.h>0).map(u=>[x,u]));if(!us.length)return;ng();lg('<b>毒</b> <small>ターン終了時:毒状態のフーズにダメージ</small>');for(const[x,u]of us){if(G.over)return;if(u.h<=0)continue;const d=u.psn>1?2:1;hurt(x,u,d);dlog(u,d,`${u.n}が${u.psn>1?'猛毒':'毒'}で倒れた`)}chk();render();await settle();await sl(600)}
+// 新鮮: ターン終了時に手札と場の新鮮が失われる(冷蔵庫(Z:kf)がいる側は維持)
+function freshEnd(){[G.p,G.e].forEach(s=>{if(s.board.some(u=>u.h>0&&u.pos<3&&(u.ts||[]).some(t=>t.tr=='Z'&&t.tf=='kf')))return;s.hand.forEach(c=>{if(c.fr)c.fr=false});s.board.forEach(u=>{if(!u.fr)return;u.fr=false;(u.fk||[]).forEach(k=>{u[k]=false})})})}
+function endT(s,skip){if(G.over)return;if(!skip){s.board.slice().forEach(u=>trig(s,u,'E'));chk()}if(G.over)return;freshEnd();const go=()=>{G.busy=false;if(!G.over)begin(opp(s))};if([...G.p.board,...G.e.board].some(u=>u.psn>0&&u.h>0)){G.busy=true;render();poisonTick(s).then(go,er=>{console.error(er);go()});return}begin(opp(s))}
+function useful(s,c){const o=opp(s);if(c.t=='f')return true;if(c.f=='pf')return o.board.length>0&&s.pp>0;if(c.f=='dn')return o.board.length>0&&o.board.length>s.board.length;if(c.f=='st')return o.board.length>0;if(c.f=='dx')return s.hp>3;if(c.f=='od')return(s.sc||0)>0;if(c.f=='ts')return s.board.length>0&&s.hand.some(x=>x.t=='s');if(['df','da','dh','cl','rf','rb','db','dw','d2','d3','py','pa','sn'].includes(c.f))return o.board.length>0;if(c.f=='bf'||c.f=='ba')return s.board.length>0;if(c.f=='hl')return s.hp < s.maxHp;if(c.f=='su')return s.board.length<4;if(c.f=='mb')return o.board.some(u=>u.pos<3);if(c.f=='mf')return o.board.some(u=>u.pos>=3);if(c.f=='cy')return o.board.some(u=>u.h>0);if(c.f=='gy')return s.board.some(u=>u.h>0&&!u.ty);if(c.f=='hp')return handCands(s,'hp').length>0;if(c.f=='mc')return s.board.some(u=>(u.ts||[]).some(t=>t.tr=='V'))||o.board.some(u=>u.w&&u.h>0&&u.pos==0);if(c.f=='mr'){const g=o.board.filter(u=>u.w&&u.h>0);return g.filter(u=>u.pos<3).length>g.filter(u=>u.pos>=3).length}if(c.f=='mv')return s.board.length>0;if(c.f=='fh')return s.hand.some(x=>hasFresh(x)&&!x.fr);if(c.f=='ca'){const isC=x=>['ch','rc'].includes(x.f)||(x.ts||[]).some(z=>['ch','rc'].includes(z.tf));return s.hand.some(isC)||s.board.some(isC)}return true}
+const val=x=>{const v=x.a+x.h+(x.w?2:0)+(x.ts||[]).length*2;if(x.psn>0){const d=x.psn>1?2:1;return x.h<=d?v*.25:v-d*2}return v};
+
+function calcPiercingDmg(u, t, o) {
+  if (!u.t || t === 'L') return 0;
+  if (u.a > t.h) return u.a - t.h;
+  return 0;
+}
+
+// ===== リーサル探索（読み取り専用の純関数。盤面は書き換えない）=====
+// 守護(前列)は必ず倒す＋空ける列を1つ選んで全滅→残りのface持ちでリーダーへ。進化は「しない/各フーズ」を枝にする
+// 貫通の余剰：最後に殴る貫通持ちの余剰ダメージは、後ろにフーズがいない(または後列を殴る)なら直接リーダーに入る
+// 列を空けず「守護＋余剰が届く1体」だけ倒して貫通でリーダーを削り切る案も探索する
+const adl=u=>(u.ts||[]).filter(t=>t.tr=='A'&&t.tf=='dl'&&!((t.cd=='F'&&u.pos>=3)||(t.cd=='B'&&u.pos<3))).reduce((a,t)=>a+(+t.tv||0),0);
+function aPick(s,u){const at=pickA(s,u);if(!at)return undefined;const o=opp(s);
+  if(at.tf=='df')return cpick(s,o,{t:'s',f:'df',v:at.tv},true);
+  if(at.tf=='db')return o.board.filter(x=>x.h>0).sort((a,b)=>b.a-a.a)[0];
+  if(at.tf=='bf')return s.board.filter(x=>x!==u&&x.h>0).sort((a,b)=>b.a-a.a)[0];
+  return undefined}
+function findLethal(me,foe,canEvoNow){
+  const col=x=>x.pos%3,fo=foe.board,mine=me.board.filter(u=>!u.stunned&&!u.done);
+  const opts=[null].concat(canEvoNow?mine.filter(u=>!u.evo):[]);
+  const lead=t=>t.pos>=3||!fo.some(y=>y.pos==t.pos+3);
+  const assign=(A,K,i,used,steps,lb,canL)=>{
+    if(i==K.length){const L=canL?A.filter(x=>!used.has(x)&&x.face):[],stp=steps.concat(L.map(x=>({u:x.u,t:'L'}))),bn=[...new Set(stp.map(z=>z.u))].reduce((a,u)=>a+adl(u),0);
+      return lb+L.reduce((a,x)=>a+x.a,0)+bn>=foe.hp?stp:null}
+    const t=K[i],R=A.filter(x=>!used.has(x)),subs=[];
+    for(let m=1;m<1<<R.length;m++){const S=R.filter((_,k)=>m>>k&1),sm=S.reduce((a,x)=>a+x.a,0);
+      if(sm<t.h)continue;
+      // 最小の組のみ。ただし貫通の余剰が届く標的では「貫通持ち1体を最後に回せる」組も許す(他の攻撃で先に削る)
+      if(S.some(x=>sm-x.a>=t.h)&&!(lead(t)&&S.some(x=>x.u.t&&sm-x.a<t.h)))continue;subs.push({S,sm})}
+    const w=o=>o.S.filter(x=>x.face).reduce((a,x)=>a+x.a,0)*10+o.sm;
+    subs.sort((x,y)=>w(x)-w(y));
+    for(const {S,sm} of subs){const u2=new Set(used);S.forEach(x=>u2.add(x));
+      const pl=S.find(x=>x.u.t&&sm-x.a<t.h),ex=pl&&lead(t)&&sm>t.h?Math.ceil((sm-t.h)/2):0;
+      const ord=S.filter(x=>x!==pl).concat(pl?[pl]:[]);
+      const r=assign(A,K,i+1,u2,steps.concat(ord.map(x=>({u:x.u,t}))),lb+ex,canL);if(r)return r}
+    return null};
+  const gd=fo.filter(x=>x.w&&x.pos<3),sortK=K=>gd.concat(K.filter(x=>!gd.includes(x)).sort((a,b)=>a.pos-b.pos));
+  const openAfter=K=>[0,1,2].some(c=>!fo.some(x=>col(x)==c&&!K.includes(x)));
+  const tries=[];
+  if(openAfter(gd))tries.push({K:sortK(gd),canL:true});
+  else[0,1,2].forEach(c=>tries.push({K:sortK(gd.concat(fo.filter(x=>col(x)==c))),canL:true}));
+  tries.push({K:gd.slice(),canL:false});
+  fo.filter(x=>!gd.includes(x)&&vis(foe,x)&&lead(x)).forEach(x=>{const K=sortK(gd.concat([x]));tries.push({K,canL:openAfter(K)})});
+  for(const eu of opts){
+    const A=mine.map(u=>({u,a:u.a+(u===eu?2:0),face:!u.sick||u.s,ok:!u.sick||u.s||u.r||u===eu})).filter(x=>x.ok);
+    for(const {K,canL} of tries){
+      const r=assign(A,K,0,new Set(),[],0,canL);
+      if(r)return{evo:eu,steps:r}}}
+  return null}
+// ===== 除去・全体/複数対象の効果シミュレーション（盤面のコピー上で適用。実盤面は書き換えない）=====
+const MULTI=['da','rf','rb','d2','d3','cl','dn','df','dh'];
+const effList=c=>[{f:c.f,v:c.v}].concat((c.ts||[]).filter(t=>t.tr=='F').map(t=>({f:t.tf,v:t.tv}))).filter(e=>e.f);
+// 除去の対象選び：dmg以下で倒せる敵のうち価値最大(同価値なら体力小さい方)。無ければnull
+function pickKillB(A,L){let t=null;A.forEach(u=>{if(u.h>0&&u.h<=(u.ty?Math.ceil(L/2):L)&&(!t||val(u)>val(t)||(val(u)==val(t)&&u.h<t.h)))t=u});return t}
+function pickKill(o,L){return pickKillB(o.board,L)}
+// B: 敵盤面のコピー({...u,orig:u})。カードcの効果(F)を順に当て、直撃ダメ・対象指定(pick)・設置位置(cl)・自軍巻き込み量(dn)を返す
+// guardFirst: 倒せる守護を最優先(リーサル用)。単体=倒せる最高価値→守護→最高価値 / d2=倒せる高価値2体 / d3=3,2,1ダメを倒せる順に割当 / cl=置ける列のうち敵価値が最大の列
+function applyEff(s,B,c,guardFirst){
+  let dl=0,pick,pos=null,own=null;
+  const alive=()=>B.filter(u=>u.h>0),top=(L,f)=>[...L].sort(f)[0];
+  for(const e of effList(c)){const v=e.v,A=alive();
+    if(e.f=='dl')dl+=v;
+    else if(e.f=='da')A.forEach(u=>{u.h-=v});
+    else if(e.f=='rf')A.filter(u=>u.pos<3).forEach(u=>{u.h-=v});
+    else if(e.f=='rb')A.filter(u=>u.pos>=3).forEach(u=>{u.h-=v});
+    else if(e.f=='dh'){const t=top(A,(a,b)=>b.a-a.a);if(t)t.h-=v}
+    else if(e.f=='df'){let t=null;if(guardFirst)t=A.find(u=>u.w&&u.pos<3&&u.h<=v)||null;t=t||pickKillB(A,v)||A.find(u=>u.w&&u.pos<3)||top(A,(a,b)=>val(b)-val(a));if(t){t.h-=v;if(c.f=='df')pick=t.orig}}
+    else if(e.f=='d2'){const L=A.slice(),pk=[];for(let i=0;i<2&&L.length;i++){const t=(guardFirst&&L.find(u=>u.w&&u.pos<3&&u.h<=v))||pickKillB(L,v)||top(L,(a,b)=>val(b)-val(a));L.splice(L.indexOf(t),1);pk.push(t);t.h-=v}if(c.f=='d2')pick=pk.map(x=>x.orig)}
+    else if(e.f=='d3'){const L=A.slice(),pk=[];[3,2,1].forEach(d=>{if(!L.length)return;const t=(guardFirst&&L.find(u=>u.w&&u.pos<3&&u.h<=d))||pickKillB(L,d)||top(L,(a,b)=>b.a-a.a);L.splice(L.indexOf(t),1);pk.push(t);t.h-=d});if(c.f=='d3')pick=pk.map(x=>x.orig)}
+    else if(e.f=='cl'){let bp=null,bs=-1;free(s).forEach(p=>{const sc=A.filter(u=>u.pos%3==p%3).reduce((a,u)=>a+(u.h<=v?val(u)+4:Math.min(v,u.h)*.5),0);if(sc>bs){bs=sc;bp=p}});
+      if(bp!==null){A.filter(u=>u.pos%3==bp%3).forEach(u=>{u.h-=v});pos=bp}}
+    else if(e.f=='dn'){const n=s.board.length+A.length;A.forEach(u=>{u.h-=n});own=n}}
+  return{dl,pick,pos,own}}
+// そのカードの除去・全体/複数ダメ効果の価値(攻撃プランの評価尺度)。倒した価値＋(撃った後の攻撃プラン評価−撃たない場合)＋残った敵への削り＋直撃−自軍の巻き込み
+function effVal(s,o,c,base){
+  if(!effList(c).some(e=>MULTI.includes(e.f)))return null;
+  const B=o.board.map(u=>({...u,orig:u})),r=applyEff(s,B,c,false);
+  const g=u=>val(u)+u.a+(u.ts&&u.ts.length?2:0)+4,dm=doomedSet(s,o.board);
+  let kv=0,dealt=0;B.forEach(u=>{if(u.h<=0)kv+=killG(u.orig,dm);else dealt+=u.orig.h-u.h});
+  const own=r.own==null?0:s.board.filter(u=>u.h<=r.own).reduce((a,u)=>a+g(u),0);
+  const b0=base===undefined?planAttack(s,o,false,0).sc:base;
+  const sc2=planAttack(s,{...o,hp:o.hp-r.dl,board:B.filter(u=>u.h>0)},false,0).sc;
+  return{V:kv+(sc2-b0)+.4*dealt+.8*r.dl-own,pick:r.pick,pos:r.pos}}
+// CPUの除去の対象指定：単体(df)/複数(d2,d3)は盤面シミュレーションで、dm(PP最大値ダメ)は倒せる最高価値→守護。gf=true:守護優先(リーサル用)
+function cpick(s,o,c,gf){if(!o.board.length)return undefined;
+  if(c.f=='cy')return cpuCy(s,o);
+  if(c.f=='gy')return cpuGy(s);
+  if(c.f=='dq'){const L=Math.ceil(s.mpp/2);return pickKill(o,L)||o.board.find(u=>u.w&&u.pos<3&&u.h>0)||undefined}
+  if(c.f=='mq'||c.f=='mh')return cpuFoeT(o.board.filter(u=>u.h>0));
+  if(c.t=='s'&&c.f=='dm'){const L=s.mpp;return pickKill(o,L)||o.board.find(u=>u.w&&u.pos<3)||undefined}
+  if(c.f=='mb')return o.board.filter(u=>u.pos<3&&u.h>0).sort((a,b)=>(b.w?1:0)-(a.w?1:0)||b.a-a.a)[0];
+  if(c.f=='mf'){const fg=u=>o.board.some(y=>y.w&&y.pos==u.pos-3);return o.board.filter(u=>u.pos>=3&&u.h>0).sort((a,b)=>fg(b)-fg(a)||a.h-b.h)[0]}
+  if(c.f=='sn')return [...o.board].sort((a,b)=>b.a-a.a)[0];
+  if(c.f=='py')return o.board.filter(u=>u.h>0).sort((a,b)=>(a.psn||0)-(b.psn||0)||b.h-a.h)[0];
+  if(c.f=='df'||c.f=='d2'||c.f=='d3')return applyEff(s,o.board.map(u=>({...u,orig:u})),c,!!gf).pick;
+  return undefined}
+// 手札からのリーサル：直撃(F:敵リーダーにdl)＋疾走/突進フーズ＋PPチャージを出して盤面ごとfindLethalで判定する。返すのは先に出すカードの列
+// 火力全開(pf)は「残りPPを全部使って敵1体にその分ダメ」なので必ず最後に撃ち、他のカードの消費PP/PPチャージを引いた残りPP=ダメージで、倒せる敵を除いた盤面を判定する
+function handLethal(s,o){
+  const sum=(c,f)=>(c.f==f?c.v:0)+(c.ts||[]).filter(t=>t.tr=='F'&&t.tf==f).reduce((a,t)=>a+t.tv,0);
+  const pfc=o.board.length?s.hand.find(c=>c.f=='pf'):null;
+  let cand=[];
+  s.hand.forEach(c=>{
+    if(c.f=='pf')return;
+    const cs=cst(s,c);if(cs>s.pp||sumN(c)>0)return;
+    const aoe=effList(c).some(e=>['da','rf','rb','d2','d3','df','dh'].includes(e.f));
+    const dl=aoe?0:sum(c,'dl'),sf=sum(c,'zl'),gp=pfc?sum(c,'pp'):0,isF=c.t=='f';
+    const vu=isF?unit(c,-1,s===G.e):null;
+    if(!(dl>0||aoe||gp>0||(vu&&(vu.s||vu.r)&&vu.a>0)))return;
+    cand.push({c,cs,dl,sf,gp,isF,vu,aoe})});
+  cand=cand.sort((x,y)=>y.dl-x.dl||(y.vu?y.vu.a:0)-(x.vu?x.vu.a:0)).slice(0,8);
+  const ms=[];for(let m=pfc?0:1;m<1<<cand.length;m++)ms.push(m);
+  const pc=m=>{let n=0;for(;m;m&=m-1)n++;return n};
+  ms.sort((a,b)=>pc(a)-pc(b));
+  const evo=canEvo(s),fr=free(s).length,rk=x=>x.gp>0?0:x.isF?1:2;let budget=300;
+  for(const m of ms){
+    const sub=cand.filter((_,k)=>m>>k&1),cost=sub.reduce((a,x)=>a+x.cs,0),g=sub.reduce((a,x)=>a+x.gp,0),nf=sub.filter(x=>x.isF).length,self=sub.reduce((a,x)=>a+x.sf,0),dmg=sub.reduce((a,x)=>a+x.dl,0);
+    if(cost-g>s.pp||nf>fr||self>=s.hp||sub.some(x=>x.gp&&x.cs>s.pp))continue;
+    const order=sub.slice().sort((x,y)=>rk(x)-rk(y)).map(x=>x.c);
+    // 除去・全体ダメ(da/rf/rb/d2/d3/df/dh)は敵盤面のコピーに順に当てて、倒れた敵を除いた盤面で判定する
+    let FB=o.board,dlx=0;
+    if(sub.some(x=>x.aoe)){const B=o.board.map(u=>({...u,orig:u}));order.forEach(c=>{const x=sub.find(y=>y.c===c);if(x&&x.aoe)dlx+=applyEff(s,B,c,true).dl});FB=B.filter(u=>u.h>0)}
+    const me2={...s,board:s.board.concat(sub.filter(x=>x.vu).map(x=>x.vu))},foe2={...o,hp:o.hp-dmg-dlx,board:FB};
+    if(sub.length){
+      if(dmg+dlx>=o.hp)return{cards:order};
+      if(findLethal(me2,foe2,evo))return{cards:order}}
+    if(pfc){const L=s.pp-cost+g;
+      if(L>0)for(const t of FB.filter(u=>u.h>0&&u.h<=L)){
+        if(budget--<=0)break;
+        if(findLethal(me2,{...foe2,board:FB.filter(x=>x!==t)},evo))return{cards:order.concat([pfc]),pfT:t.orig||t}}}}
+  return null}
+// ===== 守り：このカード群を出した後、相手が次のターンにこちらを倒せるか（読み取り専用）=====
+// 出すフーズは守護/高体力を前列へ仮配置、自傷・回復・除去(dh/da)を反映。相手は全フーズ行動可能・PP+1で進化判定。手札の直撃分としてHPに小さな余裕を見る
+function dangerAfter(s,o,cards){
+  const sum=(c,f)=>(c.f==f?c.v:0)+(c.ts||[]).filter(t=>t.tr=='F'&&t.tf==f).reduce((a,t)=>a+t.tv,0);
+  let hp=s.hp;const ob=o.board.map(u=>({...u})),used=new Set(s.board.map(u=>u.pos)),nb=[];
+  const place=(front,pr)=>{const ord=front?[0,1,2,3,4,5]:[3,4,5,0,1,2];
+    const f=ord.filter(p=>!used.has(p));if(!f.length)return -1;
+    const good=front?f.find(p=>p<3):f.find(p=>p>=3&&used.has(p-3));return good!==undefined?good:f[0]};
+  const fol=cards.filter(c=>c.t=='f').sort((a,b)=>((b.k.includes('W')?2:0)+(b.h>b.a?1:0))-((a.k.includes('W')?2:0)+(a.h>a.a?1:0)));
+  for(const c of fol){const tank=c.k.includes('W')||c.h>c.a,p=place(tank);if(p<0)continue;used.add(p);const u=unit(c,p,s===G.e);nb.push(u)}
+  cards.forEach(c=>{hp-=sum(c,'zl');hp=Math.min(s.maxHp,hp+sum(c,'hl'));
+    const dh=sum(c,'dh'),da=sum(c,'da');
+    if(dh&&ob.length){const t=[...ob].sort((a,b)=>b.a-a.a)[0];t.h-=dh}
+    if(da)ob.forEach(u=>{u.h-=da})});
+  return dangerCore(s,o,s.board.concat(nb),ob,hp)}
+// 守りの共通判定：こちらの盤面myB・HP hp、相手の盤面fBで、相手が次のターンにこちらを倒せるか。
+// 相手の全フーズは行動可能(気絶除く)、PP+1後の進化も見る。相手の手札の直撃分としてHPに小さな余裕(手札2枚以上で2)を見る
+function dangerCore(s,o,myB,fB,hp){
+  const me2={...o,board:fB.filter(u=>u.h>0).map(u=>({...u,sick:false,done:false,stunned:!!u.stun}))};
+  const foe2={...s,hp:hp-(o.hand&&o.hand.length>=2?2:0),board:myB.filter(u=>u.h>0)};
+  return !!findLethal(me2,foe2,o.ep>0&&o.mpp+1>=5)}
+// 攻撃プラン実行後の盤面を、コピー上で戦闘(攻撃力分の与ダメ＋反撃)して再現し、相手の次ターンのリーサルを受けるか判定する
+function dangerPlan(me,foe,c){
+  const mp=new Map(),fp=new Map();
+  const mb=me.board.map(u=>{const x={...u};mp.set(u,x);return x}),fb=foe.board.map(u=>{const x={...u};fp.set(u,x);return x});
+  if(c.evo){const x=mp.get(c.evo);if(x){x.a+=2;x.h+=2}}
+  c.steps.forEach(({u,t})=>{const x=mp.get(u);if(!x||x.h<=0||t==='L')return;const y=fp.get(t);if(!y||y.h<=0)return;y.h-=x.a;x.h-=y.a});
+  return dangerCore(me,foe,mb,fb,me.hp)}
+async function tryLethal(s,o){
+  for(let n=0;n<14&&!G.over;n++){
+    const p=findLethal(s,o,canEvo(s));
+    if(!p){
+      const h=handLethal(s,o);if(!h)return;
+      const c=h.cards[0],i=s.hand.indexOf(c);
+      if(i<0||cst(s,c)>s.pp||(c.t=='f'&&!free(s).length))return;
+      await playA(s,i,c.t=='f'?cpos(s,c):0,c.f=='pf'?h.pfT:cpick(s,o,c,true));render();await settle();await sl(1200);continue}
+    if(p.evo){evolve(s,p.evo);render();await sl(1200);continue}
+    const st=p.steps[0];
+    if(!st||!ready(st.u)||(st.t!=='L'&&!o.board.includes(st.t))||!targets(s,st.u).includes(st.t))return;
+    ev('atk','e',st.u.pos);ev('mark','p',st.t==='L'?-1:st.t.pos,'');render();await sl(800);
+    await attackA(s,st.u,st.t,aPick(s,st.u));render();await settle();await sl(1200)}}
+// ===== 攻撃プラン（読み取り専用の純関数）=====
+// 「進化なし/各フーズ」×「倒す敵フーズの組」を全探索し、トレード収支が最良の案を返す。リーダー攻撃は倒した後に届く場合のみ
+// ===== 敵を倒す価値 =====
+// ・自分の盤面のターン終了時効果(E@cl:正面の敵全員にdmg)で、このターン中に勝手に死ぬ敵(体力<=dmg)を殴って倒しても無駄 → 価値0
+// ・死亡時に手札へ戻る敵(D@rt)は倒しても戻ってくる → 価値はごく小さい
+// 毒(1/2)と自軍のターン終了時:正面全体ダメ(E@cl)の合計で、この手番の終わりに死ぬ敵
+const psnD=x=>x.psn>1?2:x.psn>0?1:0;
+function eodCols(me){const c=[0,0,0];me.board.forEach(u=>{if(u.h<=0)return;(u.ts||[]).forEach(t=>{if(t.tr!='E'||t.tf!='cl')return;if((t.cd=='F'&&u.pos>=3)||(t.cd=='B'&&u.pos<3))return;c[u.pos%3]+=t.tv})});return c}
+// 攻撃時:正面全体ダメ(A@cl)の量
+const aClD=u=>(u.ts||[]).filter(t=>t.tr=='A'&&t.tf=='cl'&&!((t.cd=='F'&&u.pos>=3)||(t.cd=='B'&&u.pos<3))).reduce((a,t)=>a+t.tv,0);
+function doomedSet(me,fo){const dm=new Set(),ec=eodCols(me);
+  fo.forEach(x=>{if(x.h<=ec[x.pos%3]+psnD(x))dm.add(x)});
+  return dm}
+const hasRt=x=>(x.ts||[]).some(t=>t.tr=='D'&&t.tf=='rt');
+const killG=(x,dm)=>dm&&dm.has(x)?0:hasRt(x)?2:val(x)+x.a+(x.ts&&x.ts.length?2:0)+4-Math.min(4,2*(x.ts||[]).filter(z=>z.tr=='D').length);
+// faceR(0〜1の乱数)：進化して直接リーダーを殴る案(顔進化)を採るかの判定用。省略(=1)なら顔進化しない
+// defend=true: 戦闘後に相手の次ターンリーサルを受ける案を減点(攻撃フェーズの守り)。tryAttackだけが使う
+function planAttack(me,foe,canEvoNow,evoGate=0,faceR=1,defend=false){
+  const fo=foe.board,col=x=>x.pos%3,mine=me.board.filter(u=>!u.stunned&&!u.done),n=fo.length;
+  const opts=[null].concat(canEvoNow?mine.filter(u=>!u.evo):[]);
+  const gd=fo.filter(x=>x.w&&x.pos<3),isG=x=>x.w&&x.pos<3;
+  const vl=x=>x.a+x.h+(x.w?2:0)+(x.ts||[]).length*2,dm=doomedSet(me,fo),eodC=eodCols(me);
+  // 毒・ターン終了ダメで後から死ぬぶん、戦闘で削る必要量が減る(needM)
+  const needM=new Map(),nd=t=>needM.has(t)?needM.get(t):t.h;
+  const assign=(A,K,i,used,st)=>{
+    if(i==K.length)return{st,used};
+    const t=K[i],R=A.filter(x=>!used.has(x)),subs=[];
+    for(let m=1;m<1<<R.length;m++){const S=R.filter((_,k)=>m>>k&1),sm=S.reduce((a,x)=>a+x.a,0);
+      if(sm<nd(t)||S.some(x=>sm-x.a>=nd(t)))continue;subs.push(S)}
+    const w=S=>S.filter(x=>x.face).reduce((a,x)=>a+x.a,0)*10+S.reduce((a,x)=>a+x.a,0);
+    subs.sort((a,b)=>w(a)-w(b));
+    for(const S of subs){const u2=new Set(used);S.forEach(x=>u2.add(x));
+      const r=assign(A,K,i+1,u2,st.concat(S.map(x=>({x,t}))));if(r)return r}
+    return null};
+  let bestNo={sc:0,evo:null,steps:[],gv:0,ld:0},bestEv=null,bestFace=null;
+  const pool=[];
+  for(const eu of opts){
+    const A=mine.map(u=>{const e=u===eu;return{u,a:u.a+(e?2:0),h:u.h+(e?2:0),face:!u.sick||u.s,ok:!u.sick||u.s||u.r||e}}).filter(x=>x.ok);
+    for(let m=0;m<1<<n;m++){
+      const K0=fo.filter((_,k)=>m>>k&1),inK=x=>K0.includes(x);
+      if(K0.some(x=>!isG(x))&&!gd.every(inK))continue;
+      if(K0.some(x=>x.pos>=3&&fo.some(y=>y.pos==x.pos-3&&!inK(y))))continue;
+      const K=K0.filter(isG).concat(K0.filter(x=>!isG(x)).sort((a,b)=>a.pos-b.pos));
+      needM.clear();
+      K.forEach(t=>{let rd=0;if(!isG(t)&&!(t.pos<3&&K0.some(y=>y.pos==t.pos+3)))rd=Math.max(0,Math.min(t.h-1,eodC[col(t)]+psnD(t)));needM.set(t,t.h-rd)});
+      {const opn=f=>gd.every(f)&&[0,1,2].some(c=>!fo.some(x=>col(x)==c&&!f(x)));
+       if(opn(inK)&&!opn(x=>inK(x)&&nd(x)==x.h))K.forEach(t=>needM.set(t,t.h))}
+      const r=assign(A,K,0,new Set(),[]);if(!r)continue;
+      // 貫通持ちは各標的の最後に殴る(余剰ダメージ=合計−体力、半分(切り上げ)が後ろ/リーダーへ)
+      const ordSt=[];let pierceSc=0,pierceLd=0;
+      K.forEach(t=>{const grp=r.st.filter(z=>z.t===t),sm=grp.reduce((a,z)=>a+z.x.a,0),pl=grp.find(z=>z.x.u.t&&sm>t.h&&sm-z.x.a<t.h);
+        if(!pl){ordSt.push(...grp);return}
+        ordSt.push(...grp.filter(z=>z!==pl),pl);
+        const q=Math.ceil((sm-t.h)/2),bk=t.pos<3?fo.find(x=>x.pos==t.pos+3):null;
+        if(bk){if(!inK(bk))pierceSc+=q>=bk.h?killG(bk,dm):.4*q}
+        else{pierceSc+=q*(foe.hp<=12?1.8:1.1)*(me.hp>=14&&foe.hp<=20?1.3:1);pierceLd+=q}});
+      let sc=pierceSc,gv=0;
+      const ease=me.hp>=14,fw=(foe.hp<=12?1.8:1.1)*(ease&&foe.hp<=20?1.3:1);
+      r.st.forEach(({x,t})=>{if(x.h<=t.a){
+        // 相打ち：攻撃力が高い側から打つほど損(減点大)、低いほど得(減点小)。同値は残りHP差・効果数・盤面の優劣で決める
+        const vx=x.a+x.h+(x.u.w?2:0)+(x.u.ts||[]).length*2,da=x.a-t.a;let f;
+        if(da>0)f=1+Math.min(.6,.15*da);
+        else if(da<0)f=Math.max(.45,1+.15*da);
+        else{const ex=(x.u.ts||[]).length-(t.ts||[]).length;f=Math.min(1.3,Math.max(.7,1+.06*(x.h-t.h)+.08*ex+(me.board.length<=foe.board.length?-.1:.05)))}
+        const dD=(x.u.ts||[]).some(z=>z.tr=='D')?.85:1;
+        sc-=vx*(ease?.9:.7)*f*dD}sc-=.5});
+      K.forEach(t=>{const g=killG(t,dm);sc+=g;gv+=g});
+      const open=gd.every(inK)&&[0,1,2].some(c=>!fo.some(x=>col(x)==c&&!inK(x)));
+      const steps=ordSt.map(({x,t})=>({u:x.u,t}));
+      let ld=pierceLd;
+      if(open)A.filter(x=>!r.used.has(x)&&x.face).forEach(x=>{sc+=x.a*fw;steps.push({u:x.u,t:'L'});ld+=x.a});
+      [...new Set(steps.map(z=>z.u))].forEach(u=>{const d=adl(u);if(d){sc+=d*fw;ld+=d}
+        const cd=aClD(u);if(cd>0)fo.forEach(f=>{if(col(f)!=u.pos%3||inK(f))return;sc+=f.h<=cd?killG(f,dm):dm.has(f)?0:.3*cd})});
+      if(eu){if(!steps.some(z=>z.u===eu))continue;sc-=4}
+      const c={sc,evo:eu,steps,gv,ld};
+      if(defend)pool.push(c);
+      if(eu){if(steps.some(z=>z.u===eu&&z.t==='L')&&(!bestFace||sc>bestFace.sc))bestFace=c;if(!bestEv||sc>bestEv.sc)bestEv=c}else if(sc>bestNo.sc+1e-9)bestNo=c}}
+  if(defend){
+    // 守り：scの大きい順に危険判定し、減点後の最良を選ぶ(それ以上は逆転できない所で打ち切る＝枝刈り)。何もしない案も候補
+    const dn=new Map(),dg=c=>{if(!dn.has(c))dn.set(c,dangerPlan(me,foe,c));return dn.get(c)};
+    const pick=L=>{const A=L.slice().sort((a,b)=>b.sc-a.sc);let b=null,n=0;
+      for(const c of A){if(b&&c.sc<=b.sc)break;if(n++>=40)break;const sc=c.sc-(dg(c)?60:0);if(!b||sc>b.sc)b={...c,sc}}
+      return b};
+    bestNo=pick(pool.filter(c=>!c.evo).concat([{sc:0,evo:null,steps:[],gv:0,ld:0}]));
+    bestEv=pick(pool.filter(c=>c.evo));
+    bestFace=pick(pool.filter(c=>c.evo&&c.steps.some(z=>z.u===c.evo&&z.t==='L')))}
+  // 進化案は、しない案より得で、かつ「進化で追加で倒せる敵の総価値」が閾値以上のときだけ採用(EP温存)
+  const base=bestEv&&bestEv.sc>bestNo.sc+1e-9&&bestEv.gv-bestNo.gv>=evoGate?bestEv:bestNo;
+  // 顔進化：進化した味方がリーダーを殴り、敵を倒す価値は下がらず、リーダーへのダメージが増える案。
+  // 最善かの判断は難しいので乱数で採用。リーダーのHPが詰まるほど・EPに余裕があるほど採りやすい
+  if(base===bestNo&&bestFace&&bestFace.gv>=bestNo.gv&&bestFace.ld>bestNo.ld&&bestNo.sc-bestFace.sc<=5){
+    const hpA=foe.hp-bestFace.ld,m=Math.min(1,(me.ep||0)/3),pr=(hpA<=6?.85:hpA<=10?.6:hpA<=15?.35:.12)*m;
+    if(faceR<pr)return bestFace}
+  return base}
+async function tryAttack(s,o){
+  let cnt=0;
+  for(let n=0;n<8&&!G.over;n++){
+    const p=planAttack(s,o,canEvo(s),(9+Math.random()*11)*(s.ep<=1?1.25:1),Math.random(),true);
+    if(!p.steps.length)return cnt;
+    if(p.evo){evolve(s,p.evo);render();await sl(1200)}
+    for(const st of p.steps){
+      if(G.over)return cnt;
+      if(!s.board.includes(st.u)||!ready(st.u)||(st.t!=='L'&&!o.board.includes(st.t))||!targets(s,st.u).includes(st.t)){
+        if(st===p.steps[0]&&!p.evo)return cnt;break}
+      ev('atk','e',st.u.pos);ev('mark','p',st.t==='L'?-1:st.t.pos,'');render();await sl(800);
+      await attackA(s,st.u,st.t,aPick(s,st.u));cnt++;render();await settle();await sl(1200)}}
+  return cnt}
+// 面を空ける/守護を削る：勝てない相手に安いフーズで殴る（deficit指定=面を空けるため、味方が死ぬ攻撃のみ）
+const sumN=c=>(c.f=='su'?c.v:0)+(c.ts||[]).filter(t=>t.tr=='F'&&t.tf=='su').reduce((a,t)=>a+t.tv,0);
+function slotDeficit(s){let top=null,tv=0;
+  s.hand.forEach(c=>{const k=sumN(c);if(k<=0||cst(s,c)>s.pp||!useful(s,c))return;
+    const v=(c.t=='f'?c.a+c.h:0)+k*2+(c.ts||[]).length*2;if(v>tv){top=c;tv=v}});
+  return top?{d:(top.t=='f'?1:0)+sumN(top)-free(s).length,tv}:null}
+async function tryChip(s,o,dd,oldOk=true){
+  for(let n=0;n<4&&!G.over;n++){
+    if(dd){const x=slotDeficit(s);if(!x||x.d<=0)return}
+    let best=null;
+    s.board.filter(u=>ready(u)).forEach(u=>targets(s,u).filter(t=>t!=='L').forEach(t=>{
+      const vu=val(u);let sc;
+      if(dd){if(u.h>t.a||vu>dd.tv-3)return;sc=-vu+.3*Math.min(u.a,t.h)+(t.w?1:0)}
+      else{
+        const hv=(u.ts||[]).filter(x=>x.tr=='H'&&x.tf=='dl'&&!((x.cd=='F'&&u.pos>=3)||(x.cd=='B'&&u.pos<3))).reduce((a,x)=>a+(+x.tv||0),0);
+        const fr=u.a>0&&u.a<t.h&&u.h>t.a&&!(t.ts||[]).some(x=>x.tr=='H')&&!(u.w&&u.pos<3&&u.h-t.a<3);
+        if(fr)sc=Math.min(u.a,t.h)+hv*1.5+(t.w?2:0);
+        else{if(!oldOk||!(t.w&&t.pos<3&&val(t)>=8)||vu>5||u.a<=0)return;sc=Math.min(u.a,t.h)-vu*.3}}
+      if(!best||sc>best.sc)best={u,t,sc}}));
+    if(!best)return;
+    ev('atk','e',best.u.pos);ev('mark','p',best.t.pos,'');render();await sl(800);
+    await attackA(s,best.u,best.t,aPick(s,best.u));render();await settle();await sl(1200)}}
+async function cpu(){
+  const s = G?.e;
+  const o = G?.p;
+
+  if (!s || !o) return;
+
+  try {
+    G.busy = true;
+    await sl(1000);
+    const pp0 = s.pp;
+    await tryLethal(s, o);
+    if (G.over) return;
+    let dd = slotDeficit(s);
+    if (dd && dd.d > 0) {
+      await tryAttack(s, o);
+      if (G.over) return;
+      dd = slotDeficit(s);
+      if (dd && dd.d > 0) await tryChip(s, o, dd);
+      if (G.over) return;
+    }
+
+    const late = c => c.t == 's' && c.f == 'st';
+    const gain = c => (c.t == 's' && c.f == 'pp' ? c.v : 0) + (c.ts || []).filter(t => t.tr == 'F' && t.tf == 'pp').reduce((a, t) => a + t.tv, 0);
+    const pb = c => c.t == 'f' && (c.ts || []).some(t => t.tr == 'P' && (t.tf == 'bf' || t.tf == 'ba')) ? 1 : 0;
+    const sd = c => (c.f == 'zl' ? c.v : 0) + (c.f == 'dx' ? 2 : 0) + (c.ts || []).filter(t => t.tr == 'F' && t.tf == 'zl').reduce((a, t) => a + t.tv, 0);
+    const ed = c => c.t == 'f' ? (c.ts || []).filter(t => t.tr == 'E' && t.tf == 'zl').reduce((a, t) => a + t.tv, 0) : 0;
+    const pkR = L => {
+      const R = s.board.filter(u => ready(u) && u.sick && u.r && !u.s && u.a > 0);
+      if (!R.length) return pickKill(o, L);
+      const vs = o.board.filter(x => vis(o, x)), gv = vs.some(w => w.w && w.pos < 3);
+      const sk = x => vs.includes(x) && (!gv || (x.w && x.pos < 3)) && R.some(u => u.a >= x.h);
+      return pickKillB(o.board.filter(x => !sk(x)), L) || pickKill(o, L);
+    };
+    const threat = () => o.board.map(u => u.a).sort((a, b) => b - a).slice(0, 2).reduce((a, b) => a + b, 0);
+    // 火力全開：他を出し終えた最後に撃つ(=残りPPが最大)。倒せる敵がいる時だけ。PP0なら「特技を使うたび」持ちの強化用に撃つ
+    const hasM = c => effList(c).some(e => MULTI.includes(e.f));
+    // 撃った後に残りPPで除去・全体/複数ダメを撃つ(攻撃後の盤面で再評価)
+    const castMulti = async () => {
+      for (let z = 0; z < 3 && !G.over; z++) {
+        if (!o.board.length) return;
+        const b0 = planAttack(s, o, false, 0).sc;
+        let best = null;
+        s.hand.forEach(c => {
+          if (c.t != 's' || !hasM(c) || cst(s, c) > s.pp) return;
+          const e = effVal(s, o, c, b0);
+          if (e && e.V >= 5 + 2 * cst(s, c) && (!best || e.V > best.e.V)) best = {c, e};
+        });
+        if (!best) return;
+        await playA(s, s.hand.indexOf(best.c), 0, cpick(s, o, best.c));
+        render();
+        await settle();
+        await sl(1200);
+        await tryLethal(s, o);
+      }
+    };
+    // PPが5以上余ったまま手札を何も使わなかった時だけ、理由の種類をログに出す(カード名は出さない)
+    const idleLog = () => {
+      if (s.pp < 5 || s.pp < pp0 || !s.hand.length) return;
+      const R = new Set(), fr0 = free(s).length;
+      s.hand.forEach(c => {
+        if (c.t == 'f') { if (!fr0) R.add('盤面が埋まっている'); else if (sd(c) || ed(c)) R.add('自傷を避けた'); return; }
+        if (!useful(s, c)) R.add('効果の対象・条件がない');
+        else if (late(c)) R.add('出汁ミストは攻撃後に温存');
+        else if (c.f == 'pf') R.add('火力全開は倒せる敵がいない');
+        else if (hasM(c)) R.add('除去の価値が低い');
+        else if (sd(c)) R.add('自傷を避けた');
+      });
+      if (R.size) lg(`<small>CPU: PPが余ったが手札は使わず（${[...R].join('／')}）</small>`);
+    };
+    const castPf = async fin => {
+      for (let z = 0; z < 8 && !G.over; z++) {
+        const i = s.hand.findIndex(c => c.f == 'pf');
+        if (i < 0 || !o.board.length) return;
+        if (!fin && s.hand.some(c => late(c) && useful(s, c)) && threat() >= 4) return;
+        const L = s.pp;
+        let t;
+        if (L > 0) {
+          t = pkR(L);
+          if (!t && fin && L >= 5) t = o.board.find(u => u.w && u.pos < 3);
+          if (!t) return;
+        } else if (!s.board.some(u => u.h > 0 && (u.ts || []).some(x => x.tr == 'S' && x.tf == 'sf'))) return;
+        await playA(s, i, 0, t);
+        render();
+        await settle();
+        await sl(1200);
+        await tryLethal(s, o);
+      }
+    };
+
+    for (let it = 0; it < 12 && !G.over; it++) {
+      const stc = s.hand.find(c => late(c) && useful(s, c));
+      const rsv = stc && threat() >= 5 ? cst(s, stc) : 0;
+      const pot = o.board.reduce((a, u) => a + u.a, 0), edB = s.board.reduce((a, u) => a + (u.h > 0 ? (u.ts || []).filter(t => t.tr == 'E' && t.tf == 'zl').reduce((x, t) => x + t.tv, 0) : 0), 0);
+      // 除去・全体/複数ダメの価値：撃たない場合の攻撃プランと比べた得(EV)。スペルは価値が低ければ撃たない
+      const EV = new Map();
+      if (o.board.length && s.hand.some(hasM)) {
+        const b0 = planAttack(s, o, false, 0).sc;
+        s.hand.forEach(c => { if (hasM(c) && cst(s, c) <= s.pp && !EV.has(c)) { const e = effVal(s, o, c, b0); if (e) EV.set(c, e); } });
+      }
+      const hd = s.hand.map((c, i) => ({c, i})).filter(x => useful(s, x.c) && !late(x.c) && x.c.f != 'pf' && !(x.c.t == 's' && EV.has(x.c) && EV.get(x.c).V < 5 + 2 * cst(s, x.c)));
+      // 火力全開は「他のカードを出した残りPP」がダメージ。出汁ミスト温存中は撃たない。倒せる敵がいる時だけ価値あり
+      const stH = !!stc && threat() >= 4;
+      const pfOn = !stH && o.board.length > 0 && s.hand.some(c => c.f == 'pf');
+      const pfTerm = L => { const t = L > 0 ? pkR(L) : null; return t ? val(t) + 10 * t.h : 0; };
+      // 新能力の加点: 新鮮(新鮮でないフーズは朝市セリ後に)、選択(スモーガスボード+選択カード)、移動(守護どかし/「移動するたび」を先に)、毒
+      const isCh = c => ['ch', 'rc'].includes(c.f) || (c.ts || []).some(t => ['ch', 'rc'].includes(t.tf));
+      const isMv = c => ['mb', 'mf', 'mv', 'mr', 'mc', 'mh'].includes(c.f);
+      const isV = c => (c.ts || []).some(t => t.tr == 'V');
+      const fzV = c => 4 + 2 * (c.ts || []).filter(t => t.cd == 'N').length + 3 * (c.k.match(/[a-z]/g) || []).length;
+      const guards = o.board.filter(u => u.w && u.h > 0), gF = guards.filter(u => u.pos < 3).length, gB = guards.length - gF;
+      const extra = (c, sub) => {
+        let r = 0;
+        const cc = sub.map(x => x.c);
+        if (c.t == 'f' && hasFresh(c)) { const fz = c.fr || cc.some(y => y.f == 'fh'); r += fz ? fzV(c) : -fzV(c) * .6; }
+        if (c.f == 'fh') r += 3;
+        if (c.f == 'ca') r += cc.some(y => y !== c && isCh(y)) || s.board.some(isCh) ? 4 : -12;
+        if (isCh(c) && cc.some(y => y.f == 'ca')) r += 6;
+        if (isMv(c)) {
+          if (cc.some(y => y !== c && isV(y)) || s.board.some(isV)) r += 5;
+          if (c.f == 'mr' && gF > gB) r += 14;
+          if (c.f == 'mf' && gF > 0) r += 4;
+        }
+        if (isV(c) && cc.some(isMv)) r += 4;
+        if (c.f == 'pa') { const unp = o.board.filter(u => !u.psn).length, p1 = o.board.filter(u => u.psn == 1).length; r += Math.min(24, 3 * unp + 4 * p1); }
+        if (c.f == 'py' || (c.ts || []).some(t => t.tf == 'py' || t.tf == 'pr')) r += o.board.some(u => !u.psn || u.psn == 1) ? 4 : 0;
+        if (c.f == 'fn' || (c.ts || []).some(t => t.tf == 'fd')) r += o.board.length ? 2 * s.hand.filter(x => x.fr).length : 0;
+        return r;
+      };
+      const fr = free(s).length;
+      let best = null;
+      const cands = [];
+
+      for (let m = pfOn ? 0 : 1; m < 1 << hd.length; m++) {
+        const sub = hd.filter((_, k) => m >> k & 1);
+        const gs = sub.filter(x => gain(x.c)), ng = sub.filter(x => !gain(x.c));
+        const gc = gs.reduce((a, x) => a + cst(s, x.c), 0), gg = gs.reduce((a, x) => a + gain(x.c), 0);
+        const nc = ng.reduce((a, x) => a + cst(s, x.c), 0);
+        const pT = pfOn ? pfTerm(Math.max(0, s.pp - (gc + nc - gg))) : 0;
+        if (gs.length && !ng.length && !pT) continue;
+        if (!sub.length && !pT) continue;
+        const fl = sub.filter(x => x.c.t == 'f').length;
+        const sfl = sub.reduce((a, x) => a + sd(x.c), 0), efl = edB + sub.reduce((a, x) => a + ed(x.c), 0);
+        if ((sfl || efl) && s.hp - sfl - efl < 1 + Math.ceil(pot * .5)) continue;
+        if (gs.some(x => cst(s, x.c) > s.pp) || gc + nc - gg > s.pp - rsv || fl > fr) continue;
+
+        let sc = nc * 10 + pT + (Math.random() * 6 - 3);
+        if (gs.length && nc <= s.pp - rsv - gc) sc -= 8 * gs.length;
+        { const mv = ng.filter(x => x.c.t == 's' && EV.has(x.c)).map(x => Math.max(0, Math.min(EV.get(x.c).V, 60))).sort((a, b) => b - a); if (mv.length > 1) sc -= .6 * mv.slice(1).reduce((a, b) => a + b, 0); } // 除去/ダメ系を重ねる案は同じ敵を二重に数えるので割り引く
+        ng.forEach(x => {
+          const c = x.c;
+          sc += extra(c, sub);
+          if (c.t == 'f') {
+            sc += c.a + c.h + (c.k.includes('W') ? 3 : 0) + (c.k.includes('S') ? 4 : 0);
+            const ev = EV.get(c);
+            if (ev) sc += .7 * Math.max(0, Math.min(ev.V, 40));
+          } else {
+            const ev = EV.get(c);
+            if (ev) sc += Math.max(0, Math.min(ev.V, 60));
+            if (c.f == 'hl' && s.hp <= s.maxHp - 10) sc += 6;
+            if (c.f == 'mp') sc += 10;
+          }
+        });
+        cands.push({sc, sub});
+      }
+      // 守り：スコア上位8案のうち、出した後に相手の次ターンリーサルを受ける案は大きく減点
+      cands.sort((a, b) => b.sc - a.sc);
+      for (const cd of cands.slice(0, 8)) {
+        const sc = cd.sc - (dangerAfter(s, o, cd.sub.map(x => x.c)) ? 80 : 0);
+        if (!best || sc > best.sc) best = {sc, sub: cd.sub};
+      }
+
+      if (!best || !best.sub.length) break;
+      const rx = c => c.t == 'f' && (c.ts || []).some(t => t.tr == 'L') ? 1 : 0;
+      const pe = c => c.t == 'f' && (c.ts || []).some(t => t.tr == 'P' && t.tf == 'su') ? 1 : 0; // 「フーズを出すたび:召喚」持ちは他のフーズより先に出す
+      const cs = best.sub.map(x => x.c).sort((a, b) => (b.f == 'dn') - (a.f == 'dn') || ((b.f == 'fh' || b.f == 'ca') - (a.f == 'fh' || a.f == 'ca')) || (((b.ts || []).some(t => t.tr == 'V')) - ((a.ts || []).some(t => t.tr == 'V'))) || (['mb', 'mf', 'mv', 'mr', 'mc', 'mh'].includes(a.f) - ['mb', 'mf', 'mv', 'mr', 'mc', 'mh'].includes(b.f)) || rx(b) - rx(a) || (gain(b) > 0) - (gain(a) > 0) || (a.t == 'f' ? 0 : 1) - (b.t == 'f' ? 0 : 1) || pe(b) - pe(a) || pb(b) - pb(a) || (b.f == 'dh') - (a.f == 'dh') || a.c - b.c);
+      const c = cs.find(c => cst(s, c) <= s.pp && !(c.t == 'f' && !free(s).length));
+      const i = c ? s.hand.indexOf(c) : -1;
+      if (i < 0) break;
+      await playA(s, i, c.t == 'f' ? cpos(s, c) : 0, cpick(s, o, c));
+      render();
+      await settle();
+      await sl(1200);
+      await tryLethal(s, o);
+    }
+
+    if (G.over) return;
+    await castPf(false);
+    if (G.over) return;
+    await tryLethal(s, o);
+    idleLog();
+    if (G.over) return;
+
+    const nAtk = await tryAttack(s, o);
+    if (G.over) return;
+    await tryChip(s, o, null, !nAtk && Math.random() < .5);
+    if (G.over) return;
+    for (let z = 0; z < 3 && !G.over; z++) {
+      const i = s.hand.findIndex(c => late(c) && useful(s, c) && cst(s, c) <= s.pp);
+      if (i < 0 || threat() < 4) break;
+      await playA(s, i, 0);
+      render();
+      await settle();
+      await sl(1200);
+    }
+    if (G.over) return;
+    await castMulti();
+    if (G.over) return;
+    await castPf(true);
+    if (G.over) return;
+
+    for (const u of s.board.slice()) {
+      if (G.over) return;
+      if ((u.ts || []).some(t => t.tr == 'E') && u.h > 0) {
+        trig(s, u, 'E');
+        chk();
+        render();
+        await settle();
+        await sl(1000);
+      }
+    }
+  } catch (err) {
+    const errMsg = `<span style="color:#ff5a5a;font-weight:bold;">🚨 CPUエラー: ${err.message}</span>`;
+    if (G && G.log) {
+      G.log.push(errMsg);
+      const l = document.querySelector('#log');
+      if (l) {
+        l.innerHTML = G.log.slice(-30).join('<br>');
+        l.scrollTop = 1e9;
+      }
+    }
+    console.error("CPU Error:", err);
+  } finally {
+    if (G) G.busy = false;
+    if (s) endT(s, true);
+  }
+}
+
+function render(){if(!G)return;const{p,e}=G;const su=G.sel!=null?p.board[G.sel]:null,tg=su?targets(p,su):[],gt=G.tgt?(G.tgt.k=='eff'?G.tgt.ch.got:G.tgt.got||[]):[],sc=G.tgt?(G.tgt.k=='aeff'?selCands(p,{f:G.tgt.at.tf},G.tgt.u):G.tgt.k=='eff'?effCands(G.tgt.ch):G.tgt.k=='ptgt'?selCands(p,{f:G.tgt.o.f,v:G.tgt.o.v},G.tgt.T.u):G.tgt.k=='popt'?[]:selCands(p,p.hand[G.tgt.i]).filter(u=>!gt.includes(u))):[],pk=u=>(sc.includes(u)?' pk':'')+(gt.includes(u)?' pkd':'');
+const ld=(s,id,n)=>`<b>${n} ❤${s.hp}/${s.maxHp}</b><span>PP ${s.pp}/${s.mpp}</span><span>EP ${s.ep}</span><span>山${s.deck.length} 手${s.hand.length}</span>${cols(s)==3?'<span>🧱防御中</span>':''}`;
+$('#el').innerHTML=ld(e,'e',OPN());$('#el').className='lead'+(tg.includes('L')?' tgt':'');$('#el').dataset.a='leader';
+$('#pl').innerHTML=ld(p,'p','あなた');$('#gm').classList.toggle('tgtm',!!G.tgt&&!MOD(G.tgt));renderOpt();if(G.tgt&&!MOD(G.tgt)){const eff=G.tgt.k=='eff',cf=eff?G.tgt.ch.c.f:(p.hand[G.tgt.i]||{}).f,r=TSEL[cf]||{},k=gt.length,lb=(r.n>1)?`（${k+1}体目${r.lab?'：'+r.lab[k]:''}）`:'';const cs=eff?(G.tgt.ch.cs||''):G.tgt.k=='aeff'?cLog(`<b>${G.tgt.u.n}</b> <small>${G.tgt.at.tx}</small>`):(()=>{const cc=p.hand[G.tgt.i];return cc?cLog(`<b>${cc.n}</b> <small>${desc(cc)||''}</small>`):''})();$('#now').innerHTML='🎯 '+(eff?'効果の対象を選択':'対象を選択')+lb+(cs?'<br>'+cs:'')+(eff?' <small>（金枠のフーズをクリック）</small>':' <small>（金枠のフーズをクリック／それ以外をクリックでキャンセル）</small>');G.hint=1}else if(G.hint){G.hint=0;$('#now').innerHTML=G.nb.join(' ▶ ')}
+const stIcon=(u,sid)=>{const act=(sid=='p')===(G.cur=='p');return ((u.stun||(act&&u.stunned))?'⏸':'')+(u.sick&&!(u.s||u.r)?'💤':'')+(u.psn>0?(u.psn>1?'☠️':'🧪'):'')+(u.fr&&u.fx?'🌿':'')};
+const stTip=(u,sid)=>{const act=(sid=='p')===(G.cur=='p');const a=[];if(u.stun)a.push('次のターン攻撃できない');else if(act&&u.stunned)a.push('このターン攻撃できない');if(u.sick&&!(u.s||u.r))a.push('レスト（持ち主のターン開始で回復）');else if(u.sick&&u.r&&!u.s)a.push('突進：フーズだけ攻撃可');if(u.fr&&u.fx)a.push('新鮮：ターン終了まで[新鮮]の効果が有効');if(u.psn>0)a.push(u.psn>1?'猛毒：ターン終了時に2ダメージ':'毒：ターン終了時に1ダメージ');return a.join(' / ')};
+const uh=(u,cls,d,lk,sid)=>`<div class="u ${cls}" title="${stTip(u,sid)}" style="--k:${KC[u.col]||''}" data-a="${d}" data-s="${sid}${u.pos}">${u.cost!=null?`<em>${u.cost}</em>`:''}<b>${u.n}</b><i>${lk?'🔒':''}${u.w&&u.pos<3?'🛡':''}${stIcon(u,sid)}${u.r?'⚡':''}${u.s?'💨':''}${u.t?'🔱':''}${u.ty?'🪨':''}${u.evo?'★':''}</i><small>${u.d}</small><span class="a">${u.a}</span><span class="h">${u.h}</span></div>`;
+const cell=(s,pos,mine)=>{const i=s.board.findIndex(x=>x.pos==pos),u=s.board[i],t=pos<3?'前列':'後列',id=(mine?'p':'e')+pos;if(!u)return mine?`<div class="sl${G.pend!=null?' pl':''}" data-a="slot:${pos}" data-s="${id}">${t}</div>`:`<div class="sl" data-s="${id}">${t}</div>`;return uh(u,mine?(G.sel===i?'sel ':'')+(ready(u)&&G.cur=='p'&&!G.tgt?('rdy'+(face(u)?' ldr':'')):'')+pk(u):(tg.includes(u)?'tgt':'')+pk(u),(mine?'my:':'foe:')+i,!vis(s,u),mine?'p':'e')};
+$('#eb').innerHTML=[3,4,5,0,1,2].map(q=>cell(e,q,false)).join('');
+$('#pb').innerHTML=[0,1,2,3,4,5].map(q=>cell(p,q,true)).join('');
+
+// マリガン中か通常プレイ時かでクラス切り替え（マリガン中はグレーアウトしない）
+$('#hd').classList.toggle('dense',p.hand.length>8);$('#hd').innerHTML=p.hand.map((c,i)=>{
+  const isOk = G.mulligan || (G.cur=='p' && cst(p,c)<=p.pp);
+  const isSelected = G.mulligan && G.mulSel.has(i);
+  return `<div class="c ${c.t=='s'?'sp':'fd'} r${c.rar} ${isOk?'ok':''} ${(G.pend===i||(G.tgt&&G.tgt.i===i))?' pd':''} ${isSelected?'mulligan-selected':''}" style="--k:${KC[c.col]}" data-a="hand:${i}"><em${(c.dc||cst(p,c)<c.c)?' style=\"color:#7CFF7C\"':''}>${cst(p,c)}</em><b>${c.fr&&hasFresh(c)?'🌿':''}${c.n}</b><div class="st">${'★'.repeat(c.rar)}</div><small>${descH(c)}</small><span>${c.t=='f'?c.a+'/'+c.h:'特技'}</span></div>`;
+}).join('');
+
+// マリガン中のボタン表示制御
+$('#mulliganConfirm').style.display = G.mulligan ? 'inline-block' : 'none';
+$('#evo').style.display = G.mulligan ? 'none' : 'inline-block';
+$('#end').style.display = G.mulligan ? 'none' : 'inline-block';
+
+if(!G.mulligan){
+  $('#evo').disabled=!(G.cur=='p'&&canEvo(p)&&p.board.length);$('#evo').textContent=G.evo?'進化：対象を選択':'進化 (EP'+p.ep+')';$('#end').disabled=G.cur!='p'||G.busy;
+}
+fxPlay()}
+
+$('#mulliganConfirm').onclick=()=>confirmMulligan();
+$('#evo').onclick=()=>{if(G.tgt&&G.tgt.k=='eff')return;G.tgt=null;G.evo=!G.evo;G.sel=null;render()};$('#end').onclick=async()=>{if(G.cur!='p'||G.busy||(G.tgt&&G.tgt.k=='eff'))return;G.busy=true;G.sel=null;G.pend=null;G.tgt=null;G.evo=false;const s=G.p;for(const u of s.board.slice()){if(G.over)return;if((u.ts||[]).some(t=>t.tr=='E')&&u.h>0){trig(s,u,'E');chk();render();await settle();await sl(1000)}}G.busy=false;endT(s,true)};$('#mute').onclick=()=>{muted=!muted;$('#mute').textContent=muted?'🔇':'🔊'};
+const after=job=>{if(job){render();job.then(()=>{askNext();render();settle()},er=>{console.error(er);G.busy=false;render()})}else{askNext();render();settle()}};
+$('#gm').addEventListener('click',e=>{const d=e.target.closest('[data-a]');if(!G||G.over||(G.busy&&!(G.tgt&&(G.tgt.k=='eff'||G.tgt.k=='opt'||G.tgt.k=='mvd'||G.tgt.k=='hsel'||G.tgt.k=='hpos'))))return;
+// 対象選択中: 候補をクリックで確定、それ以外のクリックはキャンセル（PP・手札は消費しない）
+if(G.tgt&&G.tgt.k=='opt'){const ch=G.tgt.ch,m=d?d.dataset.a.split(':'):[''],o=m[0]=='opt'?CHT[ch.opt].o[+m[1]]:null;if(!o)return;G.tgt=null;const a0=G.ask;G.ask=true;try{lg(`${o.t}を選択`,'r');runOpt(ch.s,o,ch.self);chk()}finally{G.ask=a0}askNext();render();settle();return}
+if(G.tgt&&(G.tgt.k=='hsel'||G.tgt.k=='hpos')){const T=G.tgt,ch=T.ch,s=ch.s,m=d?d.dataset.a.split(':'):[''];const fin2=f=>{G.tgt=null;const a0=G.ask;G.ask=true;try{f();chk()}finally{G.ask=a0}askNext();render();settle()};
+if(T.k=='hpos'){if(m[0]!='hp'||!free(s).includes(+m[1]))return;fin2(()=>summonHand(s,T.card,+m[1]));return}
+const L=handCands(s,ch.kind);
+if(m[0]=='hs'){const c=L[+m[1]];if(!c)return;if(ch.kind=='hr'){const k=T.sel.indexOf(c);if(k>=0)T.sel.splice(k,1);else if(T.sel.length<ch.v)T.sel.push(c);render();return}
+if(ch.kind=='hp'){const fr=free(s);if(fr.length>1){G.tgt={k:'hpos',ch,card:c};render();return}fin2(()=>applyHand(s,'hp',ch.v,[c],fr[0]));return}
+fin2(()=>applyHand(s,ch.kind,ch.v,[c]));return}
+if(m[0]=='hok'&&ch.kind=='hr')fin2(()=>applyHand(s,'hr',ch.v,T.sel));return}
+if(G.tgt&&G.tgt.k=='mvd'){const ch=G.tgt.ch,m=d?d.dataset.a.split(':'):[''];if(m[0]!='mvp')return;G.tgt=null;moveU(ch.s,ch.u,+m[1]);chk();askNext();render();settle();return}
+if(G.tgt&&G.tgt.k=='popt'){const T=G.tgt,m=d?d.dataset.a.split(':'):[''],o=m[0]=='opt'?CHT[T.id].o[+m[1]]:null;if(!o){G.tgt=null;G.pend=null;G.sel=null;render();return}const need=TSEL[o.f]&&!(TSEL[o.f].n>1)&&!TSEL[o.f].ord&&needSel(TSEL[o.f],selCands(G.p,{f:o.f,v:o.v},T.u).length);if(need){G.tgt={k:'ptgt',T,idx:+m[1],o};render();return}G.tgt=null;G.pend=null;after(launchP(T,{opt:+m[1]}));return}
+if(G.tgt&&G.tgt.k=='ptgt'){const P=G.tgt,kk=d?d.dataset.a.split(':'):['',''],tt=kk[0]=='foe'?G.e.board[+kk[1]]:kk[0]=='my'?G.p.board[+kk[1]]:null;G.tgt=null;G.pend=null;if(tt&&selCands(G.p,{f:P.o.f,v:P.o.v},P.T.u).includes(tt))after(launchP(P.T,{opt:P.idx,t:tt}));else{G.sel=null;render()}return}
+if(G.tgt&&G.tgt.k=='aeff'){const T=G.tgt,kk=d?d.dataset.a.split(':'):['',''],tt=kk[0]=='foe'?G.e.board[+kk[1]]:kk[0]=='my'?G.p.board[+kk[1]]:null;G.tgt=null;let jb=null;if(tt&&selCands(G.p,{f:T.at.tf},T.u).includes(tt)&&G.p.board.includes(T.u)){ev('atk','p',T.u.pos);jb=attackA(G.p,T.u,T.t,tt);G.sel=null}after(jb);return}
+if(G.tgt&&G.tgt.k=='eff'){const ch=G.tgt.ch,kk=d?d.dataset.a.split(':'):['',''],tt=kk[0]=='foe'?G.e.board[+kk[1]]:kk[0]=='my'?G.p.board[+kk[1]]:null;
+  if(!tt||!effCands(ch).includes(tt))return;
+  ch.got.push(tt);G.tgt=null;if(ch.got.length>=ch.n||!effCands(ch).length){fx(ch.s,ch.c,ch.self,ch.n>1?ch.got:tt);chk()}else G.tgt={k:'eff',ch};
+  askNext();render();settle();return}
+if(G.tgt&&G.cur=='p'&&!G.mulligan){let jb=null;const T=G.tgt,pp=G.p;G.tgt=null;const kk=d?d.dataset.a.split(':'):['',''];const cc=pp.hand[T.i],tt=kk[0]=='foe'?G.e.board[+kk[1]]:kk[0]=='my'?pp.board[+kk[1]]:null;
+  if(cc&&tt&&selCands(pp,cc).includes(tt)&&!T.got.includes(tt)&&cst(pp,cc)<=pp.pp&&(cc.t!='f'||!pp.board.some(u=>u.pos==T.pos))){const nn=(TSEL[cc.f].n||1);T.got.push(tt);if(T.got.length>=nn||!selCands(pp,cc).some(u=>!T.got.includes(u)))jb=playA(pp,T.i,T.pos,nn>1?T.got:tt);else G.tgt=T}else $('#now').innerHTML=(G.nb||[]).join(' → ');
+  after(jb);return}
+if(!d)return;const[k,i]=d.dataset.a.split(':'),p=G.p;let job=null;
+
+// マリガン中のクリック処理
+if(G.mulligan){
+  if(k=='hand'){
+    const idx = +i;
+    if(G.mulSel.has(idx)) G.mulSel.delete(idx);
+    else G.mulSel.add(idx);
+    render();
+  }
+  return;
+}
+
+if(G.cur!='p') return;
+
+if(k=='hand'){const c=p.hand[+i];if(cst(p,c)>p.pp||(c.t=='f'&&p.board.length>=6))return;G.sel=null;G.evo=false;if(c.t=='f')G.pend=G.pend===+i?null:+i;else if(needOpt(p,c)){G.tgt={k:'popt',i:+i,pos:-1,id:c.v};G.pend=null}else if(needPick(p,c)){G.tgt={i:+i,pos:-1,got:[]};G.pend=null}else{job=playA(p,+i);G.pend=null}}
+else if(k=='slot'){if(G.pend!=null&&!p.board.some(u=>u.pos==+i)){const c=p.hand[G.pend];if(needOpt(p,c))G.tgt={k:'popt',i:G.pend,pos:+i,id:c.v};else if(needPick(p,c))G.tgt={i:G.pend,pos:+i,got:[]};else job=playA(p,G.pend,+i);G.pend=null}}
+else if(k=='my'){G.pend=null;const u=p.board[+i];if(G.evo){evolve(p,u);G.evo=false}else if(ready(u))G.sel=G.sel===+i?null:+i}
+else if(G.sel!=null){const u=p.board[G.sel],t=k=='leader'?'L':G.e.board[+i];if(targets(p,u).includes(t)){const at=pickA(p,u),ao=p.allCh?null:(u.ts||[]).find(z=>z.tr=='A'&&z.tf=='ch'&&!((z.cd=='F'&&u.pos>=3)||(z.cd=='B'&&u.pos<3))&&(z.cd!='N'||u.fr));if(ao)G.tgt={k:'popt',atk:true,u,t,id:ao.tv};else if(at)G.tgt={k:'aeff',u,t,at};else{ev('atk','p',u.pos);job=attackA(p,u,t);G.sel=null}}}
+after(job)});
+// ===== オンライン対戦（PeerJS / 手番側が進行し、公開情報のスナップショットを相手へ送る）=====
+const NET={peer:null,conn:null,host:false,code:'',rmMe:false,rmOpp:false,pf:null};
+const NCH='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function OPN(){return G&&G.online?'相手':'CPU'}
+const dumC=()=>({dummy:1,n:'手札',c:0,t:'f',k:'',a:0,h:0,col:'g',rar:1,ts:[],id:-1});
+const dums=n=>Array.from({length:Math.max(0,n)},dumC);
+const swapLg=t=>String(t).split(/(<small>[\s\S]*?<\/small>)/).map((x,i)=>i%2?x:x.replace(/敵リーダー|あなた|相手/g,m=>m=='敵リーダー'?'あなた':m=='あなた'?'相手':'あなた')).join('');
+function netStatus(t){const e=$('#nwSt');if(e)e.textContent=t}
+function netRaw(m){try{if(NET.conn&&NET.conn.open)NET.conn.send(JSON.stringify(m))}catch(er){console.error(er)}}
+function updateLobby(){const ok=!!(NET.conn&&NET.conn.open);$('#nwGo').style.display=ok&&NET.host?'':'none';$('#nwGo').disabled=tot()!=30;$('#nwWait').style.display=ok&&!NET.host?'':'none';$('#nwWarn').style.display=ok&&tot()!=30?'':'none';$('#nwBye').style.display=NET.peer?'':'none';$('#nwHost').disabled=$('#nwJoin').disabled=!!NET.peer}
+function netClose(){const c=NET.conn,p=NET.peer;NET.conn=null;NET.peer=null;NET.host=false;NET.code='';NET.pf=null;try{c&&c.close()}catch(e){}try{p&&p.destroy()}catch(e){}$('#nwCode').textContent='';netStatus('未接続');updateLobby()}
+function netHost(){
+  if(typeof Peer=='undefined'){netStatus('PeerJSを読み込めませんでした（ネット接続を確認してください）');return}
+  netClose();const code=Array.from({length:4},()=>NCH[Math.floor(Math.random()*NCH.length)]).join('');
+  const peer=new Peer('mogubato-'+code);NET.peer=peer;NET.host=true;NET.code=code;
+  peer.on('open',()=>{$('#nwCode').textContent=code;netStatus('部屋を作りました。このコードを相手に伝えてください');updateLobby()});
+  peer.on('connection',c=>{if(NET.conn&&NET.conn.open){try{c.close()}catch(e){}return}setConn(c)});
+  peer.on('error',er=>{if(er.type=='unavailable-id'){netHost();return}netStatus('通信エラー: '+er.type)});
+  updateLobby()}
+function netJoin(){
+  if(typeof Peer=='undefined'){netStatus('PeerJSを読み込めませんでした（ネット接続を確認してください）');return}
+  const code=$('#nwIn').value.trim().toUpperCase();if(code.length!=4){netStatus('部屋コードは4文字です');return}
+  netClose();const peer=new Peer();NET.peer=peer;NET.host=false;
+  peer.on('open',()=>{netStatus('接続中…');setConn(peer.connect('mogubato-'+code,{reliable:true}))});
+  peer.on('error',er=>{netStatus(er.type=='peer-unavailable'?'その部屋コードは見つかりません':'通信エラー: '+er.type);if(er.type=='peer-unavailable'){const p=NET.peer;NET.peer=null;try{p.destroy()}catch(e){}updateLobby()}});
+  updateLobby()}
+function showOv(t){$('#ovt').textContent=t;$('#ov').style.display='flex';$('#rematch').style.display='none';$('#rmst').textContent='';$('#again').textContent='対人画面へ戻る';$('#ovre').textContent='結果'}
+function setConn(c){
+  NET.conn=c;NET.rmMe=NET.rmOpp=false;
+  const op=()=>{netStatus('✅ 接続OK'+(NET.host?'（「対人戦を始める」を押してください）':'（ホストの開始待ち）'));updateLobby()};
+  c.on('open',op);if(c.open)op();
+  c.on('data',d=>netRecv(d));
+  c.on('close',()=>{if(NET.conn!==c)return;NET.conn=null;netStatus('接続が切れました');updateLobby();if(G&&G.online&&!G.over){G.over=true;showOv('📡 相手との接続が切れました')}});
+  c.on('error',er=>{console.error(er);netStatus('通信エラー')})}
+function hostStart(){
+  if(!NET.host||!(NET.conn&&NET.conn.open))return;
+  if(tot()!=30){netStatus('デッキを30枚にしてください');return}
+  const f=Math.random()<.5;NET.pf=f;NET.rmMe=NET.rmOpp=false;netRaw({t:'init',first:!f})}
+function rmCheck(){if(NET.host&&NET.rmMe&&NET.rmOpp)hostStart()}
+function netRecv(raw){
+  let m;try{m=typeof raw=='string'?JSON.parse(raw):raw}catch(e){return}
+  if(!m||!m.t)return;
+  try{switch(m.t){
+    case'init':if(tot()!=30){netRaw({t:'nack'});return}netRaw({t:'ack'});startOnline(!!m.first);break;
+    case'ack':if(NET.pf!=null){const f=NET.pf;NET.pf=null;startOnline(f)}break;
+    case'nack':NET.pf=null;netStatus('相手のデッキが30枚そろっていません');if($('#rmst'))$('#rmst').textContent='相手のデッキが30枚そろっていません';break;
+    case'mul':if(G&&G.online){G.oppMul=true;mulCheck()}break;
+    case'st':applySnap(m);break;
+    case'fin':if(G&&G.online&&!G.over){G.fromNet=true;try{fin(m.res=='l'?'🎉 勝利！':'😵 敗北…')}finally{G.fromNet=false}}break;
+    case'rematch':NET.rmOpp=true;if(G&&G.over&&$('#rmst'))$('#rmst').textContent='相手が再戦を希望しています';rmCheck();break}
+  }catch(er){console.error(er)}}
+function startOnline(first){
+  NET.rmMe=NET.rmOpp=false;
+  const p=mk(),e=mk();const ids=[];cnt.forEach((n,i)=>{for(let k=0;k<n;k++)ids.push(i)});p.deck=shuf(ids).map(i=>C[i]);
+  const mh=first?START_HAND_P:START_HAND_E,oh=first?START_HAND_E:START_HAND_P;
+  e.deck=dums(30);e.hand=[];
+  G={p,e,turn:0,over:false,sel:null,evo:false,log:[],cur:'e',busy:false,ev:[],dq:[],nb:[],lt:0,mulligan:true,mulSel:new Set(),online:true,first:!!first,mulDone:false,oppMul:false,started:false,outLg:[],outEv:[],xd:0,xc:0};
+  draw(p,mh);for(let i=0;i<oh;i++)e.hand.push(e.deck.pop());
+  const lgEl=$('#log');if(lgEl)lgEl.innerHTML='';
+  $('#navTabs').style.display='none';document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+  $('#gm').style.display='';$('#ov').style.display='none';$('#ovre').style.display='none';
+  lg(`開始手札: あなた${mh}枚 / 相手${oh}枚　あなたは${first?'先攻':'後攻'}`);
+  lg('🃏 マリガンフェーズ: 交換したいカードを選んで確定（選ばなければキープ）');
+  render()}
+function onMulDone(){G.mulDone=true;G.cur='e';netRaw({t:'mul'});if(!G.oppMul)lg('⏳ 相手のマリガンを待っています…');mulCheck();render()}
+function mulCheck(){
+  if(!G||!G.online||!G.mulDone||!G.oppMul||G.started)return;
+  G.started=true;
+  if(G.first)begin(G.p);else{lg('— 相手のターンから開始 —');G.cur='e';render()}}
+function pubSide(s){const o={};for(const k in s)if(k!='deck'&&k!='hand')o[k]=s[k];return{pub:o,hc:s.hand.length,dc:s.deck.length}}
+function netPing(){if(!G||!G.online||G.cur!='p'||G.netT)return;G.netT=setTimeout(()=>{if(G)G.netT=0;netSend(false)},80)}
+function netSend(handoff){
+  if(!G||!G.online||(!handoff&&G.cur!='p'))return;
+  if(G.netT){clearTimeout(G.netT);G.netT=0}
+  const m={t:'st',turn:G.turn,p:pubSide(G.p),e:pubSide(G.e),
+    ops:{draw:G.xd||0,dc:G.xc||0,gain:G.e.hand.filter(c=>!c.dummy).map(c=>JSON.parse(JSON.stringify(c)))},
+    over:G.over?G.result:0,ho:handoff?1:0};
+  const body=JSON.stringify(m);
+  const lgs=G.outLg.splice(0),evs=G.outEv.splice(0);
+  if(!handoff&&!lgs.length&&!evs.length&&body===G.lastSnap)return;
+  G.lastSnap=body;m.lg=lgs;m.ev=evs;netRaw(m)}
+function onHandoff(){G.cur='e';G.sel=null;G.evo=false;G.pend=null;G.tgt=null;G.choices=[];G.busy=false;netSend(true);render()}
+function netFin(){if(G.fromNet)return;if(G.cur=='p')netSend(false);netRaw({t:'fin',res:G.result})}
+function swapIn(dst,src,mine){const kh=dst.hand,kd=dst.deck;for(const k of Object.keys(dst))delete dst[k];Object.assign(dst,src.pub);dst.hand=mine?kh:dums(src.hc);dst.deck=mine?kd:dums(src.dc)}
+function applySnap(m){
+  if(!G||!G.online||G.over)return;
+  if(G.cur=='p'&&!G.mulligan)return;
+  G.cur='e';
+  swapIn(G.p,m.e,true);swapIn(G.e,m.p,false);
+  G.turn=m.turn;G.sel=null;G.evo=false;G.pend=null;G.tgt=null;G.choices=[];G.busy=false;
+  if(G.opK!==m.turn){G.opK=m.turn;G.opD=0;G.opC=0;G.opG=0}
+  const o=m.ops||{};
+  const nc=(o.dc||0)-G.opC;if(nc>0){G.opC=o.dc;for(let k=0;k<nc&&G.p.hand.length;k++)G.p.hand.splice(Math.floor(Math.random()*G.p.hand.length),1)}
+  const nd=(o.draw||0)-G.opD;if(nd>0){G.opD=o.draw;draw(G.p,nd)}
+  const ga=o.gain||[],gs=ga.slice(G.opG);G.opG=ga.length;
+  gs.forEach(g=>{if(G.p.hand.length<HMAX)G.p.hand.push(g.dc?g:(C.find(x=>x.n==g.n)||g))});
+  (m.lg||[]).forEach(([t,k])=>lg(swapLg(t),k||undefined));
+  (m.ev||[]).forEach(([k,s0,pos,v])=>G.ev.push([k,s0=='p'?'e':s0=='e'?'p':s0,pos,v]));
+  if(m.over&&!G.over){G.fromNet=true;try{fin(m.over=='w'?'😵 敗北…':'🎉 勝利！')}finally{G.fromNet=false}return}
+  if(m.ho&&!G.over)begin(G.p);else render()}
+$('#nwHost').onclick=netHost;$('#nwJoin').onclick=netJoin;$('#nwBye').onclick=netClose;$('#nwGo').onclick=hostStart;
+$('#nwIn').oninput=e=>{e.target.value=e.target.value.toUpperCase()};
+$('#rematch').onclick=()=>{NET.rmMe=true;netRaw({t:'rematch'});$('#rmst').textContent=NET.rmOpp?'開始します…':'相手の返事を待っています…';rmCheck()};
+updateLobby();
+bld();
+Object.values(ADD).flat().forEach(n=>{if(!C.some(c=>c.n==n))console.error('ADD参照エラー: '+n)});
+setInterval(()=>{try{const sp=document.getElementById('spin');if(sp)sp.classList.toggle('on',!!G&&!G.over&&!G.mulligan&&(G.busy||G.cur!='p'))}catch(e){}},150);
+</script></body></html>
