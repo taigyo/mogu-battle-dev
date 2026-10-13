@@ -144,6 +144,7 @@ button.g.on{background:var(--ok);color:#fff;border-color:var(--ok)}
   </div>
 </div>
 
+<div id="banner" style="display:none;position:fixed;inset:0;z-index:20;pointer-events:none;align-items:center;justify-content:center"><div id="bnT" style="font-size:40px;font-weight:800;color:#fff;background:rgba(0,0,0,.78);padding:18px 34px;border-radius:16px;text-shadow:0 2px 6px #000;border:2px solid var(--ac)"></div></div>
 <div id="ov"><div><p id="ovt"></p><div id="rmst" style="font-size:14px;min-height:20px;margin-bottom:6px"></div><button id="rematch" style="display:none">🔁 再戦</button> <button id="again">対戦設定へ戻る</button> <button id="ovx">閉じる</button></div></div><button id="ovre" style="display:none;position:fixed;right:8px;bottom:8px;z-index:8">対戦設定へ戻る</button>
 
 <script>
@@ -368,6 +369,7 @@ $('#go').onclick=()=>start();
 $('#ovx').onclick=()=>{$('#ov').style.display='none';$('#ovre').style.display='block'};
 $('#ovre').onclick=()=>{if(G&&G.online){$('#ov').style.display='flex';$('#ovre').style.display='none'}else $('#again').click()};
 $('#again').onclick=()=>{
+  if(G&&G.online){netRaw({t:'left'});if(NET.host)setTimeout(netClose,250)}
   $('#ov').style.display='none';$('#ovre').style.display='none';
   $('#gm').style.display='none';
   $('#navTabs').style.display='flex';
@@ -492,7 +494,7 @@ function confirmMulligan(){
 }
 
 function draw(s,n){for(let i=0;i<n;i++){if(!s.deck.length){fin(s===G.p?'💀 デッキ切れ…敗北':'🎉 '+OPN()+'がデッキ切れ！勝利');return}const c=s.deck.pop();if(G.online&&s===G.e)G.xd=(G.xd||0)+1;if(s.hand.length<HMAX)s.hand.push(hasFresh(c)?{...c,fr:true}:c)}}
-function fin(t){if(G.over)return;G.over=true;G.result=t.includes('勝利')?'w':'l';sfx(t.includes('勝利')?'win':'lose');$('#ovt').textContent=t;$('#ov').style.display='flex';const on=!!G.online;$('#rematch').style.display=on?'':'none';$('#rmst').textContent='';$('#again').textContent=on?'対人画面へ戻る':'対戦設定へ戻る';$('#ovre').textContent=on?'結果・再戦':'対戦設定へ戻る';if(on)netFin()}
+function fin(t){if(G.over)return;G.over=true;G.result=t.includes('勝利')?'w':'l';sfx(t.includes('勝利')?'win':'lose');$('#ovt').textContent=t;$('#ov').style.display='flex';const on=!!G.online;$('#rematch').style.display=on?'':'none';$('#rematch').disabled=false;$('#rmst').textContent='';$('#again').textContent=on?'対人画面へ戻る':'対戦設定へ戻る';$('#ovre').textContent=on?'結果・再戦':'対戦設定へ戻る';if(on)netFin()}
 const AU={lo:{p:(s,t)=>s.hp<=t,a:3,h:0,k:'s'},hi:{p:(s,t)=>s.hp>=t,a:0,h:3,k:'w'},pp:{p:(s,t)=>s.mpp>=t,a:2,h:2,k:''},hd:{p:(s,t)=>s.hand.length<=t,a:2,h:0,k:'t'},hm:{p:(s,t)=>s.hp>=t,a:-3,h:0,k:''}};
 function aura(s){s.board.forEach(u=>{const t=(u.ts||[]).find(x=>x.tr=='C');if(!t)return;const d=AU[t.tf];if(!d)return;const on=d.p(s,t.tv);if(on&&!u.cOn){u.cOn=true;u.a+=d.a;u.h+=d.h;if(d.k){u.cx=!!u[d.k];u[d.k]=true}ev('up',s,u.pos,'+'+d.a+'/+'+d.h)}else if(!on&&u.cOn){u.cOn=false;u.a-=d.a;u.h=Math.max(1,u.h-d.h);if(d.k&&!u.cx)u[d.k]=false}})}
 function chk(){flushH();[G.p,G.e].forEach(aura);for(const s of[G.p,G.e]){const dead=s.board.filter(u=>u.h<=0);s.board=s.board.filter(u=>u.h>0);dead.forEach(u=>{G.dq.push([s,u]);ev('die',s,u.pos,u.n)})}const pd=G.p.hp<=0,ed=G.e.hp<=0;if(pd&&ed){const w=G.src||(G.cur=='p'?G.p:G.e);fin(w===G.p?'🎉 勝利！':'😵 敗北…')}else if(pd)fin('😵 敗北…');else if(ed)fin('🎉 勝利！')}
@@ -523,7 +525,7 @@ function noise(d,v=.2,at=0){if(!ac||muted)return;const n=ac.currentTime+at,b=ac.
 const SE={spawn:()=>tone('sine',330,880,.18,.15),cast:()=>{tone('sine',700,1400,.2,.12);tone('triangle',1050,1050,.15,.08,.08)},atk:()=>{tone('sawtooth',600,120,.12,.1);noise(.08,.08)},hit:()=>{noise(.16,.25);tone('square',180,50,.16,.12)},die:()=>{tone('sawtooth',320,40,.5,.12);noise(.35,.2)},heal:()=>{tone('sine',523,523,.14,.14);tone('sine',784,784,.28,.14,.12)},up:()=>[440,554,659].forEach((f,i)=>tone('triangle',f,f,.12,.12,i*.07)),down:()=>tone('triangle',360,140,.35,.14),win:()=>[523,659,784,1047].forEach((f,i)=>tone('triangle',f,f,.25,.15,i*.14)),lose:()=>[392,330,262,196].forEach((f,i)=>tone('sawtooth',f,f,.3,.1,i*.2))};
 const sfx=k=>SE[k]&&SE[k]();
 document.addEventListener('click',()=>{try{if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state=='suspended')ac.resume()}catch(e){}},true);
-function fxPlay(){netPing();const Q=G.ev;G.ev=[];const seen=new Set();Q.forEach(([k,side,pos,v],i)=>setTimeout(()=>{if(!seen.has(k)){seen.add(k);sfx(k)}if(k=='cast')return;const el=pos>=0?document.querySelector(`[data-s="${side}${pos}"]`):$(side=='p'?'#pl':'#el');if(!el)return;const add=c=>{el.classList.add(c);setTimeout(()=>el.classList.remove(c),1000)};
+function fxPlay(){netPing();if(G.remote){const n0=$('#now');if(n0)n0.innerHTML='⏳ 相手が効果の対象を選んでいます…'}const Q=G.ev;G.ev=[];const seen=new Set();Q.forEach(([k,side,pos,v],i)=>setTimeout(()=>{if(!seen.has(k)){seen.add(k);sfx(k)}if(k=='cast')return;const el=pos>=0?document.querySelector(`[data-s="${side}${pos}"]`):$(side=='p'?'#pl':'#el');if(!el)return;const add=c=>{el.classList.add(c);setTimeout(()=>el.classList.remove(c),1000)};
 if(k=='die'){const g=document.createElement('div');g.className='gh';g.textContent='💥'+v;el.appendChild(g);setTimeout(()=>g.remove(),1100);return}
 add(k=='atk'?'a-atk-'+side:'a-'+k);
 if(v&&'hit heal up down'.includes(k)){const q=document.createElement('div');q.className='pop '+k;q.textContent=v;el.appendChild(q);setTimeout(()=>q.remove(),1200)}},Math.min(i,6)*140))}
@@ -546,9 +548,9 @@ const cpuGy=s=>s.board.filter(u=>u.h>0&&!u.ty).sort((a,b)=>(b.a+b.h)-(a.a+a.h))[
 const cpuCy=(s,o)=>{const A=o.board.filter(u=>u.h>0);return A.find(u=>u.w&&u.pos<3)||A.filter(u=>u.pos>=3).sort((a,b)=>a.h-b.h)[0]||A[0]};
 const cpuFoeT=A=>[...A].sort((a,b)=>(b.w?1:0)-(a.w?1:0)||b.a-a.a)[0];
 const cpuDestFoe=(o,t)=>{const fr=free(o).filter(i=>i!==t.pos),pf=(t.w?[3,4,5]:[0,1,2]).filter(i=>fr.includes(i)),L=pf.length?pf:fr.length?fr:[0,1,2,3,4,5].filter(i=>i!==t.pos);return rnd(L)};
-const movePickFoe=(s,o,t)=>{if(G.ask&&s===G.p){(G.choices=G.choices||[]).push({s:o,mvu:1,u:t,got:[],cs:lgCause});return}moveU(o,t,cpuDestFoe(o,t))};
+const movePickFoe=(s,o,t)=>{if(AK(s)){(G.choices=G.choices||[]).push({s:o,mvu:1,u:t,got:[],cs:lgCause,rem:s!==G.p});return}moveU(o,t,cpuDestFoe(o,t))};
 const handCands=(s,k)=>k=='hb'?s.hand.filter(c=>c.t=='f'):k=='hp'?(free(s).length?s.hand.filter(c=>c.t=='f'&&c.c<=3):[]):s.hand.slice();
-const summonHand=(s,c,pos)=>{const i=s.hand.indexOf(c);if(i<0||s.board.some(u=>u.pos==pos))return;s.hand[i]={...c,c:0};runG(play0g(s,i,pos))};
+const summonHand=(s,c,pos)=>{if(G.rctx){const ch=G.rctx;G.rctx=null;const i0=s.hand.indexOf(c);if(i0>=0)s.hand.splice(i0,1);remoteAnswer(ch,{card:JSON.parse(JSON.stringify(c)),pos});return}const i=s.hand.indexOf(c);if(i<0||s.board.some(u=>u.pos==pos))return;s.hand[i]={...c,c:0};runG(play0g(s,i,pos))};
 function applyHand(s,k,v,picks,pos){if(k=='hr'){let n=0;picks.forEach(c=>{const i=s.hand.indexOf(c);if(i<0)return;s.hand.splice(i,1);s.deck.splice(Math.floor(Math.random()*(s.deck.length+1)),0,C.find(x=>x.n==c.n)||c);n++});if(n){lg(`${n}枚を山札に戻した`,'r');draw(s,n)}return}
 const c=picks[0];if(!c)return;if(k=='hd'){const i=s.hand.indexOf(c);if(i>=0){s.hand.splice(i,1);lg(`${c.n}を捨てた`,'r')}return}
 if(k=='hb'){const i=s.hand.indexOf(c);if(i>=0){s.hand[i]={...c,a:c.a+1,h:c.h+1};lg(`手札の${c.n}が+1/+1`,'r')}return}
@@ -556,21 +558,21 @@ if(k=='hp'){if(pos===undefined)pos=cpos(s,c);summonHand(s,c,pos)}}
 function cpuHand(s,k,v,L){const hi=(a,b)=>b.c-a.c;if(k=='hr'){applyHand(s,k,v,L.filter(c=>c.c>s.mpp+2).sort(hi).slice(0,v));return}
 if(k=='hd'){applyHand(s,k,v,[[...L].sort((a,b)=>(a.rar||1)-(b.rar||1)||a.c-b.c)[0]]);return}
 applyHand(s,k,v,[[...L].sort(hi)[0]])}
-const handFx=(s,k,v)=>{const L=handCands(s,k);if(!L.length)return;if(G.ask&&s===G.p){(G.choices=G.choices||[]).push({s,hsel:1,kind:k,v,got:[],cs:lgCause});return}cpuHand(s,k,v,L)};
+const handFx=(s,k,v)=>{const L=handCands(s,k);if(!L.length)return;if(AK(s)){(G.choices=G.choices||[]).push({s,hsel:1,kind:k,v,got:[],cs:lgCause,rem:s!==G.p});return}cpuHand(s,k,v,L)};
 const HTT={hr:'🔄 山札に戻す手札を選択（2枚まで）',hd:'🗑 捨てる手札を選択',hb:'💪 +1/+1するフーズを選択',hp:'🍽 場に出すフーズを選択'};
 const hbtn=c=>`${c.n} <small>(${c.c}${c.t=='f'?' '+c.a+'/'+c.h:''})</small>`;
 const POSL=['前列・左','前列・中','前列・右','後列・左','後列・中','後列・右'];
 const cpuDest=(s,t)=>{const pref=t.h>t.a?[0,1,2]:[3,4,5],fr=free(s),f1=pref.filter(i=>fr.includes(i)),L=f1.length?f1:fr;return L.length?rnd(L):t.pos};
-const movePick=(s,t)=>{if(G.ask&&s===G.p){(G.choices=G.choices||[]).push({s,mvu:1,u:t,got:[],cs:lgCause});return}moveU(s,t,cpuDest(s,t))};
+const movePick=(s,t)=>{if(AK(s)){(G.choices=G.choices||[]).push({s,mvu:1,u:t,got:[],cs:lgCause,rem:s!==G.p});return}moveU(s,t,cpuDest(s,t))};
 // 選択効果テーブル: id→選択肢(f=効果コード,v=値,t=表示)。F/攻撃時などはtf='ch'(選ぶ)/'rc'(ランダム),tv=idで参照。s.allCh中は全選択肢を発動
 const CHT={1:{o:[{f:'dd',v:1,t:'1枚引く'},{f:'sf',v:2,t:'+2/+2'}]},2:{o:[{f:'sa',v:3,t:'+3/+0'},{f:'df',v:5,t:'敵1体に5ダメ'}]},3:{o:[{f:'df',v:4,t:'敵1体に4ダメ'},{f:'ba',v:2,t:'他の味方全体+2/+2'},{f:'dd',v:2,t:'2枚引く'}]},4:{o:[{f:'df',v:3,t:'敵1体に3ダメ'},{f:'ba',v:1,t:'他の味方全体+1/+1'}]}};
-const runOpt=(s,o,self,pk0)=>{let pk=pk0;if(pk===undefined&&s===G.e&&o.f=='df')pk=pickKill(opp(s),o.v)||undefined;fx(s,{f:o.f,v:o.v},self,pk)};
+const runOpt=(s,o,self,pk0)=>{let pk=pk0;if(pk===undefined&&s===G.e&&!G.online&&o.f=='df')pk=pickKill(opp(s),o.v)||undefined;fx(s,{f:o.f,v:o.v},self,pk)};
 const cpuOpt=(s,L)=>{const A=opp(s).board.filter(u=>u.h>0);const sc=o=>o.f=='df'?(A.some(u=>u.h<=o.v)?9+Math.min(6,Math.max(...A.filter(u=>u.h<=o.v).map(val))*.4):A.length?4:0):o.f=='dd'?(s.hand.length<HMAX-2?5:1):o.f=='ba'?(s.board.length>1?2+s.board.length:0):3;return[...L].sort((a,b)=>sc(b)-sc(a))[0]};
 function chooseFx(s,id,self,rd,pick){const L=(CHT[id]||{o:[]}).o;if(!L.length)return;
   if(!s.allCh&&pick&&pick.opt!==undefined&&L[pick.opt]){const o=L[pick.opt];lg(`${o.t}を選択`,'r');runOpt(s,o,self,pick.t);return}
   if(s.allCh){lg('すべて選択！','r');L.forEach(o=>{if(!G.over)runOpt(s,o,self)});return}
   if(rd){const o=rnd(L);lg(`ランダム：${o.t}`,'r');runOpt(s,o,self);return}
-  if(G.ask&&s===G.p){(G.choices=G.choices||[]).push({s,c:{f:'ch',v:id},self,opt:id,n:1,got:[],cs:lgCause});return}
+  if(AK(s)){(G.choices=G.choices||[]).push({s,c:{f:'ch',v:id},self,opt:id,n:1,got:[],cs:lgCause,rem:s!==G.p});return}
   const o=cpuOpt(s,L);lg(`${o.t}を選択`,'r');runOpt(s,o,self)}
 const MOD=T=>T.k=='opt'||T.k=='popt'||T.k=='mvd'||T.k=='hsel'||T.k=='hpos';
 const needOpt=(p,c)=>!!c&&c.f=='ch'&&!p.allCh;
@@ -584,11 +586,18 @@ const needSel=(r,len)=>r.ord?len>=2:len>(r.n||1);
 const needPick=(s,c)=>{const r=c&&TSEL[c.f];return !!r&&needSel(r,selCands(s,c).length)};
 // 誘発効果の選択待ち: 自分の操作中(G.ask)に出た選択式効果はG.choicesに積み、操作完了後に1件ずつ対象を選ばせる
 const effCands=ch=>selCands(ch.s,ch.c,ch.self).filter(u=>!ch.got.includes(u));
-function askNext(){while(G.choices&&G.choices.length&&!G.tgt&&!G.over){const ch=G.choices.shift();if(ch.hsel){if(handCands(ch.s,ch.kind).length){G.tgt={k:'hsel',ch,sel:[]};return}continue}if(ch.mvu){if(ch.u.h>0){G.tgt={k:'mvd',ch};return}continue}if(ch.opt!==undefined){G.tgt={k:'opt',ch};return}const L=effCands(ch);if(!L.length)continue;if(needSel(TSEL[ch.c.f],L.length)){G.tgt={k:'eff',ch};return}fx(ch.s,ch.c,ch.self,ch.n>1?L:L[0]);chk()}}
+function askNext(){while(G.choices&&G.choices.length&&!G.tgt&&!G.remote&&!G.over){const ch=G.choices.shift(),RA=o=>{if(ch.remoteId)remoteAnswer(ch,o)};
+if(ch.hsel){if(ch.rem){remoteReq(ch);return}if(handCands(ch.s,ch.kind).length){G.tgt={k:'hsel',ch,sel:[]};return}RA({done:1});continue}
+if(ch.mvu){if(ch.u.h>0){if(ch.rem){remoteReq(ch);return}G.tgt={k:'mvd',ch};return}RA({done:1});continue}
+if(ch.opt!==undefined){if(ch.rem){remoteReq(ch);return}G.tgt={k:'opt',ch};return}
+const L=effCands(ch);if(!L.length){RA({u:[]});continue}
+if(needSel(TSEL[ch.c.f],L.length)){if(ch.rem){remoteReq(ch);return}G.tgt={k:'eff',ch};return}
+if(ch.remoteId){RA({u:(ch.n>1?L:[L[0]]).map(mkRef)});continue}
+fx(ch.s,ch.c,ch.self,ch.n>1?L:L[0]);chk()}}
 const pickOf=(L,p)=>p&&L.includes(p)?p:rnd(L);
 const dlog=(t,v,km)=>{if(t.h<=0){const m=km||`${t.n}を倒した！`;t.rep=1;t.dmsg=m;lg(m,'r')}else lg(`${t.n}に${v}ダメ`,'r')};
 function fx(s,c,self,pick){const o=opp(s),v=c.v,A=o.board.filter(u=>u.h>0);
-if(pick===undefined&&G.ask&&s===G.p){const r=TSEL[c.f];if(r&&needSel(r,selCands(s,c,self).length)){(G.choices=G.choices||[]).push({s,c:{f:c.f,v:c.v},self,n:r.n||1,got:[],cs:lgCause});return}}switch(c.f){
+if(pick===undefined&&AK(s)){const r=TSEL[c.f];if(r&&needSel(r,selCands(s,c,self).length)){(G.choices=G.choices||[]).push({s,c:{f:c.f,v:c.v},self,n:r.n||1,got:[],cs:lgCause,rem:s!==G.p});return}}switch(c.f){
 case'dl':lhit(o,v);break;
 case'am':case'af':case'ab':case'ar':for(let i=0;i<v;i++)ADD[c.f].forEach(n=>addCard(s,C.find(x=>x.n==n)));break;
 case'ac':addCard(s,rnd(C.filter(x=>x.t=='s'&&!x.tok)),v);break;
@@ -672,7 +681,7 @@ function play0(s,i,pos,pick){return runG(play0g(s,i,pos,pick))}
 async function driveA(mk,s){
   const G0=G,a=G.ask,b=G.busy;G.ask=s===G.p&&G.cur=='p';G.busy=true;
   try{const g=mk();let r;while(!(r=g.next()).done){render();await lgIdle();if(G!==G0||G.over)break;
-    while(G===G0&&!G.over&&G.ask&&((G.choices&&G.choices.length)||G.tgt||G.settling)){const had=!!G.tgt;askNext();if(!had&&G.tgt)render();await new Promise(r=>setTimeout(r,60))}}}
+    while(G===G0&&!G.over&&G.ask&&((G.choices&&G.choices.length)||G.tgt||G.settling||G.remote)){const had=!!G.tgt;askNext();if(!had&&G.tgt)render();await new Promise(r=>setTimeout(r,60))}}}
   finally{if(G===G0){G.ask=a;G.busy=b}}
 }
 const playA=(s,i,pos,pick)=>driveA(()=>play0g(s,i,pos,pick),s);
@@ -1236,7 +1245,7 @@ const stIcon=(u,sid)=>{const act=(sid=='p')===(G.cur=='p');return ((u.stun||(act
 const stTip=(u,sid)=>{const act=(sid=='p')===(G.cur=='p');const a=[];if(u.stun)a.push('次のターン攻撃できない');else if(act&&u.stunned)a.push('このターン攻撃できない');if(u.sick&&!(u.s||u.r))a.push('レスト（持ち主のターン開始で回復）');else if(u.sick&&u.r&&!u.s)a.push('突進：フーズだけ攻撃可');if(u.fr&&u.fx)a.push('新鮮：ターン終了まで[新鮮]の効果が有効');if(u.psn>0)a.push(u.psn>1?'猛毒：ターン終了時に2ダメージ':'毒：ターン終了時に1ダメージ');return a.join(' / ')};
 const uh=(u,cls,d,lk,sid)=>`<div class="u ${cls}" title="${stTip(u,sid)}" style="--k:${KC[u.col]||''}" data-a="${d}" data-s="${sid}${u.pos}">${u.cost!=null?`<em>${u.cost}</em>`:''}<b>${u.n}</b><i>${lk?'🔒':''}${u.w&&u.pos<3?'🛡':''}${stIcon(u,sid)}${u.r?'⚡':''}${u.s?'💨':''}${u.t?'🔱':''}${u.ty?'🪨':''}${u.evo?'★':''}</i><small>${u.d}</small><span class="a">${u.a}</span><span class="h">${u.h}</span></div>`;
 const cell=(s,pos,mine)=>{const i=s.board.findIndex(x=>x.pos==pos),u=s.board[i],t=pos<3?'前列':'後列',id=(mine?'p':'e')+pos;if(!u)return mine?`<div class="sl${G.pend!=null?' pl':''}" data-a="slot:${pos}" data-s="${id}">${t}</div>`:`<div class="sl" data-s="${id}">${t}</div>`;return uh(u,mine?(G.sel===i?'sel ':'')+(ready(u)&&G.cur=='p'&&!G.tgt?('rdy'+(face(u)?' ldr':'')):'')+pk(u):(tg.includes(u)?'tgt':'')+pk(u),(mine?'my:':'foe:')+i,!vis(s,u),mine?'p':'e')};
-$('#eb').innerHTML=[3,4,5,0,1,2].map(q=>cell(e,q,false)).join('');
+$('#eb').innerHTML=(G.online?[5,4,3,2,1,0]:[3,4,5,0,1,2]).map(q=>cell(e,q,false)).join('');
 $('#pb').innerHTML=[0,1,2,3,4,5].map(q=>cell(p,q,true)).join('');
 
 // マリガン中か通常プレイ時かでクラス切り替え（マリガン中はグレーアウトしない）
@@ -1252,30 +1261,30 @@ $('#evo').style.display = G.mulligan ? 'none' : 'inline-block';
 $('#end').style.display = G.mulligan ? 'none' : 'inline-block';
 
 if(!G.mulligan){
-  $('#evo').disabled=!(G.cur=='p'&&canEvo(p)&&p.board.length);$('#evo').textContent=G.evo?'進化：対象を選択':'進化 (EP'+p.ep+')';$('#end').disabled=G.cur!='p'||G.busy;
+  $('#evo').disabled=!(G.cur=='p'&&canEvo(p)&&p.board.length);$('#evo').textContent=G.evo?'進化：対象を選択':'進化 (EP'+p.ep+')';$('#end').disabled=G.cur!='p'||G.busy||!!G.remote;
 }
 fxPlay()}
 
 $('#mulliganConfirm').onclick=()=>confirmMulligan();
-$('#evo').onclick=()=>{if(G.tgt&&G.tgt.k=='eff')return;G.tgt=null;G.evo=!G.evo;G.sel=null;render()};$('#end').onclick=async()=>{if(G.cur!='p'||G.busy||(G.tgt&&G.tgt.k=='eff'))return;G.busy=true;G.sel=null;G.pend=null;G.tgt=null;G.evo=false;const s=G.p;for(const u of s.board.slice()){if(G.over)return;if((u.ts||[]).some(t=>t.tr=='E')&&u.h>0){trig(s,u,'E');chk();render();await settle();await sl(1000)}}G.busy=false;endT(s,true)};$('#mute').onclick=()=>{muted=!muted;$('#mute').textContent=muted?'🔇':'🔊'};
+$('#evo').onclick=()=>{if(G.remote||(G.tgt&&G.tgt.k=='eff'))return;G.tgt=null;G.evo=!G.evo;G.sel=null;render()};$('#end').onclick=async()=>{if(G.cur!='p'||G.busy||G.remote||(G.tgt&&G.tgt.k=='eff'))return;G.busy=true;G.sel=null;G.pend=null;G.tgt=null;G.evo=false;const s=G.p;for(const u of s.board.slice()){if(G.over)return;if((u.ts||[]).some(t=>t.tr=='E')&&u.h>0){trig(s,u,'E');chk();render();await settle();await sl(1000)}}G.busy=false;endT(s,true)};$('#mute').onclick=()=>{muted=!muted;$('#mute').textContent=muted?'🔇':'🔊'};
 const after=job=>{if(job){render();job.then(()=>{askNext();render();settle()},er=>{console.error(er);G.busy=false;render()})}else{askNext();render();settle()}};
-$('#gm').addEventListener('click',e=>{const d=e.target.closest('[data-a]');if(!G||G.over||(G.busy&&!(G.tgt&&(G.tgt.k=='eff'||G.tgt.k=='opt'||G.tgt.k=='mvd'||G.tgt.k=='hsel'||G.tgt.k=='hpos'))))return;
+$('#gm').addEventListener('click',e=>{const d=e.target.closest('[data-a]');if(G&&G.remote)return;if(!G||G.over||(G.busy&&!(G.tgt&&(G.tgt.k=='eff'||G.tgt.k=='opt'||G.tgt.k=='mvd'||G.tgt.k=='hsel'||G.tgt.k=='hpos'))))return;
 // 対象選択中: 候補をクリックで確定、それ以外のクリックはキャンセル（PP・手札は消費しない）
-if(G.tgt&&G.tgt.k=='opt'){const ch=G.tgt.ch,m=d?d.dataset.a.split(':'):[''],o=m[0]=='opt'?CHT[ch.opt].o[+m[1]]:null;if(!o)return;G.tgt=null;const a0=G.ask;G.ask=true;try{lg(`${o.t}を選択`,'r');runOpt(ch.s,o,ch.self);chk()}finally{G.ask=a0}askNext();render();settle();return}
-if(G.tgt&&(G.tgt.k=='hsel'||G.tgt.k=='hpos')){const T=G.tgt,ch=T.ch,s=ch.s,m=d?d.dataset.a.split(':'):[''];const fin2=f=>{G.tgt=null;const a0=G.ask;G.ask=true;try{f();chk()}finally{G.ask=a0}askNext();render();settle()};
+if(G.tgt&&G.tgt.k=='opt'){const ch=G.tgt.ch,m=d?d.dataset.a.split(':'):[''],o=m[0]=='opt'?CHT[ch.opt].o[+m[1]]:null;if(!o)return;G.tgt=null;if(ch.remoteId){remoteAnswer(ch,{i:+m[1]});askNext();render();return}const a0=G.ask;G.ask=true;try{lg(`${o.t}を選択`,'r');runOpt(ch.s,o,ch.self);chk()}finally{G.ask=a0}askNext();render();settle();return}
+if(G.tgt&&(G.tgt.k=='hsel'||G.tgt.k=='hpos')){const T=G.tgt,ch=T.ch,s=ch.s,m=d?d.dataset.a.split(':'):[''];const fin2=f=>{G.tgt=null;G.rctx=ch.remoteId?ch:null;const a0=G.ask;G.ask=true;try{f();chk()}finally{G.ask=a0;G.rctx=null}if(ch.remoteId)remoteAnswer(ch,{done:1});askNext();render();settle()};
 if(T.k=='hpos'){if(m[0]!='hp'||!free(s).includes(+m[1]))return;fin2(()=>summonHand(s,T.card,+m[1]));return}
 const L=handCands(s,ch.kind);
 if(m[0]=='hs'){const c=L[+m[1]];if(!c)return;if(ch.kind=='hr'){const k=T.sel.indexOf(c);if(k>=0)T.sel.splice(k,1);else if(T.sel.length<ch.v)T.sel.push(c);render();return}
 if(ch.kind=='hp'){const fr=free(s);if(fr.length>1){G.tgt={k:'hpos',ch,card:c};render();return}fin2(()=>applyHand(s,'hp',ch.v,[c],fr[0]));return}
 fin2(()=>applyHand(s,ch.kind,ch.v,[c]));return}
 if(m[0]=='hok'&&ch.kind=='hr')fin2(()=>applyHand(s,'hr',ch.v,T.sel));return}
-if(G.tgt&&G.tgt.k=='mvd'){const ch=G.tgt.ch,m=d?d.dataset.a.split(':'):[''];if(m[0]!='mvp')return;G.tgt=null;moveU(ch.s,ch.u,+m[1]);chk();askNext();render();settle();return}
+if(G.tgt&&G.tgt.k=='mvd'){const ch=G.tgt.ch,m=d?d.dataset.a.split(':'):[''];if(m[0]!='mvp')return;G.tgt=null;if(ch.remoteId){remoteAnswer(ch,{pos:+m[1]});askNext();render();return}moveU(ch.s,ch.u,+m[1]);chk();askNext();render();settle();return}
 if(G.tgt&&G.tgt.k=='popt'){const T=G.tgt,m=d?d.dataset.a.split(':'):[''],o=m[0]=='opt'?CHT[T.id].o[+m[1]]:null;if(!o){G.tgt=null;G.pend=null;G.sel=null;render();return}const need=TSEL[o.f]&&!(TSEL[o.f].n>1)&&!TSEL[o.f].ord&&needSel(TSEL[o.f],selCands(G.p,{f:o.f,v:o.v},T.u).length);if(need){G.tgt={k:'ptgt',T,idx:+m[1],o};render();return}G.tgt=null;G.pend=null;after(launchP(T,{opt:+m[1]}));return}
 if(G.tgt&&G.tgt.k=='ptgt'){const P=G.tgt,kk=d?d.dataset.a.split(':'):['',''],tt=kk[0]=='foe'?G.e.board[+kk[1]]:kk[0]=='my'?G.p.board[+kk[1]]:null;G.tgt=null;G.pend=null;if(tt&&selCands(G.p,{f:P.o.f,v:P.o.v},P.T.u).includes(tt))after(launchP(P.T,{opt:P.idx,t:tt}));else{G.sel=null;render()}return}
 if(G.tgt&&G.tgt.k=='aeff'){const T=G.tgt,kk=d?d.dataset.a.split(':'):['',''],tt=kk[0]=='foe'?G.e.board[+kk[1]]:kk[0]=='my'?G.p.board[+kk[1]]:null;G.tgt=null;let jb=null;if(tt&&selCands(G.p,{f:T.at.tf},T.u).includes(tt)&&G.p.board.includes(T.u)){ev('atk','p',T.u.pos);jb=attackA(G.p,T.u,T.t,tt);G.sel=null}after(jb);return}
 if(G.tgt&&G.tgt.k=='eff'){const ch=G.tgt.ch,kk=d?d.dataset.a.split(':'):['',''],tt=kk[0]=='foe'?G.e.board[+kk[1]]:kk[0]=='my'?G.p.board[+kk[1]]:null;
   if(!tt||!effCands(ch).includes(tt))return;
-  ch.got.push(tt);G.tgt=null;if(ch.got.length>=ch.n||!effCands(ch).length){fx(ch.s,ch.c,ch.self,ch.n>1?ch.got:tt);chk()}else G.tgt={k:'eff',ch};
+  ch.got.push(tt);G.tgt=null;if(ch.got.length>=ch.n||!effCands(ch).length){if(ch.remoteId)remoteAnswer(ch,{u:ch.got.map(mkRef)});else{fx(ch.s,ch.c,ch.self,ch.n>1?ch.got:tt);chk()}}else G.tgt={k:'eff',ch};
   askNext();render();settle();return}
 if(G.tgt&&G.cur=='p'&&!G.mulligan){let jb=null;const T=G.tgt,pp=G.p;G.tgt=null;const kk=d?d.dataset.a.split(':'):['',''];const cc=pp.hand[T.i],tt=kk[0]=='foe'?G.e.board[+kk[1]]:kk[0]=='my'?pp.board[+kk[1]]:null;
   if(cc&&tt&&selCands(pp,cc).includes(tt)&&!T.got.includes(tt)&&cst(pp,cc)<=pp.pp&&(cc.t!='f'||!pp.board.some(u=>u.pos==T.pos))){const nn=(TSEL[cc.f].n||1);T.got.push(tt);if(T.got.length>=nn||!selCands(pp,cc).some(u=>!T.got.includes(u)))jb=playA(pp,T.i,T.pos,nn>1?T.got:tt);else G.tgt=T}else $('#now').innerHTML=(G.nb||[]).join(' → ');
@@ -1332,7 +1341,7 @@ function setConn(c){
   const op=()=>{netStatus('✅ 接続OK'+(NET.host?'（「対人戦を始める」を押してください）':'（ホストの開始待ち）'));updateLobby()};
   c.on('open',op);if(c.open)op();
   c.on('data',d=>netRecv(d));
-  c.on('close',()=>{if(NET.conn!==c)return;NET.conn=null;netStatus('接続が切れました');updateLobby();if(G&&G.online&&!G.over){G.over=true;showOv('📡 相手との接続が切れました')}});
+  c.on('close',()=>{if(NET.conn!==c)return;NET.conn=null;if(!NET.host){const p=NET.peer;NET.peer=null;try{p&&p.destroy()}catch(e){}}netStatus('接続が切れました');updateLobby();if(G&&G.online){if(!G.over){G.over=true;showOv('📡 相手との接続が切れました')}else{const r=$('#rmst');if(r&&!r.textContent)r.textContent='相手が切断しました';$('#rematch').disabled=true}}});
   c.on('error',er=>{console.error(er);netStatus('通信エラー')})}
 function hostStart(){
   if(!NET.host||!(NET.conn&&NET.conn.open))return;
@@ -1349,10 +1358,13 @@ function netRecv(raw){
     case'mul':if(G&&G.online){G.oppMul=true;mulCheck()}break;
     case'st':applySnap(m);break;
     case'fin':if(G&&G.online&&!G.over){G.fromNet=true;try{fin(m.res=='l'?'🎉 勝利！':'😵 敗北…')}finally{G.fromNet=false}}break;
+    case'rq':rqIn(m);break;
+    case'rs':rsIn(m);break;
+    case'left':NET.oppLeft=true;NET.rmOpp=false;if(G&&G.online&&G.over){$('#rmst').textContent='相手は再戦せずに戻りました';$('#rematch').disabled=true}break;
     case'rematch':NET.rmOpp=true;if(G&&G.over&&$('#rmst'))$('#rmst').textContent='相手が再戦を希望しています';rmCheck();break}
   }catch(er){console.error(er)}}
 function startOnline(first){
-  NET.rmMe=NET.rmOpp=false;
+  NET.rmMe=NET.rmOpp=false;NET.oppLeft=false;
   const p=mk(),e=mk();const ids=[];cnt.forEach((n,i)=>{for(let k=0;k<n;k++)ids.push(i)});p.deck=shuf(ids).map(i=>C[i]);
   const mh=first?START_HAND_P:START_HAND_E,oh=first?START_HAND_E:START_HAND_P;
   e.deck=dums(30);e.hand=[];
@@ -1361,8 +1373,8 @@ function startOnline(first){
   const lgEl=$('#log');if(lgEl)lgEl.innerHTML='';
   $('#navTabs').style.display='none';document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
   $('#gm').style.display='';$('#ov').style.display='none';$('#ovre').style.display='none';
-  lg(`開始手札: あなた${mh}枚 / 相手${oh}枚　あなたは${first?'先攻':'後攻'}`);
-  lg('🃏 マリガンフェーズ: 交換したいカードを選んで確定（選ばなければキープ）');
+  lg(`🎲 あなたは<b>${first?'先攻':'後攻'}</b>です（開始手札 あなた${mh}枚 / 相手${oh}枚）<br>🃏 マリガン: 交換したいカードを選んで確定（選ばなければキープ）`);
+  showBanner(first?'🎲 あなたは先攻！':'🎲 あなたは後攻！');
   render()}
 function onMulDone(){G.mulDone=true;G.cur='e';netRaw({t:'mul'});if(!G.oppMul)lg('⏳ 相手のマリガンを待っています…');mulCheck();render()}
 function mulCheck(){
@@ -1381,7 +1393,6 @@ function netSend(handoff){
   const lgs=G.outLg.splice(0),evs=G.outEv.splice(0);
   if(!handoff&&!lgs.length&&!evs.length&&body===G.lastSnap)return;
   G.lastSnap=body;m.lg=lgs;m.ev=evs;netRaw(m)}
-function onHandoff(){G.cur='e';G.sel=null;G.evo=false;G.pend=null;G.tgt=null;G.choices=[];G.busy=false;netSend(true);render()}
 function netFin(){if(G.fromNet)return;if(G.cur=='p')netSend(false);netRaw({t:'fin',res:G.result})}
 function swapIn(dst,src,mine){const kh=dst.hand,kd=dst.deck;for(const k of Object.keys(dst))delete dst[k];Object.assign(dst,src.pub);dst.hand=mine?kh:dums(src.hc);dst.deck=mine?kd:dums(src.dc)}
 function applySnap(m){
@@ -1389,7 +1400,7 @@ function applySnap(m){
   if(G.cur=='p'&&!G.mulligan)return;
   G.cur='e';
   swapIn(G.p,m.e,true);swapIn(G.e,m.p,false);
-  G.turn=m.turn;G.sel=null;G.evo=false;G.pend=null;G.tgt=null;G.choices=[];G.busy=false;
+  G.turn=m.turn;{const kt=G.tgt&&G.tgt.ch&&G.tgt.ch.remoteId;G.sel=null;G.evo=false;G.pend=null;if(!kt){G.tgt=null;G.choices=[]}G.busy=false}
   if(G.opK!==m.turn){G.opK=m.turn;G.opD=0;G.opC=0;G.opG=0}
   const o=m.ops||{};
   const nc=(o.dc||0)-G.opC;if(nc>0){G.opC=o.dc;for(let k=0;k<nc&&G.p.hand.length;k++)G.p.hand.splice(Math.floor(Math.random()*G.p.hand.length),1)}
@@ -1404,6 +1415,52 @@ $('#nwHost').onclick=netHost;$('#nwJoin').onclick=netJoin;$('#nwBye').onclick=ne
 $('#nwIn').oninput=e=>{e.target.value=e.target.value.toUpperCase()};
 $('#rematch').onclick=()=>{NET.rmMe=true;netRaw({t:'rematch'});$('#rmst').textContent=NET.rmOpp?'開始します…':'相手の返事を待っています…';rmCheck()};
 updateLobby();
+// ===== リモート選択: 相手の手番中に自分のフーズの効果で選択が要るとき、持ち主が選ぶ =====
+function AK(s){return G.ask&&(s===G.p||(G.online&&s===G.e))}
+const mkRef=u=>({s:G.p.board.includes(u)?'p':'e',pos:u.pos});
+const uOf=r=>r?(r.s=='p'?G.e:G.p).board.find(x=>x.pos==r.pos):null;
+function remoteAnswer(ch,o){if(!ch||ch.answered||!ch.remoteId)return;ch.answered=1;netRaw({t:'rs',id:ch.remoteId,...o})}
+function remoteReq(ch){
+  const id=(G.rid=(G.rid||0)+1);G.remote={id,ch};G.lastSnap=null;netSend(false);
+  const m={t:'rq',id,cs:ch.cs||''};
+  const slf=ch.self?{pos:ch.self.pos,j:JSON.parse(JSON.stringify(ch.self))}:null;
+  if(ch.hsel){m.k='hsel';m.kind=ch.kind;m.v=ch.v}
+  else if(ch.mvu){m.k='mvu';m.s=ch.s===G.p?'p':'e';m.u=mkRef(ch.u)}
+  else if(ch.opt!==undefined){m.k='opt';m.opt=ch.opt;m.self=slf}
+  else{m.k='eff';m.c=ch.c;m.n=ch.n;m.self=slf}
+  netRaw(m);render()}
+function rqIn(m){
+  if(!G||!G.online||G.over)return;
+  const ch={cs:m.cs,got:[],remoteId:m.id};
+  if(m.k=='hsel')Object.assign(ch,{s:G.p,hsel:1,kind:m.kind,v:m.v});
+  else if(m.k=='mvu'){Object.assign(ch,{s:m.s=='p'?G.e:G.p,mvu:1,u:uOf(m.u)});if(!ch.u){netRaw({t:'rs',id:m.id,done:1});return}}
+  else{
+    const su=m.self?(G.p.board.find(x=>x.pos==m.self.pos&&x.n==m.self.j.n)||m.self.j):undefined;
+    Object.assign(ch,{s:G.p,self:su,n:m.n||1});
+    if(m.k=='opt'){ch.c={f:'ch',v:m.opt};ch.opt=m.opt}else ch.c=m.c}
+  (G.choices=G.choices||[]).push(ch);askNext();render()}
+function rsIn(m){
+  if(!G||!G.online||!G.remote||G.remote.id!==m.id)return;
+  const ch=G.remote.ch;G.remote=null;
+  const a0=G.ask;G.ask=true;
+  try{
+    if(ch.hsel){if(m.card){G.e.hand.push(m.card);summonHand(G.e,m.card,m.pos)}}
+    else if(ch.mvu){if(m.pos!==undefined&&ch.u.h>0)moveU(ch.s,ch.u,m.pos);chk()}
+    else if(ch.opt!==undefined){const o=CHT[ch.opt].o[m.i];if(o){lg(`${o.t}を選択`,'r');runOpt(ch.s,o,ch.self);chk()}}
+    else{const us=(m.u||[]).map(uOf).filter(Boolean);if(us.length)fx(ch.s,ch.c,ch.self,ch.n>1?us:us[0]);chk()}
+  }finally{G.ask=a0}
+  askNext();render();settle()}
+function onHandoff(){
+  G.busy=true;G.sel=null;G.evo=false;G.pend=null;G.tgt=null;render();
+  (async()=>{
+    const G0=G;
+    for(let k=0;k<600&&G===G0&&!G.over;k++){
+      settle();askNext();
+      if(!(G.dq.length||G.settling||G.remote||(G.choices&&G.choices.length)||G.tgt))break;
+      await new Promise(r=>setTimeout(r,60))}
+    if(G!==G0||G.over)return;
+    G.cur='e';G.busy=false;G.choices=[];netSend(true);render()})()}
+function showBanner(t){const b=$('#banner');$('#bnT').textContent=t;b.style.display='flex';clearTimeout(showBanner.t);showBanner.t=setTimeout(()=>{b.style.display='none'},2600)}
 bld();
 Object.values(ADD).flat().forEach(n=>{if(!C.some(c=>c.n==n))console.error('ADD参照エラー: '+n)});
 setInterval(()=>{try{const sp=document.getElementById('spin');if(sp)sp.classList.toggle('on',!!G&&!G.over&&!G.mulligan&&(G.busy||G.cur!='p'))}catch(e){}},150);
