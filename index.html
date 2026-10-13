@@ -54,29 +54,124 @@ button.g.on{background:var(--ok);color:#fff;border-color:var(--ok)}
 .c.mulligan-selected{outline:3px solid var(--bad);outline-offset:-1px;box-shadow:0 0 10px var(--bad)}
 .c.mulligan-selected::before{content:'交換';position:absolute;top:2px;right:2px;background:var(--bad);color:#fff;font-size:11px;padding:2px 6px;border-radius:4px;font-weight:bold;z-index:2}
 #optbox{position:fixed;inset:0;z-index:40;align-items:center;justify-content:center;background:rgba(0,0,0,.45)}#optbox .optm{background:#1d2433;color:#fff;border:2px solid #e0a800;border-radius:12px;padding:12px;width:min(88vw,360px);margin-top:18vh;box-shadow:0 8px 28px rgba(0,0,0,.6)}#optbox .optt{font-weight:bold;margin-bottom:6px}#optbox button{display:block;width:100%;margin:6px 0;padding:10px;text-align:left;font-size:15px}#optbox .optn{font-size:12px;opacity:.7;margin-top:4px}
+
+#bar{position:fixed;left:0;right:0;bottom:0;z-index:8;display:flex;gap:8px;justify-content:center;align-items:center;margin:0;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));background:var(--pn);border-top:2px solid var(--bd);box-shadow:0 -4px 14px rgba(0,0,0,.25)}
+#bar #evo,#bar #end{flex:1;max-width:220px}#bar #end{font-weight:700}
+#gm{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+#ovre{bottom:calc(76px + env(safe-area-inset-bottom,0px))!important}
+#pmt{position:fixed;top:calc(6px + env(safe-area-inset-top,0px));left:8px;right:8px;z-index:8;margin:0 auto;max-width:560px;box-sizing:border-box;background:#1d2433;color:#fff;border:2px solid #e0a800;border-radius:10px;padding:8px 12px;font-weight:700;font-size:15px;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+#pmt small{display:block;font-weight:400;opacity:.8;font-size:12px}
+.c.hc{outline:3px dashed #ffd54a;outline-offset:1px;box-shadow:0 0 12px #ffd54a;animation:pkp .9s ease-in-out infinite alternate}
+.c.hsel-on{outline:3px solid var(--bad);outline-offset:-1px;box-shadow:0 0 10px var(--bad);animation:none}
+.c.hsel-on::before{content:'選択中';position:absolute;top:2px;right:2px;background:var(--bad);color:#fff;font-size:11px;padding:2px 6px;border-radius:4px}
+@media(max-width:600px){
+body{padding:4px;font-size:15px}h1{font-size:18px}
+.nav-tabs{gap:4px;margin-bottom:8px;padding-bottom:6px}.nav-tabs button{flex:1;padding:8px 2px;font-size:14px}
+button{padding:9px 12px;font-size:15px}
+.field{gap:3px}
+.lead{padding:4px 8px;font-size:14px;gap:2px 8px;border-radius:8px}
+.bd{gap:3px;padding:3px;min-height:104px}
+.u{min-height:104px;padding:5px 2px 24px;font-size:13px}.u small{font-size:10.5px;line-height:1.2}
+.sl{min-height:104px;font-size:12px}
+.hand{gap:4px;padding:8px 2px}
+.hand .c{flex:0 0 112px;width:112px;min-width:112px;min-height:130px;padding:22px 3px 26px}.hand .c b{font-size:14px}.hand .c small{font-size:11px}
+.hand.dense .c{flex-basis:94px;width:94px;min-width:94px}
+#log{height:64px;font-size:12px}
+#bar{gap:6px;padding-left:6px;padding-right:6px}#bar button{padding:10px 8px;font-size:14px}
+#gm{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
+#ovre{bottom:calc(68px + env(safe-area-inset-bottom,0px))!important}
+.grid{grid-template-columns:repeat(auto-fill,minmax(112px,1fr))}
+.handicap-box{padding:10px;margin-bottom:10px}
+}
+
+#bldTop{position:sticky;top:env(safe-area-inset-top,0px);z-index:7;background:var(--bg);padding:6px 0 4px;border-bottom:2px solid var(--bd);margin-bottom:6px}
+#bldTop .row{margin:0 0 4px;flex-wrap:nowrap}#bldTop #tot{font-size:18px;min-width:3.4em}
+#bldTop .cv{margin:0;padding:4px 8px}#bldTop .cvc .bar{height:44px}
+#q{flex:1;min-width:0;box-sizing:border-box;font-size:16px;padding:8px 10px;border-radius:8px;border:1px solid var(--bd);background:var(--pn);color:var(--fg)}
+.home-hero{text-align:center;padding:20px 8px 8px}.home-hero h1{font-size:36px;margin:4px 0}.home-hero .em{font-size:48px;line-height:1}.home-hero p{margin:6px 0;opacity:.85}
+#tabHome h3{margin:0 0 8px}#tabHome ul{margin:0;padding-left:1.2em;line-height:1.7;font-size:14px}#tabHome .lg{font-size:13px;line-height:1.7;opacity:.9}
+.home-go{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0 16px}.home-go button{flex:1;min-width:140px;font-size:17px;padding:14px 10px}
+.cdot{display:inline-block;width:.8em;height:.8em;border-radius:50%;margin-right:.3em;vertical-align:-1px}
+@media(max-width:600px){
+.nav-tabs button{font-size:12.5px;padding:8px 1px;white-space:nowrap;min-width:0}
+#bldTop .cvc .bar{height:34px}#bldTop .cvc{font-size:12px}#bldTop .cv small{font-size:11px}
+.home-hero h1{font-size:30px}.home-go button{min-width:100%}
+}
 </style></head><body>
 
 <!-- タブヘッダー -->
 <div class="nav-tabs" id="navTabs">
-  <button class="active" data-tab="tabBld">🎴 デッキ構築</button>
-  <button data-tab="tabOnline">🌐 対人戦</button>
+  <button class="active" data-tab="tabHome">🏠 ホーム</button>
+  <button data-tab="tabBld">🎴 デッキ構築</button>
+  <button data-tab="tabOnline">🌐 オンライン対戦</button>
   <button data-tab="tabSetup">🤖 CPU対戦</button>
 </div>
 
+<!-- 0. ホーム画面 -->
+<div id="tabHome" class="tab-content active">
+  <div class="home-hero">
+    <div class="em">🍽</div>
+    <h1>モグバト！</h1>
+    <p>料理の精霊「フーズ」を召喚して戦う、シェフたちの戦争。</p>
+  </div>
+  <div class="home-go">
+    <button data-go="tabBld">🎴 デッキを組む</button>
+    <button data-go="tabSetup">🤖 CPU戦</button>
+    <button data-go="tabOnline">🌐 対人戦</button>
+  </div>
+  <div class="handicap-box">
+    <h3>⚔ 基本ルール</h3>
+    <ul>
+      <li>フーズで攻撃して、相手のHPを先に0にしたほうの勝ち！</li>
+      <li>毎ターン増える「PP（プレイポイント）」というコストを払ってカードを使うよ。</li>
+      <li>デッキは30枚（同名カードは3枚まで）。リーダーのHPは25、PPは最大10。</li>
+      <li>フーズを「進化」させると、そのターンすぐに攻撃できるようになって大逆転を狙えるよ！✨</li>
+      <li>「進化」は1ターンに1回、1ゲームに3回までできる。</li>
+      <li>盤面は自陣・敵陣ともに前列3＋後列3の、計12マス。</li>
+      <li>前後に重なっていれば、後列にいるフーズは攻撃されない。</li>
+      <li>左・中・右の3列が埋まっていると、壁になってリーダーに攻撃できない。</li>
+    </ul>
+  </div>
+  <div class="handicap-box">
+    <h3>🎨 4つの色の特徴</h3>
+    <ul>
+      <li><span class="cdot" style="background:#3a9d5d"></span><b>緑＝和食</b>：ドロー、コンボ、回復</li>
+      <li><span class="cdot" style="background:#d94a3a"></span><b>赤＝中華</b>：単体ダメージ、リーダー直撃、自傷、速攻</li>
+      <li><span class="cdot" style="background:#3b82f6"></span><b>青＝アメリカン</b>：全体ダメージ、単体で強い、貫通、破壊</li>
+      <li><span class="cdot" style="background:#e0a800"></span><b>黄＝ヨーロピアン</b>：特技シナジーとランプ（PP最大値増加）、大型フーズ</li>
+    </ul>
+  </div>
+  <div class="handicap-box">
+    <h3>📖 アイコンとキーワード</h3>
+    <ul class="lg">
+      <li>🛡守護:前列にいるとき先に狙われる</li>
+      <li>⚡突進:出たターンにフーズを攻撃可</li>
+      <li>💨疾走:出たターンからリーダーも攻撃可</li>
+      <li>🔱貫通:余ったダメージの半分(切り上げ)が後ろのフーズ（いなければリーダー）へ</li>
+      <li>💤レスト:召喚酔い。突進・疾走・進化で解除される</li>
+      <li>⏸行動不能:効果によって攻撃できない状態</li>
+      <li>🧪毒:ターン終了時1ダメ</li>
+      <li>☠️猛毒:ターン終了時2ダメ</li>
+      <li>🌿新鮮:引いたターンだけ発動する効果</li>
+    </ul>
+  </div>
+</div>
+
 <!-- 1. デッキ構築画面 -->
-<div id="tabBld" class="tab-content active">
-  <h1>🍽 モグバト！ デッキ構築（30枚・同名3枚まで）</h1>
-  <div style="font-size:12px;opacity:.8">料理の精霊「フーズ」を召喚して戦う、シェフたちの戦争。</div>
-  <div style="font-size:12px;opacity:.85;margin:4px 0">🛡守護:前列にいるとき先に狙われる ⚡突進:出たターンにフーズを攻撃可 💨疾走:出たターンからリーダーも攻撃可 🔱貫通:余ったダメージの半分(切り上げ)が後ろのフーズ（いなければリーダー）へ 💤レスト ⏸行動不能 🧪毒:両者のターン終了時1ダメ ☠️猛毒:同2ダメ 橙枠=レストなし 青枠=フーズだけ攻撃可</div>
-  <div class="row"><b id="tot">0/30</b><button class="g" data-p="x">クリア</button><button class="g" data-f="">全色</button><button class="g" data-f="g">🍣和食</button><button class="g" data-f="r">🥟中華</button><button class="g" data-f="b">🍔アメリカ</button><button class="g" data-f="y">🥐欧州</button></div>
-  <div class="row" id="acRow"><small>🎲 色指定オート:</small><button class="g" data-ac="g">🍣和食</button><button class="g" data-ac="r">🥟中華</button><button class="g" data-ac="b">🍔アメリカ</button><button class="g" data-ac="y">🥐欧州</button><button id="acGo">選んだ色で構築</button><small>1〜4色OK（未選択＝全色）</small></div>
-  <div class="cv" id="cv"></div>
+<div id="tabBld" class="tab-content">
+  <h1>🎴 デッキ構築</h1>
+  <div style="font-size:12px;opacity:.8">30枚・同名3枚まで。カードをタップで追加、「−」で減らす。</div>
+  <div class="row" id="acRow"><small>🎲 オート構築機能:</small><button class="g" data-ac="g">🍣和食</button><button class="g" data-ac="r">🥟中華</button><button class="g" data-ac="b">🍔アメリカン</button><button class="g" data-ac="y">🥐ヨーロピアン</button><button id="acGo">選んだ色で構築</button><small>1〜4色OK（未選択＝全色）</small></div>
+  <div id="bldTop">
+    <div class="row"><b id="tot">0/30</b><input id="q" type="search" placeholder="🔍 カード名・能力で検索（スペース区切りで複数）" autocomplete="off"><button class="g" data-p="x">クリア</button></div>
+    <div class="cv" id="cv"></div>
+  </div>
   <div class="grid" id="pool"></div>
 </div>
 
 <!-- 2b. 対人戦（オンライン2人） -->
 <div id="tabOnline" class="tab-content">
-  <h1>🌐 対人戦（2人・P2P）</h1>
+  <h1>🌐 オンライン対戦（2人）</h1>
   <div class="handicap-box">
     <h3>① 部屋を作る／入る</h3>
     <div class="row">
@@ -105,7 +200,7 @@ button.g.on{background:var(--ok);color:#fff;border-color:var(--ok)}
   <h1>🤖 CPU対戦</h1>
   <div class="handicap-box">
     <h3>🍽 CPUのデッキ</h3>
-    <div class="row" id="ccRow"><button class="g on" id="ccAuto">🎲 おまかせ</button><button class="g" data-cc="g">🍣和食</button><button class="g" data-cc="r">🥟中華</button><button class="g" data-cc="b">🍔アメリカ</button><button class="g" data-cc="y">🥐欧州</button></div>
+    <div class="row" id="ccRow"><button class="g on" id="ccAuto">🎲 おまかせ</button><button class="g" data-cc="g">🍣和食</button><button class="g" data-cc="r">🥟中華</button><button class="g" data-cc="b">🍔アメリカン</button><button class="g" data-cc="y">🥐ヨーロピアン</button></div>
     <small style="opacity:.8">おまかせ＝ランダムな色でいい感じに構築。色を選ぶとその色だけで組む（複数OK）</small>
   </div>
   <div class="handicap-box">
@@ -124,6 +219,7 @@ button.g.on{background:var(--ok);color:#fff;border-color:var(--ok)}
 
 <!-- 3. 対戦画面（試合中） -->
 <div id="gm" style="display:none">
+  <div id="pmt" style="display:none"></div>
   <div class="field">
     <div class="lead" id="el"></div>
     <div class="bd" id="eb"></div>
@@ -132,14 +228,28 @@ button.g.on{background:var(--ok);color:#fff;border-color:var(--ok)}
     <div class="bd" id="pb"></div>
     <div class="lead" id="pl"></div>
     <div class="hand" id="hd"></div>
-    <div class="row">
+    <div id="bar">
+      <button id="hokBtn" data-a="hok" style="display:none;background:var(--ok)">決定</button>
       <button id="mulliganConfirm" style="display:none;background:var(--ok);">🔄 マリガン確定</button>
       <button id="evo">進化</button>
       <button id="end">ターン終了</button>
       <button class="g" id="mute">🔊</button>
       <button class="g" id="surrender">🏳️ 降参する</button>
     </div>
-    <div style="font-size:12px;opacity:.75;margin:2px 0">橙の枠＝レストなし（リーダーも狙える） ／ 青い枠＝出たターンでフーズだけ攻撃可 ／ 💤＝レスト（持ち主のターン開始で消える） ／ 🧪毒＝どちらのターン終了時も1ダメージ ☠️猛毒＝同2ダメージ ／ 🌿新鮮＝引いたターンだけ[新鮮]効果が有効</div>
+    <div id="log"></div>
+    <div style="font-size:12px;opacity:.75;margin:2px 0">
+      <ul class="lg">
+        <li>🛡守護:前列にいるとき先に狙われる</li>
+        <li>⚡突進:出たターンにフーズを攻撃可</li>
+        <li>💨疾走:出たターンからリーダーも攻撃可</li>
+        <li>🔱貫通:余ったダメージの半分(切り上げ)が後ろのフーズ（いなければリーダー）へ</li>
+        <li>💤レスト:召喚酔い。突進・疾走・進化で解除される</li>
+        <li>⏸行動不能:効果によって攻撃できない状態</li>
+        <li>🧪毒:ターン終了時1ダメ</li>
+        <li>☠️猛毒:ターン終了時2ダメ</li>
+        <li>🌿新鮮:引いたターンだけ発動する効果</li>
+      </ul>
+    </div>
     <div id="log"></div>
   </div>
 </div>
@@ -298,7 +408,7 @@ const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.ra
 const KW={G:'頑丈',X:'毒',W:'守護',R:'突進',S:'疾走',T:'貫通',w:'[新鮮]守護',r:'[新鮮]突進',s:'[新鮮]疾走',t:'[新鮮]貫通'};
 const hasFresh=c=>/[a-z]/.test(c.k||'')||(c.ts||[]).some(t=>t.cd=='N');
 const dparts=c=>[[...c.k].map(x=>KW[x]).join(' '),c.x?(c.t=='f'&&c.f?'F:':'')+c.x:'',...(c.ts||[]).map(t=>t.tx)].filter(Boolean);const desc=c=>dparts(c).join(' / '),descH=c=>dparts(c).join('<br>');
-const KC={g:'#3a9d5d',r:'#d94a3a',b:'#3b82f6',y:'#e0a800'},IC={g:'🍣',r:'🥟',b:'🍔',y:'🥐'};let flt='';
+const KC={g:'#3a9d5d',r:'#d94a3a',b:'#3b82f6',y:'#e0a800'},IC={g:'🍣',r:'🥟',b:'🍔',y:'🥐'};let qs=[];const nz=t=>String(t).normalize('NFKC').toLowerCase().replace(/[ァ-ヶ]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0x60));const qOk=c=>{if(!qs.length)return true;const h=nz(c.n+' '+desc(c));return qs.every(w=>h.includes(w))};
 let cnt=C.map(()=>0),G=null;
 
 // --- 色指定オート構築 ---
@@ -341,8 +451,10 @@ $('#navTabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;
 document.querySelectorAll('#navTabs button').forEach(x=>x.classList.remove('active'));
 document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
 b.classList.add('active');$(`#${b.dataset.tab}`).classList.add('active')};
+$('#tabHome').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)$('#navTabs [data-tab="'+b.dataset.go+'"]').click()});
+$('#q').addEventListener('input',e=>{qs=nz(e.target.value).split(/\s+/).filter(Boolean);bld()});
 
-function bld(){$('#pool').innerHTML=C.filter(c=>!c.tok&&(!flt||c.col==flt)).sort((a,b)=>'grby'.indexOf(a.col)-'grby'.indexOf(b.col)||a.c-b.c).map(c=>`<div class="c ${c.t=='s'?'sp':'fd'} r${c.rar} ${cnt[c.id]?'in':''}" data-b="${c.id}" style="--k:${KC[c.col]}"><em>${c.c}</em><b>${c.n}</b><div class="st">${'★'.repeat(c.rar)}</div><small>${descH(c)}</small><span>${c.t=='f'?c.a+'/'+c.h:'特技'}</span><u>×${cnt[c.id]}</u>${cnt[c.id]?`<button data-b="-${c.id}">−</button>`:''}</div>`).join('');
+function bld(){$('#pool').innerHTML=C.filter(c=>!c.tok&&qOk(c)).sort((a,b)=>'grby'.indexOf(a.col)-'grby'.indexOf(b.col)||a.c-b.c).map(c=>`<div class="c ${c.t=='s'?'sp':'fd'} r${c.rar} ${cnt[c.id]?'in':''}" data-b="${c.id}" style="--k:${KC[c.col]}"><em>${c.c}</em><b>${c.n}</b><div class="st">${'★'.repeat(c.rar)}</div><small>${descH(c)}</small><span>${c.t=='f'?c.a+'/'+c.h:'特技'}</span><u>×${cnt[c.id]}</u>${cnt[c.id]?`<button data-b="-${c.id}">−</button>`:''}</div>`).join('')||'<div style="grid-column:1/-1;opacity:.7;padding:16px;text-align:center">一致するカードがありません</div>';
 const isReady=tot()==30;
 $('#tot').textContent=tot()+'/30';
 $('#go').disabled=!isReady;if(typeof updateLobby=='function')updateLobby();
@@ -351,7 +463,7 @@ $('#deckWarn').style.display=isReady?'none':'inline';
 const cb=[...Array(8)].map(()=>[0,0]);let fo=0,sp=0,sm=0;const cc={};C.forEach(c=>{const n=cnt[c.id];if(!n)return;cc[c.col]=(cc[c.col]||0)+n;cb[Math.max(0,Math.min(c.c,8)-1)][c.t=='f'?0:1]+=n;c.t=='f'?fo+=n:sp+=n;sm+=c.c*n});const mx=Math.max(6,...cb.map(x=>x[0]+x[1]));
 $('#cv').innerHTML='<div class="cvb">'+cb.map((x,i)=>`<div class="cvc"><span class="n">${x[0]+x[1]||''}</span><div class="bar"><div style="height:${x[1]/mx*100}%;background:#c77d00"></div><div style="height:${x[0]/mx*100}%;background:var(--ac)"></div></div><span class="x">${i==7?'8+':i==0?'0-1':i+1}</span></div>`).join('')+`</div><small>マナカーブ <span style="color:var(--ac)">■</span>フーズ ${fo} <span style="color:#c77d00">■</span>特技 ${sp} 平均コスト ${tot()?(sm/tot()).toFixed(1):'-'} ${[...'grby'].map(k=>IC[k]+(cc[k]||0)).join(' ')}</small>`}
 
-$('#tabBld').addEventListener('click',e=>{const f=e.target.closest('[data-f]');if(f){flt=f.dataset.f;bld();return}const p=e.target.closest('[data-p]');if(p){cnt=C.map(()=>0);bld();return}const d=e.target.closest('[data-b]');if(!d)return;const v=d.dataset.b,i=Math.abs(+v);if(v[0]=='-')cnt[i]--;else if(cnt[i]<3&&tot()<30)cnt[i]++;bld()});
+$('#tabBld').addEventListener('click',e=>{const p=e.target.closest('[data-p]');if(p){cnt=C.map(()=>0);bld();return}const d=e.target.closest('[data-b]');if(!d)return;const v=d.dataset.b,i=Math.abs(+v);if(v[0]=='-')cnt[i]--;else if(cnt[i]<3&&tot()<30)cnt[i]++;bld()});
 
 $('#acRow').addEventListener('click',e=>{
   const t=e.target.closest('[data-ac]');
@@ -577,9 +689,14 @@ function chooseFx(s,id,self,rd,pick){const L=(CHT[id]||{o:[]}).o;if(!L.length)re
 const MOD=T=>T.k=='opt'||T.k=='popt'||T.k=='mvd'||T.k=='hsel'||T.k=='hpos';
 const needOpt=(p,c)=>!!c&&c.f=='ch'&&!p.allCh;
 const launchP=(T,pick)=>{const pp=G.p;if(T.atk){if(!pp.board.includes(T.u))return null;ev('atk','p',T.u.pos);G.sel=null;return attackA(pp,T.u,T.t,pick)}const cc=pp.hand[T.i];if(!cc||cst(pp,cc)>pp.pp||(cc.t=='f'&&pp.board.some(u=>u.pos==T.pos)))return null;return playA(pp,T.i,T.pos,pick)};
-function renderOpt(){const bx=$('#optbox');if(!bx)return;const T=G.tgt;if(T&&T.k=='hpos'){const sd=T.ch.s;bx.style.display='flex';bx.innerHTML='<div class="optm"><div class="optt">📍 出す位置を選択</div><small>'+T.card.n+'</small>'+free(sd).map(i=>`<button data-a="hp:${i}">${POSL[i]}</button>`).join('')+'<div class="optn">この効果は取り消せません</div></div>';return}
-if(T&&T.k=='hsel'){const ch=T.ch,L=handCands(ch.s,ch.kind);bx.style.display='flex';bx.innerHTML='<div class="optm"><div class="optt">'+HTT[ch.kind]+'</div>'+L.map((c,i)=>`<button data-a="hs:${i}">${T.sel.includes(c)?'✅ ':''}${hbtn(c)}</button>`).join('')+(ch.kind=='hr'?`<button data-a="hok">決定（${T.sel.length}枚を戻す）</button>`:'')+'<div class="optn">この効果は取り消せません</div></div>';return}
-if(T&&T.k=='mvd'){const ch=T.ch,sd=ch.s;bx.style.display='flex';bx.innerHTML='<div class="optm"><div class="optt">📍 移動先を選択</div><small>'+ch.u.n+'をどこへ移動する？</small>'+POSL.map((l,i)=>{const w=sd.board.find(x=>x.h>0&&x.pos==i);return `<button data-a="mvp:${i}">${l} ${i==ch.u.pos?'(現在地)':w?'(入れ替え:'+w.n+')':'(空き)'}</button>`}).join('')+'<div class="optn">この効果は取り消せません</div></div>';return}if(T&&MOD(T)){const id=T.k=='popt'?T.id:T.ch.opt,cs=T.k=='opt'&&T.ch.cs?'<small>'+T.ch.cs+'</small>':'',can=T.k=='popt';bx.style.display='flex';bx.innerHTML='<div class="optm"><div class="optt">🎯 効果を選択</div>'+cs+CHT[id].o.map((o,i)=>`<button data-a="opt:${i}">${'①②③'[i]} ${o.t}</button>`).join('')+'<div class="optn">'+(can?'枠の外をクリックでキャンセル':'この効果は取り消せません')+'</div></div>'}else if(bx.innerHTML){bx.style.display='none';bx.innerHTML=''}}
+const SELM=()=>!!(G&&G.tgt&&(G.tgt.k=='hsel'||G.tgt.k=='hpos'||G.tgt.k=='mvd'));
+function renderSel(){const pm=$('#pmt'),hk=$('#hokBtn');if(!pm||!hk)return;const T=G.tgt;let tx='',hok=false;
+if(T&&T.k=='hsel'){const ch=T.ch;tx=HTT[ch.kind]+(ch.kind=='hr'?'（'+T.sel.length+'枚選択中）':'')+'<small>光っている手札をタップ（この効果は取り消せません）</small>';hok=ch.kind=='hr'}
+else if(T&&T.k=='hpos')tx='📍 '+T.card.n+'を出す位置を選択<small>光っている空きマスをタップ（取り消せません）</small>';
+else if(T&&T.k=='mvd')tx='📍 '+T.ch.u.n+'の移動先を選択<small>マスをタップ（この効果は取り消せません）</small>';
+if(tx){pm.innerHTML=tx;pm.style.display='block'}else{pm.style.display='none';pm.innerHTML=''}
+hk.style.display=hok?'inline-block':'none';if(hok)hk.textContent='決定（'+T.sel.length+'枚を戻す）'}
+function renderOpt(){const bx=$('#optbox');if(!bx)return;const T=G.tgt;if(T&&(T.k=='hpos'||T.k=='hsel'||T.k=='mvd')){if(bx.innerHTML){bx.style.display='none';bx.innerHTML=''}return}if(T&&MOD(T)){const id=T.k=='popt'?T.id:T.ch.opt,cs=T.k=='opt'&&T.ch.cs?'<small>'+T.ch.cs+'</small>':'',can=T.k=='popt';bx.style.display='flex';bx.innerHTML='<div class="optm"><div class="optt">🎯 効果を選択</div>'+cs+CHT[id].o.map((o,i)=>`<button data-a="opt:${i}">${'①②③'[i]} ${o.t}</button>`).join('')+'<div class="optn">'+(can?'枠の外をクリックでキャンセル':'この効果は取り消せません')+'</div></div>'}else if(bx.innerHTML){bx.style.display='none';bx.innerHTML=''}}
 const TSEL={df:{side:'foe'},py:{side:'foe'},sn:{side:'foe'},mb:{side:'foe',ok:u=>u.pos<3},mf:{side:'foe',ok:u=>u.pos>=3},cy:{side:'any'},gy:{side:'ally'},dq:{side:'foe'},mq:{side:'foe'},mh:{side:'foe'},mv:{side:'ally'},db:{side:'foe'},dm:{side:'foe'},pf:{side:'foe'},mm:{side:'foe'},d2:{side:'foe',n:2},d3:{side:'foe',n:3,ord:true,lab:['3ダメ','2ダメ','1ダメ']},bf:{side:'ally',ok:(u,s,c,self)=>u!==self}};
 const selCands=(s,c,self)=>{const r=c&&TSEL[c.f];if(!r)return[];const o=opp(s),L=r.side=='ally'?s.board:r.side=='any'?s.board.concat(o.board):o.board;return L.filter(u=>u.h>0&&(!r.ok||r.ok(u,s,c,self)))};
 const needSel=(r,len)=>r.ord?len>=2:len>(r.n||1);
@@ -1240,19 +1357,21 @@ async function cpu(){
 function render(){if(!G)return;const{p,e}=G;const su=G.sel!=null?p.board[G.sel]:null,tg=su?targets(p,su):[],gt=G.tgt?(G.tgt.k=='eff'?G.tgt.ch.got:G.tgt.got||[]):[],sc=G.tgt?(G.tgt.k=='aeff'?selCands(p,{f:G.tgt.at.tf},G.tgt.u):G.tgt.k=='eff'?effCands(G.tgt.ch):G.tgt.k=='ptgt'?selCands(p,{f:G.tgt.o.f,v:G.tgt.o.v},G.tgt.T.u):G.tgt.k=='popt'?[]:selCands(p,p.hand[G.tgt.i]).filter(u=>!gt.includes(u))):[],pk=u=>(sc.includes(u)?' pk':'')+(gt.includes(u)?' pkd':'');
 const ld=(s,id,n)=>`<b>${n} ❤${s.hp}/${s.maxHp}</b><span>PP ${s.pp}/${s.mpp}</span><span>EP ${s.ep}</span><span>山${s.deck.length} 手${s.hand.length}</span>${cols(s)==3?'<span>🧱防御中</span>':''}`;
 $('#el').innerHTML=ld(e,'e',OPN());$('#el').className='lead'+(tg.includes('L')?' tgt':'');$('#el').dataset.a='leader';
-$('#pl').innerHTML=ld(p,'p','あなた');$('#gm').classList.toggle('tgtm',!!G.tgt&&!MOD(G.tgt));renderOpt();if(G.tgt&&!MOD(G.tgt)){const eff=G.tgt.k=='eff',cf=eff?G.tgt.ch.c.f:(p.hand[G.tgt.i]||{}).f,r=TSEL[cf]||{},k=gt.length,lb=(r.n>1)?`（${k+1}体目${r.lab?'：'+r.lab[k]:''}）`:'';const cs=eff?(G.tgt.ch.cs||''):G.tgt.k=='aeff'?cLog(`<b>${G.tgt.u.n}</b> <small>${G.tgt.at.tx}</small>`):(()=>{const cc=p.hand[G.tgt.i];return cc?cLog(`<b>${cc.n}</b> <small>${desc(cc)||''}</small>`):''})();$('#now').innerHTML='🎯 '+(eff?'効果の対象を選択':'対象を選択')+lb+(cs?'<br>'+cs:'')+(eff?' <small>（金枠のフーズをクリック）</small>':' <small>（金枠のフーズをクリック／それ以外をクリックでキャンセル）</small>');G.hint=1}else if(G.hint){G.hint=0;$('#now').innerHTML=G.nb.join(' ▶ ')}
+$('#pl').innerHTML=ld(p,'p','あなた');$('#gm').classList.toggle('tgtm',!!G.tgt&&(!MOD(G.tgt)||G.tgt.k=='hpos'));renderOpt();renderSel();if(G.tgt&&!MOD(G.tgt)){const eff=G.tgt.k=='eff',cf=eff?G.tgt.ch.c.f:(p.hand[G.tgt.i]||{}).f,r=TSEL[cf]||{},k=gt.length,lb=(r.n>1)?`（${k+1}体目${r.lab?'：'+r.lab[k]:''}）`:'';const cs=eff?(G.tgt.ch.cs||''):G.tgt.k=='aeff'?cLog(`<b>${G.tgt.u.n}</b> <small>${G.tgt.at.tx}</small>`):(()=>{const cc=p.hand[G.tgt.i];return cc?cLog(`<b>${cc.n}</b> <small>${desc(cc)||''}</small>`):''})();$('#now').innerHTML='🎯 '+(eff?'効果の対象を選択':'対象を選択')+lb+(cs?'<br>'+cs:'')+(eff?' <small>（金枠のフーズをクリック）</small>':' <small>（金枠のフーズをクリック／それ以外をクリックでキャンセル）</small>');G.hint=1}else if(G.hint){G.hint=0;$('#now').innerHTML=G.nb.join(' ▶ ')}
 const stIcon=(u,sid)=>{const act=(sid=='p')===(G.cur=='p');return ((u.stun||(act&&u.stunned))?'⏸':'')+(u.sick&&!(u.s||u.r)?'💤':'')+(u.psn>0?(u.psn>1?'☠️':'🧪'):'')+(u.fr&&u.fx?'🌿':'')};
 const stTip=(u,sid)=>{const act=(sid=='p')===(G.cur=='p');const a=[];if(u.stun)a.push('次のターン攻撃できない');else if(act&&u.stunned)a.push('このターン攻撃できない');if(u.sick&&!(u.s||u.r))a.push('レスト（持ち主のターン開始で回復）');else if(u.sick&&u.r&&!u.s)a.push('突進：フーズだけ攻撃可');if(u.fr&&u.fx)a.push('新鮮：ターン終了まで[新鮮]の効果が有効');if(u.psn>0)a.push(u.psn>1?'猛毒：ターン終了時に2ダメージ':'毒：ターン終了時に1ダメージ');return a.join(' / ')};
 const uh=(u,cls,d,lk,sid)=>`<div class="u ${cls}" title="${stTip(u,sid)}" style="--k:${KC[u.col]||''}" data-a="${d}" data-s="${sid}${u.pos}">${u.cost!=null?`<em>${u.cost}</em>`:''}<b>${u.n}</b><i>${lk?'🔒':''}${u.w&&u.pos<3?'🛡':''}${stIcon(u,sid)}${u.r?'⚡':''}${u.s?'💨':''}${u.t?'🔱':''}${u.ty?'🪨':''}${u.evo?'★':''}</i><small>${u.d}</small><span class="a">${u.a}</span><span class="h">${u.h}</span></div>`;
-const cell=(s,pos,mine)=>{const i=s.board.findIndex(x=>x.pos==pos),u=s.board[i],t=pos<3?'前列':'後列',id=(mine?'p':'e')+pos;if(!u)return mine?`<div class="sl${G.pend!=null?' pl':''}" data-a="slot:${pos}" data-s="${id}">${t}</div>`:`<div class="sl" data-s="${id}">${t}</div>`;return uh(u,mine?(G.sel===i?'sel ':'')+(ready(u)&&G.cur=='p'&&!G.tgt?('rdy'+(face(u)?' ldr':'')):'')+pk(u):(tg.includes(u)?'tgt':'')+pk(u),(mine?'my:':'foe:')+i,!vis(s,u),mine?'p':'e')};
+const MT=G.tgt&&(G.tgt.k=='mvd'||G.tgt.k=='hpos')?G.tgt:null,FRE=MT&&MT.k=='hpos'?free(MT.ch.s):null;
+const cell=(s,pos,mine)=>{const i=s.board.findIndex(x=>x.pos==pos),u=s.board[i],t=pos<3?'前列':'後列',id=(mine?'p':'e')+pos;if(!u&&mine&&MT){const ok=MT.k=='mvd'||FRE.includes(pos);return `<div class="sl${ok?' pl':''}"${ok?` data-a="${MT.k=='mvd'?'mvp':'hp'}:${pos}"`:''} data-s="${id}">${t}</div>`}if(!u)return mine?`<div class="sl${G.pend!=null?' pl':''}" data-a="slot:${pos}" data-s="${id}">${t}</div>`:`<div class="sl" data-s="${id}">${t}</div>`;if(mine&&MT&&MT.k=='mvd')return uh(u,u===MT.ch.u?'sel':'pk','mvp:'+pos,!vis(s,u),'p');return uh(u,mine?(G.sel===i?'sel ':'')+(ready(u)&&G.cur=='p'&&!G.tgt?('rdy'+(face(u)?' ldr':'')):'')+pk(u):(tg.includes(u)?'tgt':'')+pk(u),(mine?'my:':'foe:')+i,!vis(s,u),mine?'p':'e')};
 $('#eb').innerHTML=(G.online?[5,4,3,2,1,0]:[3,4,5,0,1,2]).map(q=>cell(e,q,false)).join('');
 $('#pb').innerHTML=[0,1,2,3,4,5].map(q=>cell(p,q,true)).join('');
 
 // マリガン中か通常プレイ時かでクラス切り替え（マリガン中はグレーアウトしない）
+const HS=G.tgt&&G.tgt.k=='hsel'&&G.tgt.ch.s===p?G.tgt:null,HL=HS?handCands(p,HS.ch.kind):null,HM=HS?(()=>{let j=0;return p.hand.map(c=>HL[j]===c?j++:-1)})():null;
 $('#hd').classList.toggle('dense',p.hand.length>8);$('#hd').innerHTML=p.hand.map((c,i)=>{
-  const isOk = G.mulligan || (G.cur=='p' && cst(p,c)<=p.pp);
+  const hci=HS?HM[i]:-1;const isOk = HS?hci>=0:(G.mulligan || (G.cur=='p' && cst(p,c)<=p.pp));
   const isSelected = G.mulligan && G.mulSel.has(i);
-  return `<div class="c ${c.t=='s'?'sp':'fd'} r${c.rar} ${isOk?'ok':''} ${(G.pend===i||(G.tgt&&G.tgt.i===i))?' pd':''} ${isSelected?'mulligan-selected':''}" style="--k:${KC[c.col]}" data-a="hand:${i}"><em${(c.dc||cst(p,c)<c.c)?' style=\"color:#7CFF7C\"':''}>${cst(p,c)}</em><b>${c.fr&&hasFresh(c)?'🌿':''}${c.n}</b><div class="st">${'★'.repeat(c.rar)}</div><small>${descH(c)}</small><span>${c.t=='f'?c.a+'/'+c.h:'特技'}</span></div>`;
+  return `<div class="c ${c.t=='s'?'sp':'fd'} r${c.rar} ${isOk?'ok':''} ${(G.pend===i||(G.tgt&&G.tgt.i===i))?' pd':''} ${isSelected?'mulligan-selected':''}${HS&&hci>=0?' hc':''}${HS&&HS.si&&HS.si.includes(hci)?' hsel-on':''}" style="--k:${KC[c.col]}" data-a="${HS?(hci>=0?'hs:'+hci:'x:0'):'hand:'+i}"><em${(c.dc||cst(p,c)<c.c)?' style=\"color:#7CFF7C\"':''}>${cst(p,c)}</em><b>${c.fr&&hasFresh(c)?'🌿':''}${c.n}</b><div class="st">${'★'.repeat(c.rar)}</div><small>${descH(c)}</small><span>${c.t=='f'?c.a+'/'+c.h:'特技'}</span></div>`;
 }).join('');
 
 // マリガン中のボタン表示制御
@@ -1261,12 +1380,12 @@ $('#evo').style.display = G.mulligan ? 'none' : 'inline-block';
 $('#end').style.display = G.mulligan ? 'none' : 'inline-block';
 
 if(!G.mulligan){
-  $('#evo').disabled=!(G.cur=='p'&&canEvo(p)&&p.board.length);$('#evo').textContent=G.evo?'進化：対象を選択':'進化 (EP'+p.ep+')';$('#end').disabled=G.cur!='p'||G.busy||!!G.remote;
+  $('#evo').disabled=SELM()||!(G.cur=='p'&&canEvo(p)&&p.board.length);$('#evo').textContent=G.evo?'進化：対象を選択':'進化 (EP'+p.ep+')';$('#end').disabled=SELM()||G.cur!='p'||G.busy||!!G.remote;
 }
 fxPlay()}
 
 $('#mulliganConfirm').onclick=()=>confirmMulligan();
-$('#evo').onclick=()=>{if(G.remote||(G.tgt&&G.tgt.k=='eff'))return;G.tgt=null;G.evo=!G.evo;G.sel=null;render()};$('#end').onclick=async()=>{if(G.cur!='p'||G.busy||G.remote||(G.tgt&&G.tgt.k=='eff'))return;G.busy=true;G.sel=null;G.pend=null;G.tgt=null;G.evo=false;const s=G.p;for(const u of s.board.slice()){if(G.over)return;if((u.ts||[]).some(t=>t.tr=='E')&&u.h>0){trig(s,u,'E');chk();render();await settle();await sl(1000)}}G.busy=false;endT(s,true)};$('#mute').onclick=()=>{muted=!muted;$('#mute').textContent=muted?'🔇':'🔊'};
+$('#evo').onclick=()=>{if(G.remote||(G.tgt&&(G.tgt.k=='eff'||MOD(G.tgt))))return;G.tgt=null;G.evo=!G.evo;G.sel=null;render()};$('#end').onclick=async()=>{if(G.cur!='p'||G.busy||G.remote||(G.tgt&&(G.tgt.k=='eff'||MOD(G.tgt))))return;G.busy=true;G.sel=null;G.pend=null;G.tgt=null;G.evo=false;const s=G.p;for(const u of s.board.slice()){if(G.over)return;if((u.ts||[]).some(t=>t.tr=='E')&&u.h>0){trig(s,u,'E');chk();render();await settle();await sl(1000)}}G.busy=false;endT(s,true)};$('#mute').onclick=()=>{muted=!muted;$('#mute').textContent=muted?'🔇':'🔊'};
 const after=job=>{if(job){render();job.then(()=>{askNext();render();settle()},er=>{console.error(er);G.busy=false;render()})}else{askNext();render();settle()}};
 $('#gm').addEventListener('click',e=>{const d=e.target.closest('[data-a]');if(G&&G.remote)return;if(!G||G.over||(G.busy&&!(G.tgt&&(G.tgt.k=='eff'||G.tgt.k=='opt'||G.tgt.k=='mvd'||G.tgt.k=='hsel'||G.tgt.k=='hpos'))))return;
 // 対象選択中: 候補をクリックで確定、それ以外のクリックはキャンセル（PP・手札は消費しない）
@@ -1274,7 +1393,7 @@ if(G.tgt&&G.tgt.k=='opt'){const ch=G.tgt.ch,m=d?d.dataset.a.split(':'):[''],o=m[
 if(G.tgt&&(G.tgt.k=='hsel'||G.tgt.k=='hpos')){const T=G.tgt,ch=T.ch,s=ch.s,m=d?d.dataset.a.split(':'):[''];const fin2=f=>{G.tgt=null;G.rctx=ch.remoteId?ch:null;const a0=G.ask;G.ask=true;try{f();chk()}finally{G.ask=a0;G.rctx=null}if(ch.remoteId)remoteAnswer(ch,{done:1});askNext();render();settle()};
 if(T.k=='hpos'){if(m[0]!='hp'||!free(s).includes(+m[1]))return;fin2(()=>summonHand(s,T.card,+m[1]));return}
 const L=handCands(s,ch.kind);
-if(m[0]=='hs'){const c=L[+m[1]];if(!c)return;if(ch.kind=='hr'){const k=T.sel.indexOf(c);if(k>=0)T.sel.splice(k,1);else if(T.sel.length<ch.v)T.sel.push(c);render();return}
+if(m[0]=='hs'){const c=L[+m[1]];if(!c)return;if(ch.kind=='hr'){const si=T.si||(T.si=[]),k=si.indexOf(+m[1]);if(k>=0)si.splice(k,1);else if(si.length<ch.v)si.push(+m[1]);T.sel=si.map(j=>L[j]);render();return}
 if(ch.kind=='hp'){const fr=free(s);if(fr.length>1){G.tgt={k:'hpos',ch,card:c};render();return}fin2(()=>applyHand(s,'hp',ch.v,[c],fr[0]));return}
 fin2(()=>applyHand(s,ch.kind,ch.v,[c]));return}
 if(m[0]=='hok'&&ch.kind=='hr')fin2(()=>applyHand(s,'hr',ch.v,T.sel));return}
